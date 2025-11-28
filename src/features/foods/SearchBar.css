@@ -1,0 +1,28 @@
+.search-bar {
+    position: relative;
+    width: 100%;
+}
+
+.search-clear {
+    position: absolute;
+    right: var(--spacing-base);
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    border: none;
+    padding: 0;
+}
+
+.search-clear:hover {
+    background: var(--color-bg-elevated);
+    color: var(--color-text-primary);
+}
