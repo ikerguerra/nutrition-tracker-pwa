@@ -1,25 +1,25 @@
-import api from './api';
+import apiClient from './apiClient';
 import type { DailyLog, AddEntryRequest, UpdateEntryRequest } from '../types/dailyLog';
 
 export const dailyLogService = {
     getDailyLog: async (date: string): Promise<DailyLog> => {
-        const response = await api.get<DailyLog>(`/daily-log?date=${date}`);
-        return response.data;
+        const response = await apiClient.get<any>(`/daily-log?date=${date}`);
+        return response.data.data;
     },
 
     addEntry: async (entry: AddEntryRequest): Promise<DailyLog> => {
-        const response = await api.post<DailyLog>('/daily-log/entries', entry);
-        return response.data;
+        const response = await apiClient.post<any>('/daily-log/entries', entry);
+        return response.data.data;
     },
 
     updateEntry: async (id: number, entry: UpdateEntryRequest): Promise<DailyLog> => {
-        const response = await api.put<DailyLog>(`/daily-log/entries/${id}`, entry);
-        return response.data;
+        const response = await apiClient.put<any>(`/daily-log/entries/${id}`, entry);
+        return response.data.data;
     },
 
     deleteEntry: async (id: number): Promise<DailyLog> => {
-        const response = await api.delete<DailyLog>(`/daily-log/entries/${id}`);
-        return response.data;
+        const response = await apiClient.delete<any>(`/daily-log/entries/${id}`);
+        return response.data.data;
     }
 };
 

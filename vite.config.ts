@@ -38,7 +38,7 @@ export default defineConfig({
       workbox: {
         runtimeCaching: [
           {
-            urlPattern: /^https:\/\/localhost:8080\/api\/.*/i,
+            urlPattern: /^https:\/\/192.168.0.20:8080\/api\/.*/i,
             handler: 'NetworkFirst',
             options: {
               cacheName: 'api-cache',
@@ -59,6 +59,7 @@ export default defineConfig({
     alias: {
       '@': path.resolve(__dirname, './src'),
       '@components': path.resolve(__dirname, './src/components'),
+      '@context': path.resolve(__dirname, './src/context'),
       '@features': path.resolve(__dirname, './src/features'),
       '@hooks': path.resolve(__dirname, './src/hooks'),
       '@services': path.resolve(__dirname, './src/services'),
@@ -68,6 +69,7 @@ export default defineConfig({
     }
   },
   server: {
+    host: '0.0.0.0', // Permite acceso desde cualquier interfaz de red
     port: 5173,
     open: true
   }

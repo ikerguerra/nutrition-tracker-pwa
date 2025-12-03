@@ -6,12 +6,13 @@ interface LayoutProps {
     children: React.ReactNode;
     onAddFood?: () => void;
     onScanBarcode?: () => void;
+    onOpenDashboard?: () => void;
 }
 
-export const Layout: React.FC<LayoutProps> = ({ children, onAddFood, onScanBarcode }) => {
+export const Layout: React.FC<LayoutProps> = ({ children, onAddFood, onScanBarcode, onOpenDashboard }) => {
     return (
         <div className="layout">
-            <Header onAddFood={onAddFood} onScanBarcode={onScanBarcode} />
+            <Header onAddFood={onAddFood} onScanBarcode={onScanBarcode} onOpenDashboard={onOpenDashboard} />
             <main className="main-content">
                 <div className="container">{children}</div>
             </main>

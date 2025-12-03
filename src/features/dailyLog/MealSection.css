@@ -1,0 +1,4 @@
+.meal-section { padding: var(--spacing-md); }
+.meal-header { display:flex; justify-content:space-between; align-items:center; margin-bottom: var(--spacing-sm); }
+.meal-entries { display:flex; flex-direction: column; gap: var(--spacing-sm); }
+.meal-empty { color: var(--color-text-muted); }

@@ -1,0 +1,11 @@
+.daily-log-summary { padding: var(--spacing-md); display:flex; flex-direction: column; gap: var(--spacing-md); }
+.summary-row { display: flex; gap: var(--spacing-lg); align-items: center; }
+.summary-item { display:flex; flex-direction: column; }
+.summary-label { font-size: var(--font-xs); color: var(--color-text-muted); }
+.summary-value { font-size: var(--font-lg); font-weight: 700; }
+.summary-bars { display:flex; flex-direction: column; gap: var(--spacing-sm); width: 100%; }
+.summary-bar { display:flex; flex-direction: column; }
+.bar-label { font-size: var(--font-xs); }
+.bar-track { background: var(--color-bg-elevated); border-radius: var(--radius-sm); height: 12px; overflow:hidden; }
+.bar-fill { background: linear-gradient(90deg, var(--color-primary), var(--color-secondary)); height:100%; }
+.bar-value { font-size: var(--font-xs); color: var(--color-text-muted); margin-top: 6px; }

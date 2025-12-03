@@ -4,7 +4,9 @@ export type MealType = 'BREAKFAST' | 'LUNCH' | 'DINNER' | 'SNACK';
 
 export interface MealEntry {
     id: number;
-    food: Food;
+    foodId: number;
+    foodName: string;
+    brand?: string;
     mealType: MealType;
     quantity: number;
     unit: string;
@@ -14,16 +16,21 @@ export interface MealEntry {
         carbohydrates: number;
         fats: number;
     };
+    // Legacy or optional if backend still sends it sometimes? Logs show it's not there.
+    food?: Food;
 }
 
 export interface DailyLog {
     id: number;
     date: string;
-    totalCalories: number;
-    totalCarbs: number;
-    totalProtein: number;
-    totalFats: number;
-    entries: MealEntry[];
+    meals: Record<MealType, MealEntry[]>;
+    totals: {
+        calories: number;
+        protein: number;
+        carbohydrates: number; // Note: API might return 'carbs' or 'carbohydrates', checking logs it says 'carbs' in totals but let's be careful. Logs say: totals: {calories: 672, protein: 44.35, carbs: 81.95, fats: 17.5}
+        fats: number;
+        carbs: number; // Adding both to be safe or I should check logs again. Logs: carbs: 81.95.
+    };
 }
 
 export interface AddEntryRequest {

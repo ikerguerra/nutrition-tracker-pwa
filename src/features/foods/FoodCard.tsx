@@ -8,9 +8,10 @@ interface FoodCardProps {
     food: Food;
     onEdit?: (id: number) => void;
     onDelete?: (id: number) => void;
+    onAddToDailyLog?: (food: Food) => void;
 }
 
-export const FoodCard: React.FC<FoodCardProps> = ({ food, onEdit, onDelete }) => {
+export const FoodCard: React.FC<FoodCardProps> = ({ food, onEdit, onDelete, onAddToDailyLog }) => {
     const { id, name, brand, nutritionalInfo, servingSize, servingUnit } = food;
 
     return (
@@ -57,7 +58,7 @@ export const FoodCard: React.FC<FoodCardProps> = ({ food, onEdit, onDelete }) =>
                 </div>
             </div>
 
-            {(onEdit || onDelete) && (
+            {(onEdit || onDelete || onAddToDailyLog) && (
                 <div className="food-card-actions">
                     {onEdit && id && (
                         <Button variant="secondary" size="sm" onClick={() => onEdit(id)}>
@@ -67,6 +68,11 @@ export const FoodCard: React.FC<FoodCardProps> = ({ food, onEdit, onDelete }) =>
                     {onDelete && id && (
                         <Button variant="danger" size="sm" onClick={() => onDelete(id)}>
                             Eliminar
+                        </Button>
+                    )}
+                    {onAddToDailyLog && (
+                        <Button variant="primary" size="sm" onClick={() => onAddToDailyLog(food)}>
+                            Agregar hoy
                         </Button>
                     )}
                 </div>

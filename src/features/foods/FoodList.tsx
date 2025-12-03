@@ -1,4 +1,5 @@
 import React from 'react';
+import type { Food } from '@types/food';
 import { FoodCard } from './FoodCard';
 import { LoadingSpinner } from '@components/ui/LoadingSpinner';
 import { Button } from '@components/ui/Button';
@@ -8,9 +9,10 @@ import './FoodList.css';
 interface FoodListProps {
     onEdit?: (id: number) => void;
     onDelete?: (id: number) => void;
+    onAddToDailyLog?: (food: Food) => void;
 }
 
-export const FoodList: React.FC<FoodListProps> = ({ onEdit, onDelete }) => {
+export const FoodList: React.FC<FoodListProps> = ({ onEdit, onDelete, onAddToDailyLog }) => {
     const { foods, loading, error, pagination, changePage } = useFoods();
 
     if (loading && foods.length === 0) {
@@ -71,7 +73,7 @@ export const FoodList: React.FC<FoodListProps> = ({ onEdit, onDelete }) => {
 
             <div className="food-list-grid">
                 {foods.map((food) => (
-                    <FoodCard key={food.id} food={food} onEdit={onEdit} onDelete={onDelete} />
+                    <FoodCard key={food.id} food={food} onEdit={onEdit} onDelete={onDelete} onAddToDailyLog={onAddToDailyLog ? (f) => onAddToDailyLog(f) : undefined} />
                 ))}
             </div>
 

@@ -1,0 +1,7 @@
+.meal-entry-card { display:flex; justify-content:space-between; align-items:center; padding: var(--spacing-sm); }
+.meal-entry-body { display:flex; gap: var(--spacing-md); align-items:center; }
+.meal-entry-left { display:flex; flex-direction: column; }
+.meal-entry-title { font-weight:600; }
+.meal-entry-nutrition { text-align:right; }
+.meal-entry-actions { display:flex; gap: var(--spacing-sm); align-items:center; }
+.meal-entry-actions input { width: 64px; }
