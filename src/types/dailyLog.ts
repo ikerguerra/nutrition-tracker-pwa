@@ -31,6 +31,12 @@ export interface DailyLog {
         fats: number;
         carbs: number; // Adding both to be safe or I should check logs again. Logs: carbs: 81.95.
     };
+    goals?: {
+        calorieGoal: number;
+        proteinGoal: number;
+        carbsGoal: number;
+        fatsGoal: number;
+    };
 }
 
 export interface AddEntryRequest {

@@ -28,10 +28,11 @@ const DailyLogSummary: React.FC<DailyLogSummaryProps> = ({ dailyLog, loading, er
         );
     }
 
-    // For now we use simple static goal placeholders (should be made dynamic later)
-    const proteinGoal = 150;
-    const carbsGoal = 250;
-    const fatsGoal = 70;
+    // Use goals from API if available, otherwise use defaults
+    const calorieGoal = dailyLog.goals?.calorieGoal ?? 2000;
+    const proteinGoal = dailyLog.goals?.proteinGoal ?? 150;
+    const carbsGoal = dailyLog.goals?.carbsGoal ?? 200;
+    const fatsGoal = dailyLog.goals?.fatsGoal ?? 65;
 
     const toPercent = (value: number, goal: number) => Math.min(100, Math.round((value / goal) * 100));
 
@@ -40,7 +41,7 @@ const DailyLogSummary: React.FC<DailyLogSummaryProps> = ({ dailyLog, loading, er
             <div className="summary-row">
                 <div className="summary-item">
                     <span className="summary-label">Calorías</span>
-                    <span className="summary-value">{dailyLog.totals.calories} kcal</span>
+                    <span className="summary-value">{dailyLog.totals.calories} / {Math.round(calorieGoal)} kcal</span>
                 </div>
 
                 <div className="summary-bars">
@@ -49,7 +50,7 @@ const DailyLogSummary: React.FC<DailyLogSummaryProps> = ({ dailyLog, loading, er
                         <div className="bar-track">
                             <div className="bar-fill" style={{ width: `${toPercent(dailyLog.totals.protein, proteinGoal)}%` }} />
                         </div>
-                        <div className="bar-value">{dailyLog.totals.protein}g / {proteinGoal}g</div>
+                        <div className="bar-value">{dailyLog.totals.protein}g / {Math.round(proteinGoal)}g</div>
                     </div>
 
                     <div className="summary-bar">
@@ -57,7 +58,7 @@ const DailyLogSummary: React.FC<DailyLogSummaryProps> = ({ dailyLog, loading, er
                         <div className="bar-track">
                             <div className="bar-fill" style={{ width: `${toPercent(dailyLog.totals.carbs, carbsGoal)}%` }} />
                         </div>
-                        <div className="bar-value">{dailyLog.totals.carbs}g / {carbsGoal}g</div>
+                        <div className="bar-value">{dailyLog.totals.carbs}g / {Math.round(carbsGoal)}g</div>
                     </div>
 
                     <div className="summary-bar">
@@ -65,7 +66,7 @@ const DailyLogSummary: React.FC<DailyLogSummaryProps> = ({ dailyLog, loading, er
                         <div className="bar-track">
                             <div className="bar-fill" style={{ width: `${toPercent(dailyLog.totals.fats, fatsGoal)}%` }} />
                         </div>
-                        <div className="bar-value">{dailyLog.totals.fats}g / {fatsGoal}g</div>
+                        <div className="bar-value">{dailyLog.totals.fats}g / {Math.round(fatsGoal)}g</div>
                     </div>
                 </div>
             </div>
