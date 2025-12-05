@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { Button } from '@components/ui/Button';
 import { Input } from '@components/ui/Input';
 import { useFoods } from '@hooks/useFoods';
-import type { FoodRequest } from '@types/food';
+import type { FoodRequest } from '../../types/food';
 import './FoodForm.css';
 
-import type { Food } from '@types/food';
+import type { Food } from '../../types/food';
 
 interface FoodFormProps {
     onSuccess?: () => void;
@@ -38,12 +38,12 @@ export const FoodForm: React.FC<FoodFormProps> = ({ onSuccess, onCancel, initial
         const { name, value } = e.target;
 
         if (name.startsWith('nutrition.')) {
-            const nutritionField = name.split('.')[1];
+            const nutritionField = name.split('.')[1] as string;
             setFormData(prev => ({
                 ...prev,
                 nutritionalInfo: {
                     ...prev.nutritionalInfo,
-                    [nutritionField]: value
+                    [nutritionField as keyof typeof prev.nutritionalInfo]: value
                 }
             }));
         } else {

@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import foodService from '@services/foodService';
-import type { Food, FoodRequest, Page } from '@types/food';
+import type { Food, FoodRequest, Page } from '../types/food';
 
 interface UseFoodsReturn {
     foods: Food[];

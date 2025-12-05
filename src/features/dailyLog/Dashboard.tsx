@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { MealType, DailyLog, MealEntry } from '../../types/dailyLog';
+import { DailyLog } from '../../types/dailyLog';
 // Import Food type only when needed
 // Card not used here; keeping layout minimal
 import { Button } from '@components/ui/Button';

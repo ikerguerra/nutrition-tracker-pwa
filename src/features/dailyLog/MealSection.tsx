@@ -12,7 +12,7 @@ interface MealSectionProps {
     onDelete: (id: number) => Promise<void>;
 }
 
-const MealSection: React.FC<MealSectionProps> = ({ mealType, title, entries, onUpdate, onDelete }) => {
+const MealSection: React.FC<MealSectionProps> = ({ title, entries, onUpdate, onDelete }) => {
     return (
         <Card className="meal-section">
             <div className="meal-header">

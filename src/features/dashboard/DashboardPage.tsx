@@ -11,10 +11,13 @@ import { Dashboard } from '@features/dailyLog/Dashboard';
 import AddEntryModal from '@features/dailyLog/AddEntryModal';
 import useDailyLog from '@hooks/useDailyLog';
 import { useFoods } from '@hooks/useFoods';
+import { ExternalFoodSearch } from '@features/external/ExternalFoodSearch';
+import { Button } from '@components/ui/Button';
 
 const DashboardPage = () => {
     const [showScanner, setShowScanner] = useState(false);
     const [showAddFood, setShowAddFood] = useState(false);
+    const [showExternalSearch, setShowExternalSearch] = useState(false);
     const [editingFood, setEditingFood] = useState<Food | null>(null);
     const [showAddEntryModal, setShowAddEntryModal] = useState(false);
     const [selectedFoodForEntry, setSelectedFoodForEntry] = useState<Food | null>(null);
@@ -73,10 +76,26 @@ const DashboardPage = () => {
                             error={dailyLogError}
                             updateEntry={updateEntry}
                             deleteEntry={deleteEntry}
+                            onOpenFoods={() => {
+                                // Scroll to food list on mobile or focus search
+                                document.querySelector('.food-list-section')?.scrollIntoView({ behavior: 'smooth' });
+                            }}
                         />
                     </div>
-                    <div style={{ minWidth: 0 }}>
-                        <SearchBar onSearch={handleSearch} />
+                    <div className="food-list-section" style={{ minWidth: 0 }}>
+                        <div style={{ display: 'flex', gap: 'var(--spacing-sm)', marginBottom: 'var(--spacing-md)' }}>
+                            <div style={{ flex: 1 }}>
+                                <SearchBar onSearch={handleSearch} />
+                            </div>
+                            <Button
+                                variant="secondary"
+                                onClick={() => setShowExternalSearch(true)}
+                                title="Buscar en OpenFoodFacts"
+                            >
+                                🌐
+                            </Button>
+                        </div>
+
                         <FoodList onEdit={handleEdit} onDelete={handleDelete} onAddToDailyLog={(food) => {
                             setSelectedFoodForEntry(food);
                             setShowAddEntryModal(true);
@@ -94,14 +113,24 @@ const DashboardPage = () => {
                 <BarcodeScanner
                     onFoodFound={(data) => {
                         console.log('Food found:', data);
-                        setShowScanner(false);
                         if (data.foundInDatabase) {
                             toast.success('Alimento encontrado en base de datos');
+                            // Optionally close modal and select food
+                            // setShowScanner(false);
+                            // setSelectedFoodForEntry(data.food);
+                            // setShowAddEntryModal(true);
                         } else if (data.source === 'openfoodfacts') {
-                            toast.success('Alimento encontrado en OpenFoodFacts');
+                            toast.success('Alimento encontrado en OpenFoodFacts. Puedes importarlo.');
                         } else {
                             toast.error('Alimento no encontrado');
                         }
+                    }}
+                    onFoodImported={() => {
+                        refresh();
+                        setShowScanner(false);
+                        // Optionally open add entry modal immediately
+                        // setSelectedFoodForEntry(food);
+                        // setShowAddEntryModal(true);
                     }}
                 />
             </Modal>
@@ -120,6 +149,21 @@ const DashboardPage = () => {
                         refresh();
                     }}
                     onCancel={handleCloseModal}
+                />
+            </Modal>
+
+            <Modal
+                isOpen={showExternalSearch}
+                onClose={() => setShowExternalSearch(false)}
+                title="Buscar en OpenFoodFacts"
+                size="lg"
+            >
+                <ExternalFoodSearch
+                    onFoodImported={() => {
+                        refresh(); // Refresh local list to show imported food
+                        // Optionally close modal or keep open for more searches
+                        toast.success('Producto importado a tu lista');
+                    }}
                 />
             </Modal>
 

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import foodService from '@services/foodService';
-import type { BarcodeSearchResponse } from '@types/food';
+import type { BarcodeSearchResponse } from '../types/food';
 
 interface UseBarcodeSearchReturn {
     result: BarcodeSearchResponse | null;

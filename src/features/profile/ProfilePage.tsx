@@ -205,25 +205,25 @@ const ProfilePage: React.FC = () => {
                             <div className="goals-grid">
                                 <div className="goal-card">
                                     <div className="goal-icon">🔥</div>
-                                    <div className="goal-value">{Math.round(profile.dailyCalorieGoal!)}</div>
+                                    <div className="goal-value">{profile ? Math.round(profile.dailyCalorieGoal!) : 0}</div>
                                     <div className="goal-label">Calorías/día</div>
                                 </div>
 
                                 <div className="goal-card">
                                     <div className="goal-icon">🥩</div>
-                                    <div className="goal-value">{Math.round(profile.dailyProteinGoal!)}g</div>
+                                    <div className="goal-value">{profile ? Math.round(profile.dailyProteinGoal!) : 0}g</div>
                                     <div className="goal-label">Proteína</div>
                                 </div>
 
                                 <div className="goal-card">
                                     <div className="goal-icon">🍞</div>
-                                    <div className="goal-value">{Math.round(profile.dailyCarbsGoal!)}g</div>
+                                    <div className="goal-value">{profile ? Math.round(profile.dailyCarbsGoal!) : 0}g</div>
                                     <div className="goal-label">Carbohidratos</div>
                                 </div>
 
                                 <div className="goal-card">
                                     <div className="goal-icon">🥑</div>
-                                    <div className="goal-value">{Math.round(profile.dailyFatsGoal!)}g</div>
+                                    <div className="goal-value">{profile ? Math.round(profile.dailyFatsGoal!) : 0}g</div>
                                     <div className="goal-label">Grasas</div>
                                 </div>
                             </div>

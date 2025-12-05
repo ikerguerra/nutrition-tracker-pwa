@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card } from '@components/ui/Card';
 import { Button } from '@components/ui/Button';
-import type { Food } from '@types/food';
+import type { Food } from '../../types/food';
 import './FoodCard.css';
 
 interface FoodCardProps {

@@ -1,5 +1,5 @@
 import apiClient from './apiClient';
-import type { Food, FoodRequest, Page, BarcodeSearchResponse } from '@types/food';
+import type { Food, FoodRequest, Page, BarcodeSearchResponse } from '../types/food';
 
 interface GetAllFoodsParams {
     page?: number;

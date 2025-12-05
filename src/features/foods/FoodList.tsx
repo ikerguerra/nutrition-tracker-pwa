@@ -1,5 +1,5 @@
 import React from 'react';
-import type { Food } from '@types/food';
+import type { Food } from '../../types/food';
 import { FoodCard } from './FoodCard';
 import { LoadingSpinner } from '@components/ui/LoadingSpinner';
 import { Button } from '@components/ui/Button';
