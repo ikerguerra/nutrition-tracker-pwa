@@ -13,6 +13,7 @@ import useDailyLog from '@hooks/useDailyLog';
 import { useFoods } from '@hooks/useFoods';
 import { ExternalFoodSearch } from '@features/external/ExternalFoodSearch';
 import { Button } from '@components/ui/Button';
+import { DateSelector } from '@components/ui/DateSelector';
 
 const DashboardPage = () => {
     const [showScanner, setShowScanner] = useState(false);
@@ -21,7 +22,21 @@ const DashboardPage = () => {
     const [editingFood, setEditingFood] = useState<Food | null>(null);
     const [showAddEntryModal, setShowAddEntryModal] = useState(false);
     const [selectedFoodForEntry, setSelectedFoodForEntry] = useState<Food | null>(null);
-    const { dailyLog, addEntry, updateEntry, deleteEntry, loading: dailyLogLoading, error: dailyLogError } = useDailyLog();
+
+    // Date state
+    const [selectedDate, setSelectedDate] = useState(new Date());
+
+    // Format date as YYYY-MM-DD for API
+    const formatDateForApi = (date: Date) => {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    };
+
+    const dateString = formatDateForApi(selectedDate);
+
+    const { dailyLog, addEntry, updateEntry, deleteEntry, loading: dailyLogLoading, error: dailyLogError } = useDailyLog(dateString);
     const { searchFoods, refresh, deleteFood, foods } = useFoods();
 
     const handleSearch = (query: string) => {
@@ -63,6 +78,13 @@ const DashboardPage = () => {
                 onAddFood={() => setShowAddFood(true)}
                 onScanBarcode={() => setShowScanner(true)}
             >
+                <div style={{ marginBottom: 'var(--spacing-lg)' }}>
+                    <DateSelector
+                        selectedDate={selectedDate}
+                        onDateChange={setSelectedDate}
+                    />
+                </div>
+
                 <div style={{
                     display: 'grid',
                     gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
@@ -71,6 +93,7 @@ const DashboardPage = () => {
                 }}>
                     <div style={{ minWidth: 0 }}>
                         <Dashboard
+                            date={dateString}
                             dailyLog={dailyLog}
                             loading={dailyLogLoading}
                             error={dailyLogError}
