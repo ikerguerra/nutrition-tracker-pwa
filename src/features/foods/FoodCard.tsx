@@ -9,9 +9,18 @@ interface FoodCardProps {
     onEdit?: (id: number) => void;
     onDelete?: (id: number) => void;
     onAddToDailyLog?: (food: Food) => void;
+    isFavorite?: boolean;
+    onToggleFavorite?: (id: number) => void;
 }
 
-export const FoodCard: React.FC<FoodCardProps> = ({ food, onEdit, onDelete, onAddToDailyLog }) => {
+export const FoodCard: React.FC<FoodCardProps> = ({
+    food,
+    onEdit,
+    onDelete,
+    onAddToDailyLog,
+    isFavorite,
+    onToggleFavorite
+}) => {
     const { id, name, brand, nutritionalInfo, servingSize, servingUnit } = food;
 
     return (
@@ -21,11 +30,25 @@ export const FoodCard: React.FC<FoodCardProps> = ({ food, onEdit, onDelete, onAd
                     <h3 className="food-card-title">{name}</h3>
                     {brand && <p className="food-card-brand">{brand}</p>}
                 </div>
-                {servingSize && servingUnit && (
-                    <span className="food-card-serving">
-                        {servingSize}{servingUnit}
-                    </span>
-                )}
+                <div className="food-card-header-actions">
+                    {servingSize && servingUnit && (
+                        <span className="food-card-serving">
+                            {servingSize}{servingUnit}
+                        </span>
+                    )}
+                    {onToggleFavorite && id && (
+                        <button
+                            className={`favorite-btn ${isFavorite ? 'active' : ''}`}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                onToggleFavorite(id);
+                            }}
+                            title={isFavorite ? "Quitar de favoritos" : "Agregar a favoritos"}
+                        >
+                            {isFavorite ? '❤️' : '🤍'}
+                        </button>
+                    )}
+                </div>
             </div>
 
             <div className="food-card-nutrition">

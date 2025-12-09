@@ -121,6 +121,66 @@ const foodService = {
         } catch (error: any) {
             throw error.response?.data || error;
         }
+    },
+
+    /**
+     * Add food to favorites
+     */
+    addFavorite: async (id: number): Promise<void> => {
+        try {
+            await apiClient.post(`/foods/${id}/favorite`);
+        } catch (error: any) {
+            throw error.response?.data || error;
+        }
+    },
+
+    /**
+     * Remove food from favorites
+     */
+    removeFavorite: async (id: number): Promise<void> => {
+        try {
+            await apiClient.delete(`/foods/${id}/favorite`);
+        } catch (error: any) {
+            throw error.response?.data || error;
+        }
+    },
+
+    /**
+     * Get favorite foods
+     */
+    getFavorites: async (): Promise<Food[]> => {
+        try {
+            const response = await apiClient.get<{ data: Food[] }>('/foods/favorites');
+            return response.data.data;
+        } catch (error: any) {
+            throw error.response?.data || error;
+        }
+    },
+
+    /**
+     * Get recent foods
+     */
+    getRecentFoods: async (): Promise<Food[]> => {
+        try {
+            const response = await apiClient.get<{ data: Food[] }>('/foods/recent');
+            return response.data.data;
+        } catch (error: any) {
+            throw error.response?.data || error;
+        }
+    },
+
+    /**
+     * Get frequent foods
+     */
+    getFrequentFoods: async (limit: number = 10): Promise<Food[]> => {
+        try {
+            const response = await apiClient.get<{ data: Food[] }>('/foods/frequent', {
+                params: { limit }
+            });
+            return response.data.data;
+        } catch (error: any) {
+            throw error.response?.data || error;
+        }
     }
 };
 
