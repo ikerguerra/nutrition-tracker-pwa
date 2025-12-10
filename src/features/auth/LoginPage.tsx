@@ -58,6 +58,18 @@ const LoginPage: React.FC = () => {
                     <button type="submit" className="auth-button">Login</button>
                 </form>
 
+                <div className="auth-divider">
+                    <span>OR</span>
+                </div>
+
+                <button
+                    className="google-button"
+                    onClick={() => window.location.href = 'http://localhost:8080/oauth2/authorization/google'}
+                >
+                    <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" style={{ width: '20px', height: '20px' }} />
+                    Sign in with Google
+                </button>
+
                 <p className="auth-footer">
                     Don't have an account? <Link to="/register">Sign up</Link>
                 </p>

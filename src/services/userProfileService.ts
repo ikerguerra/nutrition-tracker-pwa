@@ -1,22 +1,32 @@
-import apiClient from './apiClient';
-import type { UserProfile, UserProfileUpdateRequest } from '../types/userProfile';
+import axios from 'axios';
+import authService from './authService';
+import type { UserProfile, UserProfileUpdateRequest } from '@types/userProfile';
+
+const API_URL = 'http://localhost:8080/api/v1/profile';
+
+const getMyProfile = async (): Promise<UserProfile> => {
+    const token = authService.getCurrentToken();
+    const response = await axios.get(API_URL, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    });
+    return response.data;
+};
+
+const updateMyProfile = async (profileData: UserProfileUpdateRequest): Promise<UserProfile> => {
+    const token = authService.getCurrentToken();
+    const response = await axios.put(API_URL, profileData, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    });
+    return response.data;
+};
 
 const userProfileService = {
-    /**
-     * Get current user's profile
-     */
-    getMyProfile: async (): Promise<UserProfile> => {
-        const response = await apiClient.get<UserProfile>('/profile');
-        return response.data;
-    },
-
-    /**
-     * Update current user's profile
-     */
-    updateMyProfile: async (data: UserProfileUpdateRequest): Promise<UserProfile> => {
-        const response = await apiClient.put<UserProfile>('/profile', data);
-        return response.data;
-    }
+    getMyProfile,
+    updateMyProfile
 };
 
 export default userProfileService;

@@ -98,6 +98,18 @@ const RegisterPage: React.FC = () => {
                     <button type="submit" className="auth-button">Sign Up</button>
                 </form>
 
+                <div className="auth-divider">
+                    <span>OR</span>
+                </div>
+
+                <button
+                    className="google-button"
+                    onClick={() => window.location.href = 'http://localhost:8080/oauth2/authorization/google'}
+                >
+                    <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" style={{ width: '20px', height: '20px' }} />
+                    Sign up with Google
+                </button>
+
                 <p className="auth-footer">
                     Already have an account? <Link to="/login">Login</Link>
                 </p>
