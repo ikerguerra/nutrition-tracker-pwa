@@ -189,6 +189,108 @@ const ProfilePage: React.FC = () => {
                                 </div>
                             </div>
 
+                            <h2>Macros Personalizados</h2>
+
+                            <div className="form-group">
+                                <label className="toggle-label">
+                                    <input
+                                        type="checkbox"
+                                        checked={formData.useCustomMacros ?? false}
+                                        onChange={(e) => handleChange('useCustomMacros', e.target.checked)}
+                                    />
+                                    <span>Usar macros personalizados</span>
+                                </label>
+                                <p className="form-help">Personaliza la distribución de macronutrientes en lugar de usar los valores predeterminados según tu tipo de dieta.</p>
+                            </div>
+
+                            {formData.useCustomMacros && (
+                                <div className="custom-macros-section">
+                                    <div className="macro-input-group">
+                                        <label htmlFor="customProtein">Proteína (%)</label>
+                                        <input
+                                            id="customProtein"
+                                            type="number"
+                                            min="0"
+                                            max="100"
+                                            step="1"
+                                            value={formData.customProteinPercentage ?? 20}
+                                            onChange={(e) => handleChange('customProteinPercentage', parseFloat(e.target.value))}
+                                        />
+                                        {profile?.dailyCalorieGoal && (
+                                            <span className="macro-grams">
+                                                {Math.round((formData.customProteinPercentage ?? 20) * profile.dailyCalorieGoal / 400)}g
+                                            </span>
+                                        )}
+                                    </div>
+
+                                    <div className="macro-input-group">
+                                        <label htmlFor="customCarbs">Carbohidratos (%)</label>
+                                        <input
+                                            id="customCarbs"
+                                            type="number"
+                                            min="0"
+                                            max="100"
+                                            step="1"
+                                            value={formData.customCarbsPercentage ?? 50}
+                                            onChange={(e) => handleChange('customCarbsPercentage', parseFloat(e.target.value))}
+                                        />
+                                        {profile?.dailyCalorieGoal && (
+                                            <span className="macro-grams">
+                                                {Math.round((formData.customCarbsPercentage ?? 50) * profile.dailyCalorieGoal / 400)}g
+                                            </span>
+                                        )}
+                                    </div>
+
+                                    <div className="macro-input-group">
+                                        <label htmlFor="customFats">Grasas (%)</label>
+                                        <input
+                                            id="customFats"
+                                            type="number"
+                                            min="0"
+                                            max="100"
+                                            step="1"
+                                            value={formData.customFatsPercentage ?? 30}
+                                            onChange={(e) => handleChange('customFatsPercentage', parseFloat(e.target.value))}
+                                        />
+                                        {profile?.dailyCalorieGoal && (
+                                            <span className="macro-grams">
+                                                {Math.round((formData.customFatsPercentage ?? 30) * profile.dailyCalorieGoal / 900)}g
+                                            </span>
+                                        )}
+                                    </div>
+
+                                    <div className="macro-validation">
+                                        {(() => {
+                                            const sum = (formData.customProteinPercentage ?? 20) +
+                                                (formData.customCarbsPercentage ?? 50) +
+                                                (formData.customFatsPercentage ?? 30);
+                                            const isValid = Math.abs(sum - 100) < 0.01;
+                                            return isValid ? (
+                                                <span className="validation-success">✓ Total: {sum.toFixed(0)}%</span>
+                                            ) : (
+                                                <span className="validation-error">⚠ Total: {sum.toFixed(0)}% (debe ser 100%)</span>
+                                            );
+                                        })()}
+                                    </div>
+
+                                    <div className="macro-distribution-bar">
+                                        <div
+                                            className="macro-bar protein"
+                                            style={{ width: `${formData.customProteinPercentage ?? 20}%` }}
+                                        />
+                                        <div
+                                            className="macro-bar carbs"
+                                            style={{ width: `${formData.customCarbsPercentage ?? 50}%` }}
+                                        />
+                                        <div
+                                            className="macro-bar fats"
+                                            style={{ width: `${formData.customFatsPercentage ?? 30}%` }}
+                                        />
+                                    </div>
+                                </div>
+                            )}
+
+
                             <div className="form-actions">
                                 <button type="submit" className="btn-primary" disabled={saving}>
                                     {saving ? 'Guardando...' : 'Guardar Cambios'}

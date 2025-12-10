@@ -202,3 +202,123 @@
 .profile-info strong {
     color: var(--color-text-primary);
 }
+
+/* Custom Macros Section */
+.toggle-label {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    cursor: pointer;
+    user-select: none;
+}
+
+.toggle-label input[type="checkbox"] {
+    width: auto;
+    cursor: pointer;
+}
+
+.toggle-label span {
+    font-weight: 500;
+    color: var(--color-text-primary);
+}
+
+.form-help {
+    font-size: 0.8rem;
+    color: var(--color-text-tertiary);
+    margin-top: var(--spacing-xs);
+    font-style: italic;
+}
+
+.custom-macros-section {
+    background: var(--color-bg-primary);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-lg);
+    margin-top: var(--spacing-md);
+}
+
+.macro-input-group {
+    display: grid;
+    grid-template-columns: 120px 1fr auto;
+    align-items: center;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+}
+
+.macro-input-group label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    margin: 0;
+}
+
+.macro-input-group input {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: 0.95rem;
+}
+
+.macro-grams {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-primary);
+    min-width: 60px;
+    text-align: right;
+}
+
+.macro-validation {
+    margin: var(--spacing-md) 0;
+    padding: var(--spacing-sm);
+    border-radius: var(--radius-sm);
+    text-align: center;
+    font-weight: 600;
+}
+
+.validation-success {
+    color: var(--color-success);
+}
+
+.validation-error {
+    color: var(--color-error);
+}
+
+.macro-distribution-bar {
+    display: flex;
+    height: 24px;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    margin-top: var(--spacing-md);
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.macro-bar {
+    transition: width 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: white;
+}
+
+.macro-bar.protein {
+    background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.macro-bar.carbs {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+}
+
+.macro-bar.fats {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+@media (max-width: 640px) {
+    .macro-input-group {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-xs);
+    }
+
+    .macro-grams {
+        text-align: left;
+    }
+}
