@@ -6,6 +6,7 @@ import LoginPage from '@features/auth/LoginPage';
 import RegisterPage from '@features/auth/RegisterPage';
 import DashboardPage from '@features/dashboard/DashboardPage';
 import ProfilePage from '@features/profile/ProfilePage';
+import { CalendarView } from '@features/calendar/CalendarView';
 import { Toaster } from 'react-hot-toast';
 import '@styles/global.css';
 
@@ -33,6 +34,14 @@ function App() {
                                 </ProtectedRoute>
                             }
                         />
+                        <Route
+                            path="/calendar"
+                            element={
+                                <ProtectedRoute>
+                                    <CalendarView />
+                                </ProtectedRoute>
+                            }
+                        />
                     </Routes>
 
                     <Toaster
@@ -44,18 +53,6 @@ function App() {
                                 color: 'var(--color-text-primary)',
                                 border: '1px solid var(--color-border)',
                                 borderRadius: 'var(--radius-md)',
-                            },
-                            success: {
-                                iconTheme: {
-                                    primary: 'var(--color-success)',
-                                    secondary: 'var(--color-bg-elevated)',
-                                },
-                            },
-                            error: {
-                                iconTheme: {
-                                    primary: 'var(--color-error)',
-                                    secondary: 'var(--color-bg-elevated)',
-                                },
                             },
                         }}
                     />

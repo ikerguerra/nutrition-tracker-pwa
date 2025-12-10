@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Food } from '../../types/food';
 import { Layout } from '@components/layout/Layout';
 import { FoodList } from '@features/foods/FoodList';
@@ -13,7 +14,7 @@ import useDailyLog from '@hooks/useDailyLog';
 import { useFoods } from '@hooks/useFoods';
 import { ExternalFoodSearch } from '@features/external/ExternalFoodSearch';
 import { Button } from '@components/ui/Button';
-import { DateSelector } from '@components/ui/DateSelector';
+import { DateCarousel } from '@components/ui/DateCarousel';
 
 const DashboardPage = () => {
     const [showScanner, setShowScanner] = useState(false);
@@ -24,7 +25,22 @@ const DashboardPage = () => {
     const [selectedFoodForEntry, setSelectedFoodForEntry] = useState<Food | null>(null);
 
     // Date state
-    const [selectedDate, setSelectedDate] = useState(new Date());
+    const [searchParams, setSearchParams] = useSearchParams();
+    const dateParam = searchParams.get('date');
+
+    const [selectedDate, setSelectedDate] = useState(() => {
+        if (dateParam) {
+            const date = new Date(dateParam);
+            return isNaN(date.getTime()) ? new Date() : date;
+        }
+        return new Date();
+    });
+
+    // Update URL when date changes
+    useEffect(() => {
+        const dateStr = formatDateForApi(selectedDate);
+        setSearchParams({ date: dateStr });
+    }, [selectedDate, setSearchParams]);
 
     // Format date as YYYY-MM-DD for API
     const formatDateForApi = (date: Date) => {
@@ -79,7 +95,7 @@ const DashboardPage = () => {
                 onScanBarcode={() => setShowScanner(true)}
             >
                 <div style={{ marginBottom: 'var(--spacing-lg)' }}>
-                    <DateSelector
+                    <DateCarousel
                         selectedDate={selectedDate}
                         onDateChange={setSelectedDate}
                     />
