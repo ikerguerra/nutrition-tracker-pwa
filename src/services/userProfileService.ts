@@ -1,6 +1,6 @@
 import axios from 'axios';
 import authService from './authService';
-import type { UserProfile, UserProfileUpdateRequest } from '@types/userProfile';
+import type { UserProfile, UserProfileUpdateRequest } from '../types/userProfile';
 
 const API_URL = 'http://localhost:8080/api/v1/profile';
 

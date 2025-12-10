@@ -15,6 +15,8 @@ import { useFoods } from '@hooks/useFoods';
 import { ExternalFoodSearch } from '@features/external/ExternalFoodSearch';
 import { Button } from '@components/ui/Button';
 import { DateCarousel } from '@components/ui/DateCarousel';
+import { WeightWidget } from './WeightWidget';
+import { NutritionCharts } from '@features/stats/NutritionCharts';
 
 const DashboardPage = () => {
     const [showScanner, setShowScanner] = useState(false);
@@ -23,6 +25,7 @@ const DashboardPage = () => {
     const [editingFood, setEditingFood] = useState<Food | null>(null);
     const [showAddEntryModal, setShowAddEntryModal] = useState(false);
     const [selectedFoodForEntry, setSelectedFoodForEntry] = useState<Food | null>(null);
+    const [showCharts, setShowCharts] = useState(false);
 
     // Date state
     const [searchParams, setSearchParams] = useSearchParams();
@@ -52,8 +55,10 @@ const DashboardPage = () => {
 
     const dateString = formatDateForApi(selectedDate);
 
-    const { dailyLog, addEntry, updateEntry, deleteEntry, loading: dailyLogLoading, error: dailyLogError } = useDailyLog(dateString);
+    const { dailyLog, addEntry, updateEntry, deleteEntry, updateWeight, loading: dailyLogLoading, error: dailyLogError } = useDailyLog(dateString);
     const { searchFoods, refresh, deleteFood, foods } = useFoods();
+
+    const minWidthForWidgets = '300px';
 
     const handleSearch = (query: string) => {
         if (query) {
@@ -121,6 +126,7 @@ const DashboardPage = () => {
                             }}
                         />
                     </div>
+
                     <div className="food-list-section" style={{ minWidth: 0 }}>
                         <div style={{ display: 'flex', gap: 'var(--spacing-sm)', marginBottom: 'var(--spacing-md)' }}>
                             <div style={{ flex: 1 }}>
@@ -140,8 +146,31 @@ const DashboardPage = () => {
                             setShowAddEntryModal(true);
                         }} />
                     </div>
+
+                    <div style={{ minWidth: minWidthForWidgets }}>
+                        <WeightWidget dailyLog={dailyLog} onUpdateWeight={updateWeight} />
+
+                        <div className="mt-4">
+                            <Button
+                                variant="secondary"
+                                className="w-full"
+                                onClick={() => setShowCharts(true)}
+                            >
+                                📊 Ver Estadísticas
+                            </Button>
+                        </div>
+                    </div>
                 </div>
             </Layout>
+
+            <Modal
+                isOpen={showCharts}
+                onClose={() => setShowCharts(false)}
+                title={`Estadísticas: ${new Date(selectedDate).toLocaleDateString()}`}
+                size="lg"
+            >
+                <NutritionCharts dailyLog={dailyLog} />
+            </Modal>
 
             <Modal
                 isOpen={showScanner}

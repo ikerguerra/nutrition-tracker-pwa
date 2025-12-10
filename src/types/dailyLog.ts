@@ -23,6 +23,7 @@ export interface MealEntry {
 export interface DailyLog {
     id: number;
     date: string;
+    dailyWeight?: number;
     meals: Record<MealType, MealEntry[]>;
     totals: {
         calories: number;

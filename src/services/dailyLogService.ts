@@ -20,6 +20,11 @@ export const dailyLogService = {
     deleteEntry: async (id: number): Promise<DailyLog> => {
         const response = await apiClient.delete<any>(`/daily-log/entries/${id}`);
         return response.data.data;
+    },
+
+    updateDailyWeight: async (date: string, weight: number): Promise<DailyLog> => {
+        const response = await apiClient.patch<any>(`/daily-log/${date}/weight`, { weight });
+        return response.data.data;
     }
 };
 

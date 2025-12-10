@@ -10,6 +10,7 @@ interface UseDailyLogReturn {
     addEntry: (entry: AddEntryRequest) => Promise<void>;
     updateEntry: (id: number, entry: UpdateEntryRequest) => Promise<void>;
     deleteEntry: (id: number) => Promise<void>;
+    updateWeight: (weight: number) => Promise<void>;
 }
 
 export const useDailyLog = (initialDate?: string): UseDailyLogReturn => {
@@ -74,11 +75,26 @@ export const useDailyLog = (initialDate?: string): UseDailyLogReturn => {
         }
     }, []);
 
+    const updateWeight = useCallback(async (weight: number) => {
+        setLoading(true);
+        setError(null);
+        try {
+            const dateToUpdate = (initialDate || new Date().toISOString().split('T')[0]) as string;
+            const updated = await dailyLogService.updateDailyWeight(dateToUpdate, weight);
+            setDailyLog(updated);
+        } catch (err: any) {
+            setError(err.message || 'Error updating weight');
+            throw err;
+        } finally {
+            setLoading(false);
+        }
+    }, [initialDate]);
+
     useEffect(() => {
         loadDailyLog(initialDate);
     }, [initialDate, loadDailyLog]);
 
-    return { dailyLog, loading, error, loadDailyLog, addEntry, updateEntry, deleteEntry };
+    return { dailyLog, loading, error, loadDailyLog, addEntry, updateEntry, deleteEntry, updateWeight };
 };
 
 export default useDailyLog;
