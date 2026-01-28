@@ -17,7 +17,7 @@ interface FoodsContextType {
     createFood: (foodData: FoodRequest) => Promise<Food>;
     updateFood: (id: number, foodData: FoodRequest) => Promise<Food>;
     deleteFood: (id: number) => Promise<void>;
-    searchFoods: (query: string) => Promise<void>;
+    searchFoods: (query: string, category?: string) => Promise<void>;
     changePage: (newPage: number) => void;
     refresh: () => Promise<void>;
     addFavorite: (id: number) => Promise<void>;
@@ -123,11 +123,11 @@ export const FoodsProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     };
 
     // Search foods
-    const searchFoods = useCallback(async (query: string): Promise<void> => {
+    const searchFoods = useCallback(async (query: string, category?: string): Promise<void> => {
         setLoading(true);
         setError(null);
         try {
-            const response = await foodService.searchFoods(query);
+            const response = await foodService.searchFoods(query, { category });
             setFoods(response.content);
             setPagination({
                 page: response.number,

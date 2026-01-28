@@ -58,15 +58,20 @@ const foodService = {
     },
 
     /**
-     * Search foods by name or brand
+     * Search foods by name or brand, optionally filter by category
      */
     searchFoods: async (
         query: string,
-        { page = 0, size = 20 }: SearchFoodsParams = {}
+        { page = 0, size = 20, category }: SearchFoodsParams & { category?: string } = {}
     ): Promise<Page<Food>> => {
         try {
+            const params: any = { query, page, size };
+            if (category) {
+                params.category = category;
+            }
+
             const response = await apiClient.get<{ data: Page<Food> }>('/foods/search', {
-                params: { query, page, size }
+                params
             });
             return response.data.data;
         } catch (error: any) {

@@ -20,6 +20,40 @@ export interface NutritionalInfo {
     vitaminB12?: number;
 }
 
+export enum FoodCategory {
+    FRUITS = 'FRUITS',
+    VEGETABLES = 'VEGETABLES',
+    GRAINS = 'GRAINS',
+    PROTEIN = 'PROTEIN',
+    DAIRY = 'DAIRY',
+    FATS_OILS = 'FATS_OILS',
+    SWEETS = 'SWEETS',
+    BEVERAGES = 'BEVERAGES',
+    SNACKS = 'SNACKS',
+    PREPARED_MEALS = 'PREPARED_MEALS',
+    LEGUMES = 'LEGUMES',
+    NUTS_SEEDS = 'NUTS_SEEDS',
+    CONDIMENTS = 'CONDIMENTS',
+    OTHER = 'OTHER'
+}
+
+export const FOOD_CATEGORY_LABELS: Record<FoodCategory, string> = {
+    [FoodCategory.FRUITS]: 'Frutas',
+    [FoodCategory.VEGETABLES]: 'Verduras',
+    [FoodCategory.GRAINS]: 'Cereales y Granos',
+    [FoodCategory.PROTEIN]: 'Proteínas',
+    [FoodCategory.DAIRY]: 'Lácteos',
+    [FoodCategory.FATS_OILS]: 'Grasas y Aceites',
+    [FoodCategory.SWEETS]: 'Dulces y Postres',
+    [FoodCategory.BEVERAGES]: 'Bebidas',
+    [FoodCategory.SNACKS]: 'Snacks',
+    [FoodCategory.PREPARED_MEALS]: 'Comidas Preparadas',
+    [FoodCategory.LEGUMES]: 'Legumbres',
+    [FoodCategory.NUTS_SEEDS]: 'Frutos Secos y Semillas',
+    [FoodCategory.CONDIMENTS]: 'Condimentos y Salsas',
+    [FoodCategory.OTHER]: 'Otros'
+};
+
 export interface Food {
     id?: number;
     name: string;
@@ -27,6 +61,7 @@ export interface Food {
     barcode?: string;
     servingSize?: number;
     servingUnit?: string;
+    category?: FoodCategory;
     nutritionalInfo?: NutritionalInfo;
     createdAt?: string;
     updatedAt?: string;

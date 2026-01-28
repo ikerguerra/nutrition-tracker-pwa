@@ -1,6 +1,7 @@
 import React from 'react';
-import type { Food } from '../../types/food';
+import type { Food, FoodCategory } from '../../types/food';
 import { FoodCard } from './FoodCard';
+import { CategoryFilter } from './CategoryFilter';
 import { LoadingSpinner } from '@components/ui/LoadingSpinner';
 import { Button } from '@components/ui/Button';
 import { useFoods } from '@hooks/useFoods';
@@ -21,6 +22,7 @@ export const FoodList: React.FC<FoodListProps> = ({ onEdit, onDelete, onAddToDai
         pagination,
         changePage,
         refresh,
+        searchFoods,
         loadFavorites,
         loadRecent,
         loadFrequent,
@@ -29,6 +31,7 @@ export const FoodList: React.FC<FoodListProps> = ({ onEdit, onDelete, onAddToDai
     } = useFoods();
 
     const [activeTab, setActiveTab] = React.useState<'all' | 'favorites' | 'recent' | 'frequent'>('all');
+    const [selectedCategory, setSelectedCategory] = React.useState<FoodCategory | undefined>(undefined);
 
     React.useEffect(() => {
         if (activeTab === 'all') refresh();
@@ -37,6 +40,16 @@ export const FoodList: React.FC<FoodListProps> = ({ onEdit, onDelete, onAddToDai
         else if (activeTab === 'frequent') loadFrequent();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [activeTab]);
+
+    // Trigger search when category changes
+    React.useEffect(() => {
+        if (activeTab === 'all' && selectedCategory) {
+            searchFoods('', selectedCategory);
+        } else if (activeTab === 'all' && !selectedCategory) {
+            refresh();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [selectedCategory]);
 
     const handleToggleFavorite = async (id: number) => {
         if (favoriteIds.includes(id)) {
@@ -137,6 +150,14 @@ export const FoodList: React.FC<FoodListProps> = ({ onEdit, onDelete, onAddToDai
                     <button className={activeTab === 'frequent' ? 'active' : ''} onClick={() => setActiveTab('frequent')}>Frecuentes</button>
                 </div>
             </div>
+
+            {activeTab === 'all' && (
+                <CategoryFilter
+                    selectedCategory={selectedCategory}
+                    onCategoryChange={setSelectedCategory}
+                />
+            )}
+
             {renderContent()}
         </div>
     );
