@@ -17,6 +17,8 @@ import { Button } from '@components/ui/Button';
 import { DateCarousel } from '@components/ui/DateCarousel';
 import { WeightWidget } from './WeightWidget';
 import { NutritionCharts } from '@features/stats/NutritionCharts';
+import { CopyDayModal } from './CopyDayModal';
+import { CopyMealSectionModal } from './CopyEntryModal';
 
 const DashboardPage = () => {
     const [showScanner, setShowScanner] = useState(false);
@@ -26,6 +28,8 @@ const DashboardPage = () => {
     const [showAddEntryModal, setShowAddEntryModal] = useState(false);
     const [selectedFoodForEntry, setSelectedFoodForEntry] = useState<Food | null>(null);
     const [showCharts, setShowCharts] = useState(false);
+    const [showCopyModal, setShowCopyModal] = useState(false);
+    const [copyingSection, setCopyingSection] = useState<{ date: string; mealType: string; title: string } | null>(null);
 
     // Date state
     const [searchParams, setSearchParams] = useSearchParams();
@@ -99,11 +103,22 @@ const DashboardPage = () => {
                 onAddFood={() => setShowAddFood(true)}
                 onScanBarcode={() => setShowScanner(true)}
             >
-                <div style={{ marginBottom: 'var(--spacing-lg)' }}>
-                    <DateCarousel
-                        selectedDate={selectedDate}
-                        onDateChange={setSelectedDate}
-                    />
+                <div style={{ marginBottom: 'var(--spacing-lg)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
+                    <div style={{ flex: 1 }}>
+                        <DateCarousel
+                            selectedDate={selectedDate}
+                            onDateChange={setSelectedDate}
+                        />
+                    </div>
+                    <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setShowCopyModal(true)}
+                        className="whitespace-nowrap"
+                        title="Copiar todas las comidas de este día a otro"
+                    >
+                        📋 Copiar Día
+                    </Button>
                 </div>
 
                 <div style={{
@@ -123,6 +138,20 @@ const DashboardPage = () => {
                             onOpenFoods={() => {
                                 // Scroll to food list on mobile or focus search
                                 document.querySelector('.food-list-section')?.scrollIntoView({ behavior: 'smooth' });
+                            }}
+                            onCopySection={(mealType) => {
+                                const titleMap: Record<string, string> = {
+                                    'BREAKFAST': 'Desayuno',
+                                    'MORNING_SNACK': 'Media Mañana',
+                                    'LUNCH': 'Almuerzo',
+                                    'AFTERNOON_SNACK': 'Merienda',
+                                    'DINNER': 'Cena'
+                                };
+                                setCopyingSection({
+                                    date: dateString,
+                                    mealType,
+                                    title: titleMap[mealType] || mealType
+                                });
                             }}
                         />
                     </div>
@@ -161,7 +190,7 @@ const DashboardPage = () => {
                         </div>
                     </div>
                 </div>
-            </Layout>
+            </Layout >
 
             <Modal
                 isOpen={showCharts}
@@ -247,6 +276,24 @@ const DashboardPage = () => {
                         console.error('Error adding entry', err);
                         toast.error('Error al agregar entrada');
                     }
+                }}
+            />
+
+            <CopyDayModal
+                isOpen={showCopyModal}
+                onClose={() => setShowCopyModal(false)}
+                sourceDate={dateString}
+                onSuccess={() => {
+                    // Optional: if target is today, validation might need reload, but usually user copies TO another day.
+                }}
+            />
+
+            <CopyMealSectionModal
+                isOpen={!!copyingSection}
+                onClose={() => setCopyingSection(null)}
+                source={copyingSection as any}
+                onSuccess={() => {
+                    // Optional: refresh logic if needed
                 }}
             />
         </>

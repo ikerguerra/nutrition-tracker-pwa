@@ -15,9 +15,10 @@ interface DashboardProps {
     updateEntry: (id: number, payload: { quantity: number; unit: string }) => Promise<void>;
     deleteEntry: (id: number) => Promise<void>;
     onOpenFoods?: () => void;
+    onCopySection?: (mealType: string) => void;
 }
 
-export const Dashboard: React.FC<DashboardProps> = ({ date, dailyLog, loading, error, updateEntry, deleteEntry, onOpenFoods }) => {
+export const Dashboard: React.FC<DashboardProps> = ({ date, dailyLog, loading, error, updateEntry, deleteEntry, onOpenFoods, onCopySection }) => {
     console.log('Dashboard render:', { dailyLog, loading, error });
 
     const groupedMeals = useMemo(() => {
@@ -47,13 +48,23 @@ export const Dashboard: React.FC<DashboardProps> = ({ date, dailyLog, loading, e
 
             <DailyLogSummary dailyLog={dailyLog} loading={loading} error={error} />
 
-            <div className="meals-grid">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-lg)' }}>
                 <MealSection
                     title="Desayuno"
                     mealType="BREAKFAST"
                     entries={groupedMeals.BREAKFAST}
                     onUpdate={updateEntry}
                     onDelete={deleteEntry}
+                    onCopy={() => onCopySection && onCopySection('BREAKFAST')}
+                />
+
+                <MealSection
+                    title="Media Mañana"
+                    mealType="MORNING_SNACK"
+                    entries={groupedMeals.MORNING_SNACK}
+                    onUpdate={updateEntry}
+                    onDelete={deleteEntry}
+                    onCopy={() => onCopySection && onCopySection('MORNING_SNACK')}
                 />
 
                 <MealSection
@@ -62,6 +73,16 @@ export const Dashboard: React.FC<DashboardProps> = ({ date, dailyLog, loading, e
                     entries={groupedMeals.LUNCH}
                     onUpdate={updateEntry}
                     onDelete={deleteEntry}
+                    onCopy={() => onCopySection && onCopySection('LUNCH')}
+                />
+
+                <MealSection
+                    title="Merienda"
+                    mealType="AFTERNOON_SNACK"
+                    entries={groupedMeals.AFTERNOON_SNACK}
+                    onUpdate={updateEntry}
+                    onDelete={deleteEntry}
+                    onCopy={() => onCopySection && onCopySection('AFTERNOON_SNACK')}
                 />
 
                 <MealSection
@@ -70,14 +91,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ date, dailyLog, loading, e
                     entries={groupedMeals.DINNER}
                     onUpdate={updateEntry}
                     onDelete={deleteEntry}
-                />
-
-                <MealSection
-                    title="Snacks"
-                    mealType="SNACK"
-                    entries={groupedMeals.SNACK}
-                    onUpdate={updateEntry}
-                    onDelete={deleteEntry}
+                    onCopy={() => onCopySection && onCopySection('DINNER')}
                 />
             </div>
         </div>

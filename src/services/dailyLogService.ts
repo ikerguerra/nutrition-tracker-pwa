@@ -35,6 +35,25 @@ export const dailyLogService = {
     updateDailyWeight: async (date: string, weight: number): Promise<DailyLog> => {
         const response = await apiClient.patch<any>(`/daily-log/${date}/weight`, { weight });
         return response.data.data;
+    },
+
+    copyDay: async (sourceDate: string, targetDate: string, replace: boolean = false): Promise<DailyLog> => {
+        const response = await apiClient.post<any>(`/daily-log/${sourceDate}/copy?targetDate=${targetDate}&replace=${replace}`);
+        return response.data.data;
+    },
+
+    copyMealEntry: async (id: number, targetDate: string, targetMealType?: string): Promise<DailyLog> => {
+        let url = `/daily-log/entries/${id}/copy?targetDate=${targetDate}`;
+        if (targetMealType) {
+            url += `&targetMealType=${targetMealType}`;
+        }
+        const response = await apiClient.post<any>(url);
+        return response.data.data;
+    },
+
+    copyMealSection: async (sourceDate: string, sourceMealType: string, targetDate: string, targetMealType: string, replace: boolean = false): Promise<DailyLog> => {
+        const response = await apiClient.post<any>(`/daily-log/${sourceDate}/meals/${sourceMealType}/copy?targetDate=${targetDate}&targetMealType=${targetMealType}&replace=${replace}`);
+        return response.data.data;
     }
 };
 
