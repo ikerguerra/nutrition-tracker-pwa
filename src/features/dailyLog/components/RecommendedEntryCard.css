@@ -1,0 +1,122 @@
+.recommended-entry-card {
+    border: 2px dashed #a0aec0;
+    border-radius: 12px;
+    padding: 12px;
+    background-color: #f7fafc;
+    margin-bottom: 12px;
+    transition: all 0.2s ease;
+    opacity: 0.9;
+}
+
+.recommended-entry-card:hover {
+    border-color: #667eea;
+    background-color: #fff;
+    opacity: 1;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.rec-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.rec-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.rec-badge {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    color: #667eea;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    background: #ebf4ff;
+    padding: 2px 6px;
+    border-radius: 4px;
+    align-self: flex-start;
+}
+
+.rec-food-name {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0;
+    color: #2d3748;
+}
+
+.rec-quantity {
+    font-size: 0.85rem;
+    color: #718096;
+}
+
+.rec-macros {
+    display: flex;
+    gap: 8px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.rec-macro {
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: #edf2f7;
+    color: #4a5568;
+}
+
+.rec-macro.cals {
+    color: #e53e3e;
+    background: #fff5f5;
+}
+
+.rec-macro.prot {
+    color: #38a169;
+    background: #f0fff4;
+}
+
+.rec-macro.carbs {
+    color: #d69e2e;
+    background: #feFCbf;
+}
+
+.rec-macro.fats {
+    color: #d53f8c;
+    background: #fff5f5;
+}
+
+.rec-reason {
+    margin-bottom: 12px;
+    color: #4a5568;
+    background: #fffaf0;
+    padding: 6px 10px;
+    border-radius: 6px;
+    border-left: 2px solid #ed8936;
+}
+
+.rec-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+}
+
+.btn-reject {
+    background-color: transparent !important;
+    border: 1px solid #cbd5e0 !important;
+    color: #718096 !important;
+}
+
+.btn-reject:hover {
+    background-color: #fff5f5 !important;
+    color: #e53e3e !important;
+    border-color: #fc8181 !important;
+}
+
+.btn-accept {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+}

@@ -19,6 +19,8 @@ import { WeightWidget } from './WeightWidget';
 import { NutritionCharts } from '@features/stats/NutritionCharts';
 import { CopyDayModal } from './CopyDayModal';
 import { CopyMealSectionModal } from './CopyEntryModal';
+import { DietPlan, RecommendationItem } from '../../types/recommendation';
+import recommendationService from '@services/recommendationService';
 
 const DashboardPage = () => {
     const [showScanner, setShowScanner] = useState(false);
@@ -30,6 +32,9 @@ const DashboardPage = () => {
     const [showCharts, setShowCharts] = useState(false);
     const [showCopyModal, setShowCopyModal] = useState(false);
     const [copyingSection, setCopyingSection] = useState<{ date: string; mealType: string; title: string } | null>(null);
+    const [recommendations, setRecommendations] = useState<DietPlan | null>(null);
+    const [recLoading, setRecLoading] = useState(false);
+    const [isGenerating, setIsGenerating] = useState(false);
 
     // Date state
     const [searchParams, setSearchParams] = useSearchParams();
@@ -58,6 +63,125 @@ const DashboardPage = () => {
     };
 
     const dateString = formatDateForApi(selectedDate);
+
+    // Fetch recommendations
+    useEffect(() => {
+        const fetchRecommendations = async () => {
+            setRecLoading(true);
+            try {
+                const plan = await recommendationService.getDailyPlan(dateString);
+                setRecommendations(plan);
+            } catch (error) {
+                setRecommendations(null);
+            } finally {
+                setRecLoading(false);
+            }
+        };
+        fetchRecommendations();
+    }, [dateString]);
+
+    const handleGeneratePlan = async () => {
+        setIsGenerating(true);
+        try {
+            const plan = await recommendationService.generateDailyPlan(dateString);
+            setRecommendations(plan);
+            toast.success('¡Plan diario generado!');
+        } catch (error) {
+            console.error('Error generating plan', error);
+            toast.error('No se pudo generar el plan');
+        } finally {
+            setIsGenerating(false);
+        }
+    };
+
+    const handleAcceptRecommendation = async (item: RecommendationItem, mealType: string) => {
+        try {
+            await addEntry({
+                date: dateString,
+                mealType: mealType as any,
+                foodId: item.foodId,
+                quantity: item.suggestedQuantity,
+                unit: item.unit || 'g'
+            });
+            toast.success(`Añadido: ${item.foodName}`);
+
+            // Optimistically remove from list
+            setRecommendations(prev => {
+                if (!prev) return null;
+                const newMeals = prev.meals.map(m => ({
+                    ...m,
+                    items: m.items.filter(i => i.id !== item.id)
+                }));
+                return { ...prev, meals: newMeals };
+            });
+        } catch (error) {
+            console.error('Error accepting recommendation', error);
+            toast.error('Error al añadir alimento recomendado');
+        }
+    };
+
+    const handleRejectRecommendation = (item: RecommendationItem) => {
+        setRecommendations(prev => {
+            if (!prev) return null;
+            const newMeals = prev.meals.map(m => ({
+                ...m,
+                items: m.items.filter(i => i.id !== item.id)
+            }));
+            return { ...prev, meals: newMeals };
+        });
+        toast('Sugerencia descartada', { icon: '👋' });
+    };
+
+    const handleAcceptAll = async () => {
+        if (!recommendations?.id) return;
+        try {
+            await recommendationService.acceptPlan(recommendations.id);
+            toast.success('¡Todo el plan aceptado!');
+            // Refresh logic:
+            // 1. Fetch Plan again (to see updated status)
+            // 2. Fetch Daily Log again (to see new entries)
+            // Or optimistically update. Let's refresh to be safe.
+            const [plan, log] = await Promise.all([
+                recommendationService.getDailyPlan(dateString),
+                dailyLog.meals ? Promise.resolve(null) : Promise.resolve(null) // hack: actually use refresh from useDailyLog
+            ]);
+
+            // To properly refresh daily log, we need to call useDailyLog's refresh or rely on SWR/React Query if used.
+            // Here useDailyLog exposes... loading, error, addEntry... but not refresh explicitly?
+            // Actually useDailyLog likely re-fetches if date changes. We can force it?
+            // Let's modify useDailyLog to expose refresh or just rely on manual optimistic?
+            // Ideally we re-fetch.
+            // DashboardPage receives "addEntry" from useDailyLog...
+            // Let's assume we need to reload the page or hook.
+            // Wait, useDailyLog is a custom hook. Let's see if it returns 'refresh'.
+            // In line 135: const { dailyLog ... } = useDailyLog(dateString).
+            // It doesn't seem to return refresh.
+            // But we can trigger it by toggling date? No.
+            // Let's reload window? No.
+
+            // Best effort: Update recommendations state (clear pending)
+            // And hope user manually refreshes if they want to see log.
+            // OR: use addEntry multiple times? No.
+            // We really need to refresh the DailyLog.
+
+            window.location.reload(); // Temporary solution for immediate consistency
+        } catch (error) {
+            console.error('Error accepting plan', error);
+            toast.error('Error al aceptar el plan');
+        }
+    };
+
+    const handleAcceptMeal = async (mealType: string) => {
+        if (!recommendations?.id) return;
+        try {
+            await recommendationService.acceptMeal(recommendations.id, mealType);
+            toast.success(`¡${mealType} aceptado!`);
+            window.location.reload();
+        } catch (error) {
+            console.error(`Error accepting ${mealType}`, error);
+            toast.error('Error al aceptar comida');
+        }
+    };
 
     const { dailyLog, addEntry, updateEntry, deleteEntry, updateWeight, loading: dailyLogLoading, error: dailyLogError } = useDailyLog(dateString);
     const { searchFoods, refresh, deleteFood, foods } = useFoods();
@@ -131,10 +255,17 @@ const DashboardPage = () => {
                         <Dashboard
                             date={dateString}
                             dailyLog={dailyLog}
-                            loading={dailyLogLoading}
+                            recommendations={recommendations}
+                            loading={dailyLogLoading || recLoading}
                             error={dailyLogError}
                             updateEntry={updateEntry}
                             deleteEntry={deleteEntry}
+                            onAcceptRecommendation={handleAcceptRecommendation}
+                            onRejectRecommendation={handleRejectRecommendation}
+                            onAcceptAll={handleAcceptAll}
+                            onAcceptMeal={handleAcceptMeal}
+                            onGeneratePlan={handleGeneratePlan}
+                            isGeneratingPlan={isGenerating}
                             onOpenFoods={() => {
                                 // Scroll to food list on mobile or focus search
                                 document.querySelector('.food-list-section')?.scrollIntoView({ behavior: 'smooth' });

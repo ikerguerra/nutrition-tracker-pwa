@@ -47,14 +47,7 @@ function App() {
                                 </ProtectedRoute>
                             }
                         />
-                        <Route
-                            path="/recommendations"
-                            element={
-                                <ProtectedRoute>
-                                    <RecommendationsPage />
-                                </ProtectedRoute>
-                            }
-                        />
+
                         <Route
                             path="/templates"
                             element={
