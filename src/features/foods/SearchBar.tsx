@@ -13,16 +13,24 @@ export const SearchBar: React.FC<SearchBarProps> = ({
     placeholder = 'Buscar alimentos por nombre o marca...',
 }) => {
     const [query, setQuery] = useState('');
+    const lastSearch = React.useRef(query);
     const debouncedQuery = useDebounce(query, 500);
 
     React.useEffect(() => {
-        if (debouncedQuery) {
+        // Only search if query is not empty and has changed or if onSearch reference changed (unlikely with fix) used defensively
+        if (debouncedQuery && debouncedQuery !== lastSearch.current) {
             onSearch(debouncedQuery);
+            lastSearch.current = debouncedQuery;
+        } else if (debouncedQuery && lastSearch.current === debouncedQuery) {
+            // This path means onSearch changed but query didn't. 
+            // In a loop scenario, we want to AVOID calling onSearch again.
+            // So we do nothing.
         }
     }, [debouncedQuery, onSearch]);
 
     const handleClear = () => {
         setQuery('');
+        lastSearch.current = '';
         onSearch('');
     };
 

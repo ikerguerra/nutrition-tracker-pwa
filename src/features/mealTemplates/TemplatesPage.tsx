@@ -4,14 +4,16 @@ import { Button } from '@components/ui/Button';
 import { Modal } from '@components/ui/Modal';
 import { toast } from 'react-hot-toast';
 import mealTemplateService from '@services/mealTemplateService';
-import { MealTemplate } from '../../types/mealTemplate';
+import { MealTemplate, CreateMealTemplateRequest } from '../../types/mealTemplate';
 import { MealType } from '../../types/dailyLog';
+import { TemplateForm } from './TemplateForm';
 import './TemplatesPage.css';
 
 const TemplatesPage: React.FC = () => {
     const [templates, setTemplates] = useState<MealTemplate[]>([]);
     const [loading, setLoading] = useState(true);
     const [showApplyModal, setShowApplyModal] = useState(false);
+    const [showCreateModal, setShowCreateModal] = useState(false);
     const [selectedTemplate, setSelectedTemplate] = useState<MealTemplate | null>(null);
     const [applyDate, setApplyDate] = useState(new Date().toISOString().split('T')[0]);
     const [applyMealType, setApplyMealType] = useState<MealType | ''>('');
@@ -39,7 +41,7 @@ const TemplatesPage: React.FC = () => {
         try {
             await mealTemplateService.applyTemplate(
                 selectedTemplate.id,
-                applyDate || new Date().toISOString().split('T')[0],
+                applyDate || new Date().toISOString().split('T')[0] || '',
                 applyMealType || undefined
             );
             toast.success('Plantilla aplicada correctamente');
@@ -47,6 +49,18 @@ const TemplatesPage: React.FC = () => {
         } catch (error) {
             console.error('Error applying template:', error);
             toast.error('Error al aplicar la plantilla');
+        }
+    };
+
+    const handleCreateTemplate = async (data: CreateMealTemplateRequest) => {
+        try {
+            const newTemplate = await mealTemplateService.createTemplate(data);
+            setTemplates([...templates, newTemplate]);
+            toast.success('Plantilla creada exitosamente');
+            setShowCreateModal(false);
+        } catch (error) {
+            console.error('Error creating template:', error);
+            toast.error('Error al crear la plantilla');
         }
     };
 
@@ -67,7 +81,7 @@ const TemplatesPage: React.FC = () => {
         <Layout>
             <div className="templates-header">
                 <h1 className="text-2xl font-bold">Mis Plantillas</h1>
-                <Button onClick={() => toast('Funcionalidad de creación próximamente')}>
+                <Button onClick={() => setShowCreateModal(true)}>
                     Crear Plantilla
                 </Button>
             </div>
@@ -161,6 +175,17 @@ const TemplatesPage: React.FC = () => {
                         </Button>
                     </div>
                 </div>
+            </Modal>
+            <Modal
+                isOpen={showCreateModal}
+                onClose={() => setShowCreateModal(false)}
+                title="Nueva Plantilla"
+                size="lg"
+            >
+                <TemplateForm
+                    onCancel={() => setShowCreateModal(false)}
+                    onSave={handleCreateTemplate}
+                />
             </Modal>
         </Layout>
     );

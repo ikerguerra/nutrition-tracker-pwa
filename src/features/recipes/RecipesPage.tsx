@@ -4,7 +4,10 @@ import { Button } from '@components/ui/Button';
 import { Modal } from '@components/ui/Modal';
 import { toast } from 'react-hot-toast';
 import recipeService from '@services/recipeService';
-import { Recipe } from '../../types/recipe';
+import { dailyLogService } from '@services/dailyLogService';
+import { Recipe, CreateRecipeRequest } from '../../types/recipe';
+import { MealType } from '../../types/dailyLog';
+import { RecipeForm } from './RecipeForm';
 import './RecipesPage.css';
 
 const RecipesPage: React.FC = () => {
@@ -12,7 +15,11 @@ const RecipesPage: React.FC = () => {
     const [loading, setLoading] = useState(true);
     const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
     const [showDetailModal, setShowDetailModal] = useState(false);
+    const [showCreateModal, setShowCreateModal] = useState(false);
+    const [showAddLogModal, setShowAddLogModal] = useState(false);
     const [servingsMultiplier, setServingsMultiplier] = useState(1);
+    const [logDate, setLogDate] = useState(new Date().toISOString().split('T')[0]);
+    const [logMealType, setLogMealType] = useState<MealType>('LUNCH');
 
     const fetchRecipes = async () => {
         setLoading(true);
@@ -44,6 +51,46 @@ const RecipesPage: React.FC = () => {
         }
     };
 
+    const handleCreateRecipe = async (data: CreateRecipeRequest) => {
+        try {
+            const newRecipe = await recipeService.createRecipe(data);
+            setRecipes([...recipes, newRecipe]);
+            toast.success('Receta creada exitosamente');
+            setShowCreateModal(false);
+        } catch (error) {
+            console.error('Error creating recipe:', error);
+            toast.error('Error al crear la receta');
+        }
+    };
+
+    const handleAddToLog = async () => {
+        if (!selectedRecipe) return;
+
+        try {
+            const dateStr = logDate || new Date().toISOString().split('T')[0];
+
+            // Iterate over ingredients and add them one by one
+            const promises = selectedRecipe.ingredients.map(ing => {
+                const quantity = (ing.quantity * servingsMultiplier) / selectedRecipe.servings;
+                return dailyLogService.addEntry({
+                    date: dateStr as string,
+                    mealType: logMealType,
+                    foodId: ing.foodId,
+                    quantity: Number(quantity.toFixed(1)),
+                    unit: (ing.unit || 'g') as string
+                });
+            });
+
+            await Promise.all(promises);
+            toast.success('Receta añadida al diario');
+            setShowAddLogModal(false);
+            setShowDetailModal(false);
+        } catch (error) {
+            console.error('Error adding recipe to log:', error);
+            toast.error('Error al añadir la receta al diario');
+        }
+    };
+
     const scaleNutrition = (summary: Recipe['nutritionPerServing'], multiplier: number) => {
         return {
             calories: (summary.calories * multiplier).toFixed(1),
@@ -57,7 +104,7 @@ const RecipesPage: React.FC = () => {
         <Layout>
             <div className="recipes-header">
                 <h1 className="text-2xl font-bold">Mis Recetas</h1>
-                <Button onClick={() => toast('Funcionalidad de creación próximamente')}>
+                <Button onClick={() => setShowCreateModal(true)}>
                     Nueva Receta
                 </Button>
             </div>
@@ -149,12 +196,63 @@ const RecipesPage: React.FC = () => {
                             }}>
                                 Eliminar Receta
                             </Button>
-                            <Button onClick={() => toast('Funcionalidad de añadir al diario próximamente')}>
+                            <Button onClick={() => setShowAddLogModal(true)}>
                                 Añadir al Diario
                             </Button>
                         </div>
                     </div>
                 )}
+            </Modal>
+
+            <Modal
+                isOpen={showCreateModal}
+                onClose={() => setShowCreateModal(false)}
+                title="Nueva Receta"
+                size="lg"
+            >
+                <RecipeForm
+                    onCancel={() => setShowCreateModal(false)}
+                    onSave={handleCreateRecipe}
+                />
+            </Modal>
+
+            <Modal
+                isOpen={showAddLogModal}
+                onClose={() => setShowAddLogModal(false)}
+                title="Añadir al Diario"
+            >
+                <div className="space-y-4 p-4">
+                    <div>
+                        <label className="block text-sm font-medium mb-1">Fecha</label>
+                        <input
+                            type="date"
+                            className="w-full p-2 border rounded"
+                            value={logDate}
+                            onChange={(e) => setLogDate(e.target.value)}
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium mb-1">Comida</label>
+                        <select
+                            className="w-full p-2 border rounded"
+                            value={logMealType}
+                            onChange={(e) => setLogMealType(e.target.value as MealType)}
+                        >
+                            <option value="BREAKFAST">Desayuno</option>
+                            <option value="LUNCH">Almuerzo</option>
+                            <option value="DINNER">Cena</option>
+                            <option value="SNACK">Snack</option>
+                        </select>
+                    </div>
+                    <div className="flex justify-end gap-2 pt-4">
+                        <Button variant="secondary" onClick={() => setShowAddLogModal(false)}>
+                            Cancelar
+                        </Button>
+                        <Button onClick={handleAddToLog}>
+                            Confirmar Añadir
+                        </Button>
+                    </div>
+                </div>
             </Modal>
         </Layout>
     );

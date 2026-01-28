@@ -49,3 +49,28 @@ export interface UpdateEntryRequest {
     quantity: number;
     unit: string;
 }
+
+// Breakdown Interface
+export interface NutrientBreakdown {
+    mealType: MealType;
+    calories: number;
+    protein: number;
+    carbs: number;
+    fats: number;
+    caloriesPercentage: number;
+    proteinPercentage: number;
+    carbsPercentage: number;
+    fatsPercentage: number;
+    fiber: number;
+    sugars: number;
+    saturatedFats: number;
+    sodium: number;
+    calcium: number;
+    iron: number;
+    potassium: number;
+    vitaminA: number;
+    vitaminC: number;
+    vitaminD: number;
+    vitaminE: number;
+    vitaminB12: number;
+}

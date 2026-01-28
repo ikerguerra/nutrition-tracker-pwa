@@ -123,7 +123,7 @@ export const FoodsProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     };
 
     // Search foods
-    const searchFoods = async (query: string): Promise<void> => {
+    const searchFoods = useCallback(async (query: string): Promise<void> => {
         setLoading(true);
         setError(null);
         try {
@@ -140,7 +140,7 @@ export const FoodsProvider: React.FC<{ children: ReactNode }> = ({ children }) =
         } finally {
             setLoading(false);
         }
-    };
+    }, []);
 
     // Change page
     const changePage = (newPage: number) => {
@@ -244,7 +244,7 @@ export const FoodsProvider: React.FC<{ children: ReactNode }> = ({ children }) =
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isAuthenticated]);
 
-    const value = {
+    const value = React.useMemo(() => ({
         foods,
         favoriteIds,
         loading,
@@ -261,7 +261,28 @@ export const FoodsProvider: React.FC<{ children: ReactNode }> = ({ children }) =
         loadFavorites,
         loadRecent,
         loadFrequent
-    };
+    }), [
+        foods,
+        favoriteIds,
+        loading,
+        error,
+        pagination,
+        createFood, // createFood (and others) need to be stable too, or this memo is useless for them. 
+        // But searchFoods is now stable.
+        // Assuming other functions are not causing the loop, but ideally ALL functions should be stable.
+        // For now, searchFoods is the critical one.
+        updateFood,
+        deleteFood,
+        searchFoods,
+        // changePage might strictly need looking at, but search is the issue.
+        // loadFoods is stable (useCallback).
+        loadFoods,
+        addFavorite,
+        removeFavorite,
+        loadFavorites,
+        loadRecent,
+        loadFrequent
+    ]);
 
     return (
         <FoodsContext.Provider value={value}>

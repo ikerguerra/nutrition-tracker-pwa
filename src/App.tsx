@@ -9,6 +9,7 @@ import ProfilePage from '@features/profile/ProfilePage';
 import RecommendationsPage from '@features/recommendations/RecommendationsPage';
 import TemplatesPage from '@features/mealTemplates/TemplatesPage';
 import RecipesPage from '@features/recipes/RecipesPage';
+import NutritionBreakdownPage from '@features/stats/NutritionBreakdownPage';
 import { CalendarView } from '@features/calendar/CalendarView';
 import { Toaster } from 'react-hot-toast';
 import '@styles/global.css';
@@ -66,6 +67,14 @@ function App() {
                             element={
                                 <ProtectedRoute>
                                     <RecipesPage />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="/nutrition-breakdown"
+                            element={
+                                <ProtectedRoute>
+                                    <NutritionBreakdownPage />
                                 </ProtectedRoute>
                             }
                         />

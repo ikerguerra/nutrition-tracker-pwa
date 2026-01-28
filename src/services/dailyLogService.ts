@@ -12,6 +12,11 @@ export const dailyLogService = {
         return response.data.data;
     },
 
+    getNutrientBreakdown: async (date: string): Promise<import('../types/dailyLog').NutrientBreakdown[]> => {
+        const response = await apiClient.get<any>(`/daily-log/${date}/breakdown`);
+        return response.data.data;
+    },
+
     addEntry: async (entry: AddEntryRequest): Promise<DailyLog> => {
         const response = await apiClient.post<any>('/daily-log/entries', entry);
         return response.data.data;
