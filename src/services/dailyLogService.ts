@@ -7,6 +7,11 @@ export const dailyLogService = {
         return response.data.data;
     },
 
+    getDailyLogsByDateRange: async (startDate: string, endDate: string): Promise<DailyLog[]> => {
+        const response = await apiClient.get<any>(`/daily-log/range?startDate=${startDate}&endDate=${endDate}`);
+        return response.data.data;
+    },
+
     addEntry: async (entry: AddEntryRequest): Promise<DailyLog> => {
         const response = await apiClient.post<any>('/daily-log/entries', entry);
         return response.data.data;
