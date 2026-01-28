@@ -6,6 +6,9 @@ import LoginPage from '@features/auth/LoginPage';
 import RegisterPage from '@features/auth/RegisterPage';
 import DashboardPage from '@features/dashboard/DashboardPage';
 import ProfilePage from '@features/profile/ProfilePage';
+import RecommendationsPage from '@features/recommendations/RecommendationsPage';
+import TemplatesPage from '@features/mealTemplates/TemplatesPage';
+import RecipesPage from '@features/recipes/RecipesPage';
 import { CalendarView } from '@features/calendar/CalendarView';
 import { Toaster } from 'react-hot-toast';
 import '@styles/global.css';
@@ -39,6 +42,30 @@ function App() {
                             element={
                                 <ProtectedRoute>
                                     <CalendarView />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="/recommendations"
+                            element={
+                                <ProtectedRoute>
+                                    <RecommendationsPage />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="/templates"
+                            element={
+                                <ProtectedRoute>
+                                    <TemplatesPage />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="/recipes"
+                            element={
+                                <ProtectedRoute>
+                                    <RecipesPage />
                                 </ProtectedRoute>
                             }
                         />

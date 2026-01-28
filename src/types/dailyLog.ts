@@ -11,12 +11,10 @@ export interface MealEntry {
     quantity: number;
     unit: string;
     calories: number;
-    macros: {
-        protein: number;
-        carbohydrates: number;
-        fats: number;
-    };
-    // Legacy or optional if backend still sends it sometimes? Logs show it's not there.
+    protein: number;
+    carbs: number;
+    fats: number;
+    // Legacy or optional
     food?: Food;
 }
 
@@ -28,9 +26,8 @@ export interface DailyLog {
     totals: {
         calories: number;
         protein: number;
-        carbohydrates: number; // Note: API might return 'carbs' or 'carbohydrates', checking logs it says 'carbs' in totals but let's be careful. Logs say: totals: {calories: 672, protein: 44.35, carbs: 81.95, fats: 17.5}
+        carbs: number;
         fats: number;
-        carbs: number; // Adding both to be safe or I should check logs again. Logs: carbs: 81.95.
     };
     goals?: {
         calorieGoal: number;

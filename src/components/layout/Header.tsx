@@ -1,57 +1,34 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '@hooks/useAuth';
 import { Button } from '@components/ui/Button';
 import './Header.css';
 
 interface HeaderProps {
     onAddFood?: () => void;
     onScanBarcode?: () => void;
-    onOpenDashboard?: () => void;
+    onToggleSidebar?: () => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ onAddFood, onScanBarcode, onOpenDashboard }) => {
-    const { logout } = useAuth();
+export const Header: React.FC<HeaderProps> = ({ onAddFood, onScanBarcode, onToggleSidebar }) => {
     const navigate = useNavigate();
-
-    const handleLogout = () => {
-        logout();
-        navigate('/login');
-    };
 
     return (
         <header className="header">
             <div className="header-container">
-                <div className="header-brand">
-                    <svg
-                        width="32"
-                        height="32"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        className="brand-icon"
-                    >
-                        <path d="M3 3h18v18H3z" />
-                        <path d="M12 3v18" />
-                        <path d="M3 12h18" />
-                    </svg>
-                    <h1 className="brand-name gradient-text">NutriTracker</h1>
+                <div className="header-left">
+                    <button className="sidebar-toggle" onClick={onToggleSidebar} aria-label="Abrir menú">
+                        ☰
+                    </button>
+                    <div className="header-brand" onClick={() => navigate('/')}>
+                        <h1 className="brand-name gradient-text">NutriTracker</h1>
+                    </div>
                 </div>
 
                 <div className="header-actions">
-                    {onOpenDashboard && (
-                        <Button variant="secondary" size="sm" onClick={onOpenDashboard}>
-                            Dashboard
-                        </Button>
-                    )}
                     {onScanBarcode && (
                         <Button variant="secondary" size="sm" onClick={onScanBarcode}>
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                                 <rect x="3" y="5" width="18" height="14" rx="2" />
-                                <line x1="7" y1="9" x2="7" y2="15" />
-                                <line x1="11" y1="9" x2="11" y2="15" />
-                                <line x1="15" y1="9" x2="15" y2="15" />
                             </svg>
                             <span className="button-text">Escanear</span>
                         </Button>
@@ -65,21 +42,6 @@ export const Header: React.FC<HeaderProps> = ({ onAddFood, onScanBarcode, onOpen
                             <span className="button-text">Agregar</span>
                         </Button>
                     )}
-                    <Button variant="secondary" size="sm" onClick={() => navigate('/profile')}>
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                            <circle cx="12" cy="7" r="4" />
-                        </svg>
-                        <span className="button-text">Perfil</span>
-                    </Button>
-                    <Button variant="secondary" size="sm" onClick={handleLogout}>
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-                            <polyline points="16 17 21 12 16 7" />
-                            <line x1="21" y1="12" x2="9" y2="12" />
-                        </svg>
-                        <span className="button-text">Salir</span>
-                    </Button>
                 </div>
             </div>
         </header>

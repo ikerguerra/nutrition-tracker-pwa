@@ -14,11 +14,10 @@ const api = axios.create({
 // Request interceptor (for future JWT authentication)
 api.interceptors.request.use(
     (config) => {
-        // Future: Add JWT token here
-        // const token = localStorage.getItem('token');
-        // if (token) {
-        //   config.headers.Authorization = `Bearer ${token}`;
-        // }
+        const token = localStorage.getItem('accessToken');
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+        }
         return config;
     },
     (error) => {
