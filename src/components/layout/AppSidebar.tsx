@@ -64,6 +64,11 @@ export function AppSidebar() {
             icon: PieChart,
         },
         {
+            to: '/nutrition-breakdown',
+            label: 'Desglose',
+            icon: PieChart,
+        },
+        {
             to: '/profile',
             label: 'Mi Perfil',
             icon: User,

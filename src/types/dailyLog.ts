@@ -73,4 +73,12 @@ export interface NutrientBreakdown {
     vitaminD: number;
     vitaminE: number;
     vitaminB12: number;
+    magnesium: number;
+    zinc: number;
+    vitaminK: number;
+    vitaminB1: number;
+    vitaminB2: number;
+    vitaminB3: number;
+    vitaminB6: number;
+    vitaminB9: number;
 }

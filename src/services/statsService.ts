@@ -49,6 +49,29 @@ export interface GoalAchievement {
     bestStreak: number;
 }
 
+export interface RdaData {
+    fiber: number;
+    sugars: number;
+    saturatedFats: number;
+    sodium: number;
+    calcium: number;
+    iron: number;
+    potassium: number;
+    vitaminA: number;
+    vitaminC: number;
+    vitaminD: number;
+    vitaminE: number;
+    vitaminB12: number;
+    magnesium: number;
+    zinc: number;
+    vitaminK: number;
+    vitaminB1: number;
+    vitaminB2: number;
+    vitaminB3: number;
+    vitaminB6: number;
+    vitaminB9: number;
+}
+
 const statsService = {
     getWeightHistory: async (startDate: string, endDate: string): Promise<WeightDataPoint[]> => {
         const response = await apiClient.get<any>(`/stats/weight-history?startDate=${startDate}&endDate=${endDate}`);
@@ -67,6 +90,11 @@ const statsService = {
 
     getGoalAchievement: async (startDate: string, endDate: string): Promise<GoalAchievement> => {
         const response = await apiClient.get<any>(`/stats/goal-achievement?startDate=${startDate}&endDate=${endDate}`);
+        return response.data.data;
+    },
+
+    getRda: async (): Promise<RdaData> => {
+        const response = await apiClient.get<any>('/stats/rda');
         return response.data.data;
     }
 };
