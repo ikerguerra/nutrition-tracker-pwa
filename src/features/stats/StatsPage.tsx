@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Layout } from '@components/layout/Layout';
 import statsService, { WeightDataPoint, MacroTrendDataPoint, WeeklySummary, GoalAchievement } from '@services/statsService';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend, ReferenceLine } from 'recharts';
-import { Button } from '@components/ui/Button';
+import { Button } from '@components/ui/button';
 import toast from 'react-hot-toast';
 
 const StatsPage: React.FC = () => {

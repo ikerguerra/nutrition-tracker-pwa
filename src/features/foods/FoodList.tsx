@@ -3,7 +3,7 @@ import type { Food, FoodCategory } from '../../types/food';
 import { FoodCard } from './FoodCard';
 import { CategoryFilter } from './CategoryFilter';
 import { LoadingSpinner } from '@components/ui/LoadingSpinner';
-import { Button } from '@components/ui/Button';
+import { Button } from '@components/ui/button';
 import { useFoods } from '@hooks/useFoods';
 import './FoodList.css';
 

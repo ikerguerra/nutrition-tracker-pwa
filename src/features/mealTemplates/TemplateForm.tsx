@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
-import { Button } from '@components/ui/Button';
-import { Input } from '@components/ui/Input';
+import { Button } from '@components/ui/button';
+import { Input } from '@components/ui/input';
 import { SearchBar } from '@features/foods/SearchBar';
 import { useFoods } from '@hooks/useFoods';
 import { MealType } from '../../types/dailyLog';

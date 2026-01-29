@@ -1,3 +1,0 @@
-.add-entry-modal-body { display:flex; flex-direction: column; gap: var(--spacing-md); }
-.add-entry-modal-body .field { display:flex; flex-direction: column; gap: var(--spacing-xs); }
-.add-entry-modal-body .actions { display:flex; gap: var(--spacing-sm); justify-content: flex-end; }

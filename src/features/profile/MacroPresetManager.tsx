@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import macroPresetService, { MacroPreset, CreateMacroPresetRequest } from '../../services/macroPresetService';
-import { Button } from '@components/ui/Button';
+import { Button } from '@components/ui/button';
 import { toast } from 'react-hot-toast';
 import './MacroPresetManager.css';
 

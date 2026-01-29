@@ -6,14 +6,19 @@ import { FoodList } from '@features/foods/FoodList';
 import { SearchBar } from '@features/foods/SearchBar';
 import { BarcodeScanner } from '@features/barcode/BarcodeScanner';
 import { FoodForm } from '@features/foods/FoodForm';
-import { Modal } from '@components/ui/Modal';
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+} from '@components/ui/dialog';
 import { toast } from 'react-hot-toast';
 import { Dashboard } from '@features/dailyLog/Dashboard';
 import AddEntryModal from '@features/dailyLog/AddEntryModal';
 import useDailyLog from '@hooks/useDailyLog';
 import { useFoods } from '@hooks/useFoods';
 import { ExternalFoodSearch } from '@features/external/ExternalFoodSearch';
-import { Button } from '@components/ui/Button';
+import { Button } from '@components/ui/button';
 import { DateCarousel } from '@components/ui/DateCarousel';
 import { WeightWidget } from './WeightWidget';
 import { NutritionCharts } from '@features/stats/NutritionCharts';
@@ -137,33 +142,10 @@ const DashboardPage = () => {
         try {
             await recommendationService.acceptPlan(recommendations.id);
             toast.success('¡Todo el plan aceptado!');
-            // Refresh logic:
-            // 1. Fetch Plan again (to see updated status)
-            // 2. Fetch Daily Log again (to see new entries)
-            // Or optimistically update. Let's refresh to be safe.
-            const [plan, log] = await Promise.all([
+            await Promise.all([
                 recommendationService.getDailyPlan(dateString),
-                dailyLog.meals ? Promise.resolve(null) : Promise.resolve(null) // hack: actually use refresh from useDailyLog
+                dailyLog?.meals ? Promise.resolve(null) : Promise.resolve(null) // hack: actually use refresh from useDailyLog
             ]);
-
-            // To properly refresh daily log, we need to call useDailyLog's refresh or rely on SWR/React Query if used.
-            // Here useDailyLog exposes... loading, error, addEntry... but not refresh explicitly?
-            // Actually useDailyLog likely re-fetches if date changes. We can force it?
-            // Let's modify useDailyLog to expose refresh or just rely on manual optimistic?
-            // Ideally we re-fetch.
-            // DashboardPage receives "addEntry" from useDailyLog...
-            // Let's assume we need to reload the page or hook.
-            // Wait, useDailyLog is a custom hook. Let's see if it returns 'refresh'.
-            // In line 135: const { dailyLog ... } = useDailyLog(dateString).
-            // It doesn't seem to return refresh.
-            // But we can trigger it by toggling date? No.
-            // Let's reload window? No.
-
-            // Best effort: Update recommendations state (clear pending)
-            // And hope user manually refreshes if they want to see log.
-            // OR: use addEntry multiple times? No.
-            // We really need to refresh the DailyLog.
-
             window.location.reload(); // Temporary solution for immediate consistency
         } catch (error) {
             console.error('Error accepting plan', error);
@@ -219,6 +201,22 @@ const DashboardPage = () => {
                 toast.error('Error al eliminar el alimento');
             }
         }
+    };
+
+    const handleOpenChangeCharts = (open: boolean) => {
+        if (!open) setShowCharts(false);
+    };
+
+    const handleOpenChangeScanner = (open: boolean) => {
+        if (!open) setShowScanner(false);
+    };
+
+    const handleOpenChangeFood = (open: boolean) => {
+        if (!open) handleCloseModal();
+    };
+
+    const handleOpenChangeExternal = (open: boolean) => {
+        if (!open) setShowExternalSearch(false);
     };
 
     return (
@@ -323,77 +321,77 @@ const DashboardPage = () => {
                 </div>
             </Layout >
 
-            <Modal
-                isOpen={showCharts}
-                onClose={() => setShowCharts(false)}
-                title={`Estadísticas: ${new Date(selectedDate).toLocaleDateString()}`}
-                size="lg"
-            >
-                <NutritionCharts dailyLog={dailyLog} />
-            </Modal>
+            <Dialog open={showCharts} onOpenChange={handleOpenChangeCharts}>
+                <DialogContent className="sm:max-w-4xl">
+                    <DialogHeader>
+                        <DialogTitle>Estadísticas: {new Date(selectedDate).toLocaleDateString()}</DialogTitle>
+                    </DialogHeader>
+                    <NutritionCharts dailyLog={dailyLog} />
+                </DialogContent>
+            </Dialog>
 
-            <Modal
-                isOpen={showScanner}
-                onClose={() => setShowScanner(false)}
-                title="Buscar por Código de Barras"
-                size="md"
-            >
-                <BarcodeScanner
-                    onFoodFound={(data) => {
-                        console.log('Food found:', data);
-                        if (data.foundInDatabase) {
-                            toast.success('Alimento encontrado en base de datos');
-                            // Optionally close modal and select food
-                            // setShowScanner(false);
-                            // setSelectedFoodForEntry(data.food);
+            <Dialog open={showScanner} onOpenChange={handleOpenChangeScanner}>
+                <DialogContent className="sm:max-w-md">
+                    <DialogHeader>
+                        <DialogTitle>Buscar por Código de Barras</DialogTitle>
+                    </DialogHeader>
+                    <BarcodeScanner
+                        onFoodFound={(data) => {
+                            console.log('Food found:', data);
+                            if (data.foundInDatabase) {
+                                toast.success('Alimento encontrado en base de datos');
+                                // Optionally close modal and select food
+                                // setShowScanner(false);
+                                // setSelectedFoodForEntry(data.food);
+                                // setShowAddEntryModal(true);
+                            } else if (data.source === 'openfoodfacts') {
+                                toast.success('Alimento encontrado en OpenFoodFacts. Puedes importarlo.');
+                            } else {
+                                toast.error('Alimento no encontrado');
+                            }
+                        }}
+                        onFoodImported={() => {
+                            refresh();
+                            setShowScanner(false);
+                            // Optionally open add entry modal immediately
+                            // setSelectedFoodForEntry(food);
                             // setShowAddEntryModal(true);
-                        } else if (data.source === 'openfoodfacts') {
-                            toast.success('Alimento encontrado en OpenFoodFacts. Puedes importarlo.');
-                        } else {
-                            toast.error('Alimento no encontrado');
-                        }
-                    }}
-                    onFoodImported={() => {
-                        refresh();
-                        setShowScanner(false);
-                        // Optionally open add entry modal immediately
-                        // setSelectedFoodForEntry(food);
-                        // setShowAddEntryModal(true);
-                    }}
-                />
-            </Modal>
+                        }}
+                    />
+                </DialogContent>
+            </Dialog>
 
-            <Modal
-                isOpen={showAddFood}
-                onClose={handleCloseModal}
-                title={editingFood ? "Editar Alimento" : "Agregar Alimento"}
-                size="lg"
-            >
-                <FoodForm
-                    initialData={editingFood ?? undefined}
-                    onSuccess={() => {
-                        handleCloseModal();
-                        toast.success(editingFood ? 'Alimento actualizado' : 'Alimento creado exitosamente');
-                        refresh();
-                    }}
-                    onCancel={handleCloseModal}
-                />
-            </Modal>
+            <Dialog open={showAddFood} onOpenChange={handleOpenChangeFood}>
+                <DialogContent className="sm:max-w-lg">
+                    <DialogHeader>
+                        <DialogTitle>{editingFood ? "Editar Alimento" : "Agregar Alimento"}</DialogTitle>
+                    </DialogHeader>
+                    <FoodForm
+                        initialData={editingFood ?? undefined}
+                        onSuccess={() => {
+                            handleCloseModal();
+                            toast.success(editingFood ? 'Alimento actualizado' : 'Alimento creado exitosamente');
+                            refresh();
+                        }}
+                        onCancel={handleCloseModal}
+                    />
+                </DialogContent>
+            </Dialog>
 
-            <Modal
-                isOpen={showExternalSearch}
-                onClose={() => setShowExternalSearch(false)}
-                title="Buscar en OpenFoodFacts"
-                size="lg"
-            >
-                <ExternalFoodSearch
-                    onFoodImported={() => {
-                        refresh(); // Refresh local list to show imported food
-                        // Optionally close modal or keep open for more searches
-                        toast.success('Producto importado a tu lista');
-                    }}
-                />
-            </Modal>
+            <Dialog open={showExternalSearch} onOpenChange={handleOpenChangeExternal}>
+                <DialogContent className="sm:max-w-lg">
+                    <DialogHeader>
+                        <DialogTitle>Buscar en OpenFoodFacts</DialogTitle>
+                    </DialogHeader>
+                    <ExternalFoodSearch
+                        onFoodImported={() => {
+                            refresh(); // Refresh local list to show imported food
+                            // Optionally close modal or keep open for more searches
+                            toast.success('Producto importado a tu lista');
+                        }}
+                    />
+                </DialogContent>
+            </Dialog>
 
             <AddEntryModal
                 isOpen={showAddEntryModal}

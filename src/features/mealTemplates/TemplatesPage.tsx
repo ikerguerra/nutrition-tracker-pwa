@@ -1,7 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Layout } from '@components/layout/Layout';
-import { Button } from '@components/ui/Button';
-import { Modal } from '@components/ui/Modal';
+import { Button } from '@components/ui/button';
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogFooter,
+} from '@components/ui/dialog';
+import { Input } from '@components/ui/input';
+import { Label } from '@components/ui/label';
 import { toast } from 'react-hot-toast';
 import mealTemplateService from '@services/mealTemplateService';
 import { MealTemplate, CreateMealTemplateRequest } from '../../types/mealTemplate';
@@ -77,6 +85,14 @@ const TemplatesPage: React.FC = () => {
         }
     };
 
+    const handleOpenChangeApply = (open: boolean) => {
+        if (!open) setShowApplyModal(false);
+    };
+
+    const handleOpenChangeCreate = (open: boolean) => {
+        if (!open) setShowCreateModal(false);
+    };
+
     return (
         <Layout>
             <div className="templates-header">
@@ -125,7 +141,7 @@ const TemplatesPage: React.FC = () => {
                                     Aplicar
                                 </Button>
                                 <Button
-                                    variant="danger"
+                                    variant="destructive"
                                     size="sm"
                                     onClick={() => handleDelete(template.id)}
                                 >
@@ -137,56 +153,59 @@ const TemplatesPage: React.FC = () => {
                 </div>
             )}
 
-            <Modal
-                isOpen={showApplyModal}
-                onClose={() => setShowApplyModal(false)}
-                title="Aplicar Plantilla"
-            >
-                <div className="apply-modal-content">
-                    <div className="form-group">
-                        <label>Fecha</label>
-                        <input
-                            type="date"
-                            className="input"
-                            value={applyDate}
-                            onChange={(e) => setApplyDate(e.target.value)}
-                        />
+            <Dialog open={showApplyModal} onOpenChange={handleOpenChangeApply}>
+                <DialogContent className="sm:max-w-sm">
+                    <DialogHeader>
+                        <DialogTitle>Aplicar Plantilla</DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-4 py-4">
+                        <div className="grid gap-2">
+                            <Label htmlFor="applyDate">Fecha</Label>
+                            <Input
+                                id="applyDate"
+                                type="date"
+                                value={applyDate}
+                                onChange={(e) => setApplyDate(e.target.value)}
+                            />
+                        </div>
+                        <div className="grid gap-2">
+                            <Label htmlFor="applyMealType">Momento del día (opcional)</Label>
+                            <select
+                                id="applyMealType"
+                                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+                                value={applyMealType}
+                                onChange={(e) => setApplyMealType(e.target.value as MealType)}
+                            >
+                                <option value="">Mantener original</option>
+                                <option value="BREAKFAST">Desayuno</option>
+                                <option value="LUNCH">Almuerzo</option>
+                                <option value="DINNER">Cena</option>
+                                <option value="SNACK">Snack</option>
+                            </select>
+                        </div>
                     </div>
-                    <div className="form-group">
-                        <label>Momento del día (opcional)</label>
-                        <select
-                            className="input"
-                            value={applyMealType}
-                            onChange={(e) => setApplyMealType(e.target.value as MealType)}
-                        >
-                            <option value="">Mantener original</option>
-                            <option value="BREAKFAST">Desayuno</option>
-                            <option value="LUNCH">Almuerzo</option>
-                            <option value="DINNER">Cena</option>
-                            <option value="SNACK">Snack</option>
-                        </select>
-                    </div>
-                    <div className="modal-actions">
-                        <Button variant="secondary" onClick={() => setShowApplyModal(false)}>
+                    <DialogFooter>
+                        <Button variant="outline" onClick={() => setShowApplyModal(false)}>
                             Cancelar
                         </Button>
                         <Button onClick={handleApply}>
                             Aplicar ahora
                         </Button>
-                    </div>
-                </div>
-            </Modal>
-            <Modal
-                isOpen={showCreateModal}
-                onClose={() => setShowCreateModal(false)}
-                title="Nueva Plantilla"
-                size="lg"
-            >
-                <TemplateForm
-                    onCancel={() => setShowCreateModal(false)}
-                    onSave={handleCreateTemplate}
-                />
-            </Modal>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+
+            <Dialog open={showCreateModal} onOpenChange={handleOpenChangeCreate}>
+                <DialogContent className="sm:max-w-4xl max-h-[90vh] overflow-y-auto">
+                    <DialogHeader>
+                        <DialogTitle>Nueva Plantilla</DialogTitle>
+                    </DialogHeader>
+                    <TemplateForm
+                        onCancel={() => setShowCreateModal(false)}
+                        onSave={handleCreateTemplate}
+                    />
+                </DialogContent>
+            </Dialog>
         </Layout>
     );
 };

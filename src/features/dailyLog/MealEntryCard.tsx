@@ -1,16 +1,18 @@
 import React, { useState } from 'react';
 import { MealEntry } from '../../types/dailyLog';
-import { Card } from '@components/ui/Card';
-import { Button } from '@components/ui/Button';
-import './MealEntryCard.css';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+
+import { Check, X, Copy, Pencil, Trash2 } from 'lucide-react';
 
 interface MealEntryCardProps {
     entry: MealEntry;
     onUpdate: (id: number, entry: { quantity: number; unit: string }) => Promise<void>;
     onDelete: (id: number) => Promise<void>;
+    onCopy?: (entry: MealEntry) => void; // Added missing prop def from usage
 }
 
-const MealEntryCard: React.FC<MealEntryCardProps> = ({ entry, onUpdate, onDelete }) => {
+const MealEntryCard: React.FC<MealEntryCardProps> = ({ entry, onUpdate, onDelete, onCopy }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [quantity, setQuantity] = useState(entry.quantity);
     const [unit, setUnit] = useState(entry.unit || 'g');
@@ -21,70 +23,69 @@ const MealEntryCard: React.FC<MealEntryCardProps> = ({ entry, onUpdate, onDelete
     };
 
     return (
-        <Card className="meal-entry-card" hover>
-            <div className="meal-entry-header">
-                <div className="meal-entry-info">
-                    <span className="meal-entry-name">{entry.foodName}</span>
-                    <span className="meal-entry-details">
-                        {entry.brand && <span>{entry.brand} • </span>}
-                        {entry.quantity} {entry.unit}
-                    </span>
-                </div>
+        <div className="group flex flex-col gap-2 p-4 transition-colors hover:bg-muted/30 sm:flex-row sm:items-center sm:justify-between border-b last:border-0 border-border/50">
+            <div className="flex flex-col gap-1 min-w-0 flex-1">
+                <span className="font-medium truncate">{entry.foodName}</span>
+                <span className="text-xs text-muted-foreground truncate">
+                    {entry.brand && <span>{entry.brand} • </span>}
+                    {entry.quantity} {entry.unit}
+                </span>
             </div>
 
-            <div className="meal-entry-actions">
+            <div className="flex items-center gap-2">
                 {isEditing ? (
-                    <div className="edit-mode">
-                        <input
+                    <div className="flex items-center gap-2 w-full sm:w-auto">
+                        <Input
                             type="number"
                             min={0.1}
                             step={0.1}
                             value={quantity}
                             onChange={(e) => setQuantity(Number(e.target.value))}
-                            className="input-sm"
+                            className="h-8 we-20 w-20"
                         />
+                        {/* Native select for simplicity or Shadcn Select if imported. Using native for speed/robustness here unless Select is confirmed. */}
                         <select
                             value={unit}
                             onChange={(e) => setUnit(e.target.value)}
-                            className="input-sm"
+                            className="h-8 rounded-md border border-input bg-background px-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                         >
                             <option value="g">g</option>
                             <option value="ml">ml</option>
-                            <option value="unidad">unidad</option>
+                            <option value="unidad">ud</option>
                             <option value="porción">porción</option>
                         </select>
-                        <Button variant="primary" size="sm" onClick={handleSave} title="Guardar">
-                            ✓
+                        <Button size="icon" variant="default" className="h-8 w-8" onClick={handleSave} title="Guardar">
+                            <Check className="size-4" />
                         </Button>
-                        <Button variant="secondary" size="sm" onClick={() => setIsEditing(false)} title="Cancelar">
-                            ✕
+                        <Button size="icon" variant="ghost" className="h-8 w-8" onClick={() => setIsEditing(false)} title="Cancelar">
+                            <X className="size-4" />
                         </Button>
                     </div>
                 ) : (
                     <>
-                        <div className="meal-entry-nutrition">
-                            <div className="meal-entry-calories">{entry.calories || 0} kcal</div>
-                            <div className="meal-entry-macros">
-                                P {entry.protein || 0}g • C {entry.carbs || 0}g • F {entry.fats || 0}g
-                            </div>
+                        <div className="flex flex-col items-end gap-0.5 text-right min-w-[100px]">
+                            <span className="font-semibold text-sm">{entry.calories || 0} kcal</span>
+                            <span className="text-xs text-muted-foreground">
+                                P {entry.protein || 0} • C {entry.carbs || 0} • F {entry.fats || 0}
+                            </span>
                         </div>
-                        <div className="action-buttons">
-                            <Button variant="ghost" size="sm" onClick={() => onCopy && onCopy(entry)} title="Copiar">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                        <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity focus-within:opacity-100 sm:ml-2">
+                            {onCopy && (
+                                <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground" onClick={() => onCopy(entry)} title="Copiar">
+                                    <Copy className="size-4" />
+                                </Button>
+                            )}
+                            <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground" onClick={() => setIsEditing(true)} title="Editar">
+                                <Pencil className="size-4" />
                             </Button>
-                            <Button variant="ghost" size="sm" onClick={() => setIsEditing(true)} title="Editar">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-                            </Button>
-                            <Button variant="ghost" size="sm" onClick={() => onDelete(entry.id)} title="Eliminar">
-                                <span style={{ color: 'var(--color-error)' }}>
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
-                                </span>
+                            <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive hover:bg-destructive/10 hover:text-destructive" onClick={() => onDelete(entry.id)} title="Eliminar">
+                                <Trash2 className="size-4" />
                             </Button>
                         </div>
                     </>
                 )}
             </div>
-        </Card>
+        </div>
     );
 };
 

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Button } from '@components/ui/Button';
-import { Input } from '@components/ui/Input';
+import { Button } from '@components/ui/button';
+import { Input } from '@components/ui/input';
+import { Label } from '@components/ui/label';
 import { useFoods } from '@hooks/useFoods';
 import type { FoodRequest } from '../../types/food';
 import './FoodForm.css';
@@ -98,45 +99,58 @@ export const FoodForm: React.FC<FoodFormProps> = ({ onSuccess, onCancel, initial
             <div className="form-section">
                 <h3>Información Básica</h3>
                 <div className="form-grid">
-                    <Input
-                        name="name"
-                        label="Nombre *"
-                        placeholder="Ej. Manzana Roja"
-                        value={formData.name}
-                        onChange={handleChange}
-                        required
-                    />
-                    <Input
-                        name="brand"
-                        label="Marca"
-                        placeholder="Ej. Natural"
-                        value={formData.brand}
-                        onChange={handleChange}
-                    />
-                    <Input
-                        name="barcode"
-                        label="Código de Barras"
-                        placeholder="Escanear o escribir"
-                        value={formData.barcode}
-                        onChange={handleChange}
-                    />
-                    <div className="serving-input-group">
+                    <div className="grid gap-2">
+                        <Label htmlFor="name">Nombre *</Label>
                         <Input
-                            name="servingSize"
-                            label="Porción"
-                            type="number"
-                            step="0.01"
-                            placeholder="100"
-                            value={formData.servingSize}
+                            id="name"
+                            name="name"
+                            placeholder="Ej. Manzana Roja"
+                            value={formData.name}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                    <div className="grid gap-2">
+                        <Label htmlFor="brand">Marca</Label>
+                        <Input
+                            id="brand"
+                            name="brand"
+                            placeholder="Ej. Natural"
+                            value={formData.brand}
                             onChange={handleChange}
                         />
+                    </div>
+                    <div className="grid gap-2">
+                        <Label htmlFor="barcode">Código de Barras</Label>
+                        <Input
+                            id="barcode"
+                            name="barcode"
+                            placeholder="Escanear o escribir"
+                            value={formData.barcode}
+                            onChange={handleChange}
+                        />
+                    </div>
+                    <div className="serving-input-group">
+                        <div className="grid gap-2 flex-1">
+                            <Label htmlFor="servingSize">Porción</Label>
+                            <Input
+                                id="servingSize"
+                                name="servingSize"
+                                type="number"
+                                step="0.01"
+                                placeholder="100"
+                                value={formData.servingSize}
+                                onChange={handleChange}
+                            />
+                        </div>
                         <div className="select-wrapper">
-                            <label className="input-label">Unidad</label>
+                            <Label htmlFor="servingUnit" className="mb-2 block">Unidad</Label>
                             <select
+                                id="servingUnit"
                                 name="servingUnit"
                                 value={formData.servingUnit}
                                 onChange={handleChange}
-                                className="form-select"
+                                className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
                             >
                                 <option value="g">g</option>
                                 <option value="ml">ml</option>
@@ -151,60 +165,78 @@ export const FoodForm: React.FC<FoodFormProps> = ({ onSuccess, onCancel, initial
             <div className="form-section">
                 <h3>Macronutrientes (por porción)</h3>
                 <div className="form-grid cols-2">
-                    <Input
-                        name="nutrition.calories"
-                        label="Calorías (kcal)"
-                        type="number"
-                        step="0.01"
-                        value={formData.nutritionalInfo.calories}
-                        onChange={handleChange}
-                    />
-                    <Input
-                        name="nutrition.protein"
-                        label="Proteínas (g)"
-                        type="number"
-                        step="0.01"
-                        value={formData.nutritionalInfo.protein}
-                        onChange={handleChange}
-                    />
-                    <Input
-                        name="nutrition.carbohydrates"
-                        label="Carbohidratos (g)"
-                        type="number"
-                        step="0.01"
-                        value={formData.nutritionalInfo.carbohydrates}
-                        onChange={handleChange}
-                    />
-                    <Input
-                        name="nutrition.fats"
-                        label="Grasas (g)"
-                        type="number"
-                        step="0.01"
-                        value={formData.nutritionalInfo.fats}
-                        onChange={handleChange}
-                    />
+                    <div className="grid gap-2">
+                        <Label htmlFor="nutrition.calories">Calorías (kcal)</Label>
+                        <Input
+                            id="nutrition.calories"
+                            name="nutrition.calories"
+                            type="number"
+                            step="0.01"
+                            value={formData.nutritionalInfo.calories}
+                            onChange={handleChange}
+                        />
+                    </div>
+                    <div className="grid gap-2">
+                        <Label htmlFor="nutrition.protein">Proteínas (g)</Label>
+                        <Input
+                            id="nutrition.protein"
+                            name="nutrition.protein"
+                            type="number"
+                            step="0.01"
+                            value={formData.nutritionalInfo.protein}
+                            onChange={handleChange}
+                        />
+                    </div>
+                    <div className="grid gap-2">
+                        <Label htmlFor="nutrition.carbohydrates">Carbohidratos (g)</Label>
+                        <Input
+                            id="nutrition.carbohydrates"
+                            name="nutrition.carbohydrates"
+                            type="number"
+                            step="0.01"
+                            value={formData.nutritionalInfo.carbohydrates}
+                            onChange={handleChange}
+                        />
+                    </div>
+                    <div className="grid gap-2">
+                        <Label htmlFor="nutrition.fats">Grasas (g)</Label>
+                        <Input
+                            id="nutrition.fats"
+                            name="nutrition.fats"
+                            type="number"
+                            step="0.01"
+                            value={formData.nutritionalInfo.fats}
+                            onChange={handleChange}
+                        />
+                    </div>
                 </div>
             </div>
 
             <div className="form-section">
                 <h3>Otros (Opcional)</h3>
                 <div className="form-grid cols-2">
-                    <Input
-                        name="nutrition.fiber"
-                        label="Fibra (g)"
-                        type="number"
-                        step="0.01"
-                        value={formData.nutritionalInfo.fiber}
-                        onChange={handleChange}
-                    />
-                    <Input
-                        name="nutrition.sugars"
-                        label="Azúcares (g)"
-                        type="number"
-                        step="0.01"
-                        value={formData.nutritionalInfo.sugars}
-                        onChange={handleChange}
-                    />
+                    <div className="grid gap-2">
+                        <Label htmlFor="nutrition.fiber">Fibra (g)</Label>
+                        <Input
+                            id="nutrition.fiber"
+                            name="nutrition.fiber"
+                            type="number"
+                            step="0.01"
+                            value={formData.nutritionalInfo.fiber}
+                            onChange={handleChange}
+                        />
+                    </div>
+                    <div className="grid gap-2">
+                        <Label htmlFor="nutrition.sugars">Azúcares (g)</Label>
+                        <Input
+                            id="nutrition.sugars"
+                            name="nutrition.sugars"
+                            type="number"
+                            step="0.01"
+                            value={formData.nutritionalInfo.sugars}
+                            onChange={handleChange}
+                        />
+                    </div>
                 </div>
             </div>
 

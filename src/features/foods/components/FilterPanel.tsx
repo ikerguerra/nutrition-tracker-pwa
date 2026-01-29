@@ -2,7 +2,7 @@ import React from 'react';
 import { FoodCategory, NutritionalFilters as NutritionalFiltersType } from '../../../types/food';
 import { CategoryFilter } from '../CategoryFilter';
 import NutritionalFilters from './NutritionalFilters';
-import { Button } from '@components/ui/Button';
+import { Button } from '@components/ui/button';
 
 interface FilterPanelProps {
     isOpen: boolean;

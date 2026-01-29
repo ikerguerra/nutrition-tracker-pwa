@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { NutrientBreakdown } from '../../types/dailyLog';
 import dailyLogService from '@services/dailyLogService';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
-import { Button } from '@components/ui/Button';
+import { Button } from '@components/ui/button';
 
 const NutritionBreakdownPage: React.FC = () => {
     const [date, setDate] = useState<string>(new Date().toISOString().split('T')[0] || '');

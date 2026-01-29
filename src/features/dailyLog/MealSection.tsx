@@ -1,11 +1,12 @@
 import React from 'react';
 import { MealType, MealEntry } from '../../types/dailyLog';
 import { RecommendationItem } from '../../types/recommendation';
-import { Card } from '@components/ui/Card';
-import { Button } from '@components/ui/Button';
+import { Card, CardHeader, CardTitle, CardContent, CardAction } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+
+import { Copy, Plus, Check } from 'lucide-react';
 import MealEntryCard from './MealEntryCard';
 import RecommendedEntryCard from './components/RecommendedEntryCard';
-import './MealSection.css';
 
 interface MealSectionProps {
     mealType: MealType;
@@ -16,6 +17,7 @@ interface MealSectionProps {
     onDelete: (id: number) => Promise<void>;
     onCopy?: () => void;
     onAcceptRecommendation?: (item: RecommendationItem) => void;
+    onRejectRecommendation?: (item: RecommendationItem) => void;
     onAcceptAll?: () => void;
 }
 
@@ -33,46 +35,60 @@ const MealSection: React.FC<MealSectionProps> = ({
     const hasItems = (entries && entries.length > 0) || (recommendations && recommendations.length > 0);
 
     return (
-        <Card className="meal-section">
-            <div className="meal-header">
-                <div>
-                    <h3>{title}</h3>
-                    <span className="meal-count">{entries?.length || 0} items</span>
+        <Card className="flex flex-col overflow-hidden transition-all hover:shadow-md border-border/60">
+            <CardHeader className="pb-3 grid grid-cols-[1fr_auto] items-center space-y-0">
+                <div className="flex items-center gap-2">
+                    <CardTitle className="text-base font-semibold">{title}</CardTitle>
+                    {(entries?.length || 0) > 0 && (
+                        <span className="inline-flex items-center justify-center rounded-full bg-secondary px-2.5 py-0.5 text-xs font-medium text-secondary-foreground">
+                            {entries.length}
+                        </span>
+                    )}
                 </div>
-                <div style={{ display: 'flex', gap: '8px' }}>
+                <div className="flex items-center gap-1">
                     {onAcceptAll && recommendations && recommendations.length > 0 && (
-                        <Button variant="success" size="sm" onClick={onAcceptAll} title="Aceptar todas las recomendaciones">
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            className="h-7 text-xs text-green-600 hover:text-green-700 hover:bg-green-50 border-green-200"
+                            onClick={onAcceptAll}
+                            title="Aceptar todas las recomendaciones"
+                        >
+                            <Check className="mr-1 size-3" />
                             Aceptar todo
                         </Button>
                     )}
                     {onCopy && entries?.length > 0 && (
-                        <Button variant="ghost" size="sm" onClick={onCopy} title={`Copiar ${title}`}>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                        <Button variant="ghost" size="icon" className="h-7 w-7" onClick={onCopy} title={`Copiar ${title}`}>
+                            <Copy className="size-3.5" />
                         </Button>
                     )}
                 </div>
-            </div>
-
-            <div className="meal-entries">
+            </CardHeader>
+            <CardContent className="p-0">
                 {!hasItems && (
-                    <p className="meal-empty">Aún no hay alimentos asignados</p>
+                    <div className="flex flex-col items-center justify-center py-8 text-center text-sm text-muted-foreground bg-muted/20">
+                        <p>Sin planificar</p>
+                    </div>
                 )}
 
-                {/* Render recommendations first */}
-                {recommendations?.map(rec => (
-                    <RecommendedEntryCard
-                        key={`rec-${rec.id}`}
-                        item={rec}
-                        onAccept={() => onAcceptRecommendation && onAcceptRecommendation(rec)}
-                        onReject={() => onRejectRecommendation && onRejectRecommendation(rec)}
-                    />
-                ))}
+                <div className="divide-y">
+                    {/* Render recommendations first */}
+                    {recommendations?.map(rec => (
+                        <RecommendedEntryCard
+                            key={`rec-${rec.id}`}
+                            item={rec}
+                            onAccept={() => onAcceptRecommendation && onAcceptRecommendation(rec)}
+                            onReject={() => onRejectRecommendation && onRejectRecommendation(rec)}
+                        />
+                    ))}
 
-                {/* Render actual entries */}
-                {entries?.map(entry => (
-                    <MealEntryCard key={entry.id} entry={entry} onUpdate={onUpdate} onDelete={onDelete} />
-                ))}
-            </div>
+                    {/* Render actual entries */}
+                    {entries?.map(entry => (
+                        <MealEntryCard key={entry.id} entry={entry} onUpdate={onUpdate} onDelete={onDelete} />
+                    ))}
+                </div>
+            </CardContent>
         </Card>
     );
 };

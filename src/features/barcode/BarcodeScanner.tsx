@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Html5Qrcode, Html5QrcodeSupportedFormats } from 'html5-qrcode';
-import { Card } from '@components/ui/Card';
-import { Input } from '@components/ui/Input';
-import { Button } from '@components/ui/Button';
+import { Card } from '@components/ui/card';
+import { Input } from '@components/ui/input';
+import { Button } from '@components/ui/button';
 import { useBarcodeSearch } from '@hooks/useBarcodeSearch';
 import { externalFoodService } from '@services/externalFoodService';
 import { toast } from 'react-hot-toast';
@@ -162,21 +162,24 @@ export const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ onFoodFound, onF
             </div>
 
             <form onSubmit={(e) => handleSearch(e)} className="scanner-form">
-                <Input
-                    type="text"
-                    placeholder="Ingresa el código de barras"
-                    value={barcode}
-                    onChange={(e) => setBarcode(e.target.value)}
-                    disabled={loading || isScanning}
-                    icon={
+                <div className="relative">
+                    <div className="absolute left-2.5 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground pointer-events-none">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                             <rect x="3" y="5" width="18" height="14" rx="2" />
                             <line x1="7" y1="9" x2="7" y2="15" />
                             <line x1="11" y1="9" x2="11" y2="15" />
                             <line x1="15" y1="9" x2="15" y2="15" />
                         </svg>
-                    }
-                />
+                    </div>
+                    <Input
+                        type="text"
+                        placeholder="Ingresa el código de barras"
+                        value={barcode}
+                        onChange={(e) => setBarcode(e.target.value)}
+                        disabled={loading || isScanning}
+                        className="pl-9"
+                    />
+                </div>
 
                 <div className="scanner-actions">
                     <Button type="submit" disabled={loading || !barcode.trim()} loading={loading}>

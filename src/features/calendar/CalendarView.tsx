@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Layout } from '@components/layout/Layout';
-import { Button } from '@components/ui/Button';
+import { Button } from '@components/ui/button';
 import { LoadingSpinner } from '@components/ui/LoadingSpinner';
 import calendarService, { CalendarDay } from '@services/calendarService';
 import { useNavigate } from 'react-router-dom';

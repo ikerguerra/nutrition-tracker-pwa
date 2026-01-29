@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Input } from '@components/ui/Input';
+import { Input } from '@components/ui/input';
 import { useDebounce } from '@hooks/useDebounce';
 import './SearchBar.css';
 
@@ -36,12 +36,8 @@ export const SearchBar: React.FC<SearchBarProps> = ({
 
     return (
         <div className="search-bar">
-            <Input
-                type="text"
-                placeholder={placeholder}
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                icon={
+            <div className="relative w-full">
+                <div className="absolute left-2.5 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground pointer-events-none">
                     <svg
                         width="20"
                         height="20"
@@ -55,8 +51,15 @@ export const SearchBar: React.FC<SearchBarProps> = ({
                         <circle cx="11" cy="11" r="8" />
                         <path d="m21 21-4.35-4.35" />
                     </svg>
-                }
-            />
+                </div>
+                <Input
+                    type="text"
+                    placeholder={placeholder}
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    className="pl-9"
+                />
+            </div>
             {query && (
                 <button className="search-clear" onClick={handleClear} aria-label="Clear search">
                     <svg

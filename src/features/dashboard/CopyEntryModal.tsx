@@ -1,7 +1,14 @@
 import React, { useState } from 'react';
-import { Modal } from '@components/ui/Modal';
-import { Button } from '@components/ui/Button';
-import { Input } from '@components/ui/Input';
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogFooter,
+} from '@components/ui/dialog';
+import { Button } from '@components/ui/button';
+import { Input } from '@components/ui/input';
+import { Label } from '@components/ui/label';
 import { dailyLogService } from '@services/dailyLogService';
 import { toast } from 'react-hot-toast';
 import { MealType } from '../../types/dailyLog';
@@ -66,6 +73,12 @@ export const CopyMealSectionModal: React.FC<CopyMealSectionModalProps> = ({
         }
     };
 
+    const handleOpenChange = (open: boolean) => {
+        if (!open) {
+            onClose();
+        }
+    };
+
     const mealTypeOptions = [
         { value: 'BREAKFAST', label: 'Desayuno' },
         { value: 'MORNING_SNACK', label: 'Media Mañana' },
@@ -75,66 +88,68 @@ export const CopyMealSectionModal: React.FC<CopyMealSectionModalProps> = ({
     ];
 
     return (
-        <Modal
-            isOpen={isOpen}
-            onClose={onClose}
-            title={`Copiar ${source.title}`}
-            size="sm"
-        >
-            <div className="space-y-4 pt-2">
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                    Copiando todo el <strong>{source.title}</strong> del <strong>{source.date}</strong>.
-                </p>
+        <Dialog open={isOpen} onOpenChange={handleOpenChange}>
+            <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader>
+                    <DialogTitle>Copiar {source.title}</DialogTitle>
+                </DialogHeader>
+                <div className="grid gap-4 py-4">
+                    <p className="text-sm text-muted-foreground">
+                        Copiando todo el <strong className="text-foreground">{source.title}</strong> del <strong className="text-foreground">{source.date}</strong>.
+                    </p>
 
-                <div>
-                    <label className="block text-sm font-medium mb-1.5 text-gray-700 dark:text-gray-300">
-                        Fecha destino:
-                    </label>
-                    <Input
-                        type="date"
-                        value={targetDate}
-                        onChange={(e) => setTargetDate(e.target.value)}
-                        className="w-full"
-                    />
+                    <div className="grid gap-2">
+                        <Label htmlFor="targetDate">
+                            Fecha destino:
+                        </Label>
+                        <Input
+                            id="targetDate"
+                            type="date"
+                            value={targetDate}
+                            onChange={(e) => setTargetDate(e.target.value)}
+                            className="w-full"
+                        />
+                    </div>
+
+                    <div className="grid gap-2">
+                        <Label htmlFor="targetMealType">
+                            Tipo de comida destino:
+                        </Label>
+                        <select
+                            id="targetMealType"
+                            value={targetMealType}
+                            onChange={(e) => setTargetMealType(e.target.value as MealType)}
+                            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+                        >
+                            {mealTypeOptions.map(opt => (
+                                <option key={opt.value} value={opt.value}>{opt.label}</option>
+                            ))}
+                        </select>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                        <input
+                            type="checkbox"
+                            id="replace-chk"
+                            checked={replace}
+                            onChange={(e) => setReplace(e.target.checked)}
+                            className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+                        />
+                        <Label htmlFor="replace-chk" className="font-normal cursor-pointer text-muted-foreground">
+                            Reemplazar si existen entradas
+                        </Label>
+                    </div>
                 </div>
 
-                <div>
-                    <label className="block text-sm font-medium mb-1.5 text-gray-700 dark:text-gray-300">
-                        Tipo de comida destino:
-                    </label>
-                    <select
-                        value={targetMealType}
-                        onChange={(e) => setTargetMealType(e.target.value as MealType)}
-                        className="input w-full"
-                    >
-                        {mealTypeOptions.map(opt => (
-                            <option key={opt.value} value={opt.value}>{opt.label}</option>
-                        ))}
-                    </select>
-                </div>
-
-                <div className="flex items-center gap-2">
-                    <input
-                        type="checkbox"
-                        id="replace-chk"
-                        checked={replace}
-                        onChange={(e) => setReplace(e.target.checked)}
-                        className="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary"
-                    />
-                    <label htmlFor="replace-chk" className="text-sm text-gray-700 dark:text-gray-300 select-none cursor-pointer">
-                        Reemplazar si existen entradas
-                    </label>
-                </div>
-
-                <div className="flex justify-end gap-3 pt-4 border-t border-gray-200 dark:border-gray-700 mt-6">
-                    <Button variant="secondary" onClick={onClose}>
+                <DialogFooter>
+                    <Button variant="outline" onClick={onClose}>
                         Cancelar
                     </Button>
-                    <Button onClick={handleCopy} disabled={loading}>
+                    <Button onClick={handleCopy} loading={loading}>
                         {loading ? 'Copiando...' : 'Copiar'}
                     </Button>
-                </div>
-            </div>
-        </Modal>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
     );
 };
