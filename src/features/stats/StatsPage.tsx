@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Layout } from '@components/layout/Layout';
 import statsService, { WeightDataPoint, MacroTrendDataPoint, WeeklySummary, GoalAchievement } from '@services/statsService';
-import { LineChart, Line, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend, ReferenceLine } from 'recharts';
+import { LineChart, Line, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend } from 'recharts';
 import { Button } from '@components/ui/button';
 import toast from 'react-hot-toast';
 
@@ -16,11 +16,11 @@ const StatsPage: React.FC = () => {
     const [weeklyData, setWeeklyData] = useState<WeeklySummary | null>(null);
     const [goalData, setGoalData] = useState<GoalAchievement | null>(null);
 
-    const getDateRange = () => {
-        const endDate = new Date().toISOString().split('T')[0];
+    const getDateRange = (): { startDate: string; endDate: string } => {
+        const endDate = new Date().toISOString().split('T')[0] ?? '';
         const startDate = new Date();
         startDate.setDate(startDate.getDate() - parseInt(dateRange));
-        return { startDate: startDate.toISOString().split('T')[0], endDate };
+        return { startDate: startDate.toISOString().split('T')[0] ?? '', endDate };
     };
 
     useEffect(() => {

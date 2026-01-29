@@ -24,7 +24,7 @@ export const FoodCard: React.FC<FoodCardProps> = ({
     const { id, name, brand, nutritionalInfo, servingSize, servingUnit } = food;
 
     return (
-        <Card className="food-card" hover>
+        <Card className="food-card">
             <div className="food-card-header">
                 <div>
                     <h3 className="food-card-title">{name}</h3>

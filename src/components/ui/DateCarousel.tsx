@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Button } from './Button';
+import { Button } from './button';
 import './DateCarousel.css';
 
 interface DateCarouselProps {

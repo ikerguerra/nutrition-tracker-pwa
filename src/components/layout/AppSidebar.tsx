@@ -1,19 +1,15 @@
 'use client'
 
-import React from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
 import {
     Calendar,
     ChefHat,
     ChevronUp,
-    CreditCard,
     Home,
     LayoutDashboard,
     LogOut,
     PieChart,
-    Settings,
     User,
-    Users,
 } from 'lucide-react'
 import { useAuth } from '@hooks/useAuth'
 
@@ -28,7 +24,6 @@ import {
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
-    SidebarSeparator,
 } from '@/components/ui/sidebar'
 import {
     DropdownMenu,
@@ -36,8 +31,7 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Button } from '@/components/ui/button'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 
 export function AppSidebar() {
     const { logout, user } = useAuth()

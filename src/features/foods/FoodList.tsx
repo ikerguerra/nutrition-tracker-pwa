@@ -1,7 +1,6 @@
 import React from 'react';
-import type { Food, FoodCategory } from '../../types/food';
+import type { Food, FoodCategory, NutritionalFilters } from '../../types/food';
 import { FoodCard } from './FoodCard';
-import { CategoryFilter } from './CategoryFilter';
 import { LoadingSpinner } from '@components/ui/LoadingSpinner';
 import { Button } from '@components/ui/button';
 import { useFoods } from '@hooks/useFoods';
@@ -35,7 +34,7 @@ export const FoodList: React.FC<FoodListProps> = ({ onEdit, onDelete, onAddToDai
 
     const [activeTab, setActiveTab] = React.useState<'all' | 'favorites' | 'recent' | 'frequent'>('all');
     const [selectedCategory, setSelectedCategory] = React.useState<FoodCategory | undefined>(undefined);
-    const [filters, setFilters] = React.useState<NutritionalFiltersType>({});
+    const [filters, setFilters] = React.useState<NutritionalFilters>({});
     const [isFiltersOpen, setIsFiltersOpen] = React.useState(false);
 
     React.useEffect(() => {
@@ -77,7 +76,7 @@ export const FoodList: React.FC<FoodListProps> = ({ onEdit, onDelete, onAddToDai
         setFilters({});
     };
 
-    const handleRemoveFilter = (key: keyof NutritionalFiltersType) => {
+    const handleRemoveFilter = (key: keyof NutritionalFilters) => {
         const newFilters = { ...filters };
         delete newFilters[key];
         setFilters(newFilters);

@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { RecommendationItem, MEAL_TYPE_ICONS } from '../../../types/recommendation';
+import { RecommendationItem } from '../../../types/recommendation';
 import { Button } from '@components/ui/button';
 import './RecommendedEntryCard.css';
 import { toast } from 'react-hot-toast';
-import recommendationService from '@services/recommendationService';
 
 interface RecommendedEntryCardProps {
     item: RecommendationItem;

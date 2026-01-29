@@ -1,10 +1,10 @@
 import React from 'react';
 import { MealType, MealEntry } from '../../types/dailyLog';
 import { RecommendationItem } from '../../types/recommendation';
-import { Card, CardHeader, CardTitle, CardContent, CardAction } from '@/components/ui/card';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 
-import { Copy, Plus, Check } from 'lucide-react';
+import { Copy, Check } from 'lucide-react';
 import MealEntryCard from './MealEntryCard';
 import RecommendedEntryCard from './components/RecommendedEntryCard';
 

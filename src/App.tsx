@@ -6,7 +6,6 @@ import LoginPage from '@features/auth/LoginPage';
 import RegisterPage from '@features/auth/RegisterPage';
 import DashboardPage from '@features/dashboard/DashboardPage';
 import ProfilePage from '@features/profile/ProfilePage';
-import RecommendationsPage from '@features/recommendations/RecommendationsPage';
 import TemplatesPage from '@features/mealTemplates/TemplatesPage';
 import RecipesPage from '@features/recipes/RecipesPage';
 import NutritionBreakdownPage from '@features/stats/NutritionBreakdownPage';

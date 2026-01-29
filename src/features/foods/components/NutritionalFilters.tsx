@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { NutritionalFilters as FiltersType } from '../../../types/food';
 import { Card } from '@components/ui/card';
 import { Button } from '@components/ui/button';

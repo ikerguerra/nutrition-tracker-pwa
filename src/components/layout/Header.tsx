@@ -1,5 +1,4 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ScanBarcode, Plus } from 'lucide-react';
 
@@ -11,8 +10,6 @@ interface HeaderProps {
 }
 
 export const Header: React.FC<HeaderProps> = ({ onAddFood, onScanBarcode, minimal }) => {
-    const navigate = useNavigate();
-
     // If minimal, only render actions (for new Layout)
     if (minimal) {
         return (

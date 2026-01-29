@@ -2,7 +2,6 @@ import React, { useMemo } from 'react';
 import { DailyLog, MealEntry } from '../../types/dailyLog';
 import { DietPlan, RecommendationItem } from '../../types/recommendation';
 import { Button } from '@/components/ui/button';
-import { Badge } from 'lucide-react'; // Wait, Badge is a component, not icon. Using generic span or Badge component if available.
 import MealSection from './MealSection';
 import DailyLogSummary from './DailyLogSummary';
 
@@ -65,6 +64,8 @@ export const Dashboard: React.FC<DashboardProps> = ({
                 LUNCH: [],
                 DINNER: [],
                 SNACK: [],
+                MORNING_SNACK: [], // Ensure all keys are present
+                AFTERNOON_SNACK: []
             };
         }
         const grouped: Record<string, RecommendationItem[]> = {
@@ -77,13 +78,13 @@ export const Dashboard: React.FC<DashboardProps> = ({
         };
 
         recommendations.meals.forEach(meal => {
-            const pendingItems = meal.items.filter(i => !i.status || i.status === 'PENDING');
+            const pendingItems = (meal.items || []).filter(i => !i.status || i.status === 'PENDING');
 
             if (meal.mealType === 'SNACK') {
-                grouped['AFTERNOON_SNACK'] = [...grouped['AFTERNOON_SNACK'], ...pendingItems];
+                grouped['AFTERNOON_SNACK'] = [...(grouped['AFTERNOON_SNACK'] || []), ...pendingItems];
             } else {
                 if (grouped[meal.mealType]) {
-                    grouped[meal.mealType] = [...grouped[meal.mealType], ...pendingItems];
+                    grouped[meal.mealType] = [...(grouped[meal.mealType] || []), ...pendingItems];
                 }
             }
         });
@@ -134,65 +135,65 @@ export const Dashboard: React.FC<DashboardProps> = ({
                     <MealSection
                         title="Desayuno"
                         mealType="BREAKFAST"
-                        entries={groupedMeals.BREAKFAST}
+                        entries={groupedMeals.BREAKFAST || []}
                         recommendations={groupedRecommendations.BREAKFAST}
                         onUpdate={updateEntry}
                         onDelete={deleteEntry}
                         onCopy={() => onCopySection && onCopySection('BREAKFAST')}
                         onAcceptRecommendation={(item) => onAcceptRecommendation && onAcceptRecommendation(item, 'BREAKFAST')}
-                        onRejectRecommendation={(item) => onRejectRecommendation && onRejectRecommendation(item, 'BREAKFAST')}
+                        onRejectRecommendation={(item) => onRejectRecommendation && onRejectRecommendation(item)}
                         onAcceptAll={() => onAcceptMeal && onAcceptMeal('BREAKFAST')}
                     />
 
                     <MealSection
                         title="Media Mañana"
                         mealType="MORNING_SNACK"
-                        entries={groupedMeals.MORNING_SNACK}
+                        entries={groupedMeals.MORNING_SNACK || []}
                         recommendations={groupedRecommendations.MORNING_SNACK}
                         onUpdate={updateEntry}
                         onDelete={deleteEntry}
                         onCopy={() => onCopySection && onCopySection('MORNING_SNACK')}
                         onAcceptRecommendation={(item) => onAcceptRecommendation && onAcceptRecommendation(item, 'MORNING_SNACK')}
-                        onRejectRecommendation={(item) => onRejectRecommendation && onRejectRecommendation(item, 'MORNING_SNACK')}
+                        onRejectRecommendation={(item) => onRejectRecommendation && onRejectRecommendation(item)}
                         onAcceptAll={() => onAcceptMeal && onAcceptMeal('MORNING_SNACK')}
                     />
 
                     <MealSection
                         title="Almuerzo"
                         mealType="LUNCH"
-                        entries={groupedMeals.LUNCH}
+                        entries={groupedMeals.LUNCH || []}
                         recommendations={groupedRecommendations.LUNCH}
                         onUpdate={updateEntry}
                         onDelete={deleteEntry}
                         onCopy={() => onCopySection && onCopySection('LUNCH')}
                         onAcceptRecommendation={(item) => onAcceptRecommendation && onAcceptRecommendation(item, 'LUNCH')}
-                        onRejectRecommendation={(item) => onRejectRecommendation && onRejectRecommendation(item, 'LUNCH')}
+                        onRejectRecommendation={(item) => onRejectRecommendation && onRejectRecommendation(item)}
                         onAcceptAll={() => onAcceptMeal && onAcceptMeal('LUNCH')}
                     />
 
                     <MealSection
                         title="Merienda"
                         mealType="AFTERNOON_SNACK"
-                        entries={groupedMeals.AFTERNOON_SNACK}
+                        entries={groupedMeals.AFTERNOON_SNACK || []}
                         recommendations={groupedRecommendations.AFTERNOON_SNACK}
                         onUpdate={updateEntry}
                         onDelete={deleteEntry}
                         onCopy={() => onCopySection && onCopySection('AFTERNOON_SNACK')}
                         onAcceptRecommendation={(item) => onAcceptRecommendation && onAcceptRecommendation(item, 'AFTERNOON_SNACK')}
-                        onRejectRecommendation={(item) => onRejectRecommendation && onRejectRecommendation(item, 'AFTERNOON_SNACK')}
+                        onRejectRecommendation={(item) => onRejectRecommendation && onRejectRecommendation(item)}
                         onAcceptAll={() => onAcceptMeal && onAcceptMeal('SNACK')}
                     />
 
                     <MealSection
                         title="Cena"
                         mealType="DINNER"
-                        entries={groupedMeals.DINNER}
+                        entries={groupedMeals.DINNER || []}
                         recommendations={groupedRecommendations.DINNER}
                         onUpdate={updateEntry}
                         onDelete={deleteEntry}
                         onCopy={() => onCopySection && onCopySection('DINNER')}
                         onAcceptRecommendation={(item) => onAcceptRecommendation && onAcceptRecommendation(item, 'DINNER')}
-                        onRejectRecommendation={(item) => onRejectRecommendation && onRejectRecommendation(item, 'DINNER')}
+                        onRejectRecommendation={(item) => onRejectRecommendation && onRejectRecommendation(item)}
                         onAcceptAll={() => onAcceptMeal && onAcceptMeal('DINNER')}
                     />
                 </div>

@@ -3,7 +3,7 @@ import { SidebarProvider, SidebarInset, SidebarTrigger } from '@/components/ui/s
 import { Separator } from '@/components/ui/separator';
 import { AppSidebar } from './AppSidebar';
 import { Header } from './Header';
-import { Toaster } from 'react-hot-toast';
+
 
 interface LayoutProps {
     children: React.ReactNode;
