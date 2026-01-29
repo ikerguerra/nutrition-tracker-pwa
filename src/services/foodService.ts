@@ -62,12 +62,22 @@ const foodService = {
      */
     searchFoods: async (
         query: string,
-        { page = 0, size = 20, category }: SearchFoodsParams & { category?: string } = {}
+        { page = 0, size = 20, category, filters = {} }: SearchFoodsParams & { category?: string, filters?: import('../types/food').NutritionalFilters } = {}
     ): Promise<Page<Food>> => {
         try {
             const params: any = { query, page, size };
             if (category) {
                 params.category = category;
+            }
+            if (filters) {
+                if (filters.minCalories) params.minCalories = filters.minCalories;
+                if (filters.maxCalories) params.maxCalories = filters.maxCalories;
+                if (filters.minProtein) params.minProtein = filters.minProtein;
+                if (filters.maxProtein) params.maxProtein = filters.maxProtein;
+                if (filters.minCarbs) params.minCarbs = filters.minCarbs;
+                if (filters.maxCarbs) params.maxCarbs = filters.maxCarbs;
+                if (filters.minFats) params.minFats = filters.minFats;
+                if (filters.maxFats) params.maxFats = filters.maxFats;
             }
 
             const response = await apiClient.get<{ data: Page<Food> }>('/foods/search', {

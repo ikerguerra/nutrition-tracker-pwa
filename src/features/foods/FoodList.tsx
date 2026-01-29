@@ -7,6 +7,9 @@ import { Button } from '@components/ui/Button';
 import { useFoods } from '@hooks/useFoods';
 import './FoodList.css';
 
+import { FilterPanel } from './components/FilterPanel';
+import { ActiveFilters } from './components/ActiveFilters';
+
 interface FoodListProps {
     onEdit?: (id: number) => void;
     onDelete?: (id: number) => void;
@@ -32,6 +35,8 @@ export const FoodList: React.FC<FoodListProps> = ({ onEdit, onDelete, onAddToDai
 
     const [activeTab, setActiveTab] = React.useState<'all' | 'favorites' | 'recent' | 'frequent'>('all');
     const [selectedCategory, setSelectedCategory] = React.useState<FoodCategory | undefined>(undefined);
+    const [filters, setFilters] = React.useState<NutritionalFiltersType>({});
+    const [isFiltersOpen, setIsFiltersOpen] = React.useState(false);
 
     React.useEffect(() => {
         if (activeTab === 'all') refresh();
@@ -41,15 +46,22 @@ export const FoodList: React.FC<FoodListProps> = ({ onEdit, onDelete, onAddToDai
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [activeTab]);
 
-    // Trigger search when category changes
+    // Trigger search when category or filters change
     React.useEffect(() => {
-        if (activeTab === 'all' && selectedCategory) {
-            searchFoods('', selectedCategory);
-        } else if (activeTab === 'all' && !selectedCategory) {
-            refresh();
+        if (activeTab === 'all') {
+            const hasFilters = Object.values(filters).some(val => val !== undefined);
+            if (selectedCategory || hasFilters) {
+                // Debounce could be useful here, but for now direct call
+                const handler = setTimeout(() => {
+                    searchFoods('', selectedCategory, filters);
+                }, 300); // 300ms debounce
+                return () => clearTimeout(handler);
+            } else if (!selectedCategory && !hasFilters) {
+                refresh();
+            }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [selectedCategory]);
+    }, [selectedCategory, filters]);
 
     const handleToggleFavorite = async (id: number) => {
         if (favoriteIds.includes(id)) {
@@ -58,6 +70,17 @@ export const FoodList: React.FC<FoodListProps> = ({ onEdit, onDelete, onAddToDai
         } else {
             await addFavorite(id);
         }
+    };
+
+    const handleClearAll = () => {
+        setSelectedCategory(undefined);
+        setFilters({});
+    };
+
+    const handleRemoveFilter = (key: keyof NutritionalFiltersType) => {
+        const newFilters = { ...filters };
+        delete newFilters[key];
+        setFilters(newFilters);
     };
 
     const renderContent = () => {
@@ -152,10 +175,25 @@ export const FoodList: React.FC<FoodListProps> = ({ onEdit, onDelete, onAddToDai
             </div>
 
             {activeTab === 'all' && (
-                <CategoryFilter
-                    selectedCategory={selectedCategory}
-                    onCategoryChange={setSelectedCategory}
-                />
+                <>
+                    <FilterPanel
+                        isOpen={isFiltersOpen}
+                        onToggle={() => setIsFiltersOpen(!isFiltersOpen)}
+                        selectedCategory={selectedCategory}
+                        onCategoryChange={setSelectedCategory}
+                        filters={filters}
+                        onFiltersChange={setFilters}
+                        onClear={handleClearAll}
+                    />
+
+                    <ActiveFilters
+                        selectedCategory={selectedCategory}
+                        filters={filters}
+                        onRemoveCategory={() => setSelectedCategory(undefined)}
+                        onRemoveFilter={handleRemoveFilter}
+                        onClearAll={handleClearAll}
+                    />
+                </>
             )}
 
             {renderContent()}

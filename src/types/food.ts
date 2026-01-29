@@ -108,3 +108,14 @@ export interface ErrorResponse {
     path: string;
     validationErrors?: Record<string, string>;
 }
+
+export interface NutritionalFilters {
+    minCalories?: number;
+    maxCalories?: number;
+    minProtein?: number;
+    maxProtein?: number;
+    minCarbs?: number;
+    maxCarbs?: number;
+    minFats?: number;
+    maxFats?: number;
+}
