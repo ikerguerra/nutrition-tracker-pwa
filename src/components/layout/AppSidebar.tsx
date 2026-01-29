@@ -32,45 +32,48 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { useTranslation } from 'react-i18next'
+import { LanguageSelector } from '@components/common/LanguageSelector'
 
 export function AppSidebar() {
+    const { t } = useTranslation();
     const { logout, user } = useAuth()
     const location = useLocation()
 
     const navItems = [
         {
             to: '/',
-            label: 'Diario',
+            label: t('nav.dashboard'),
             icon: Home,
         },
         {
             to: '/calendar',
-            label: 'Calendario',
+            label: t('nav.calendar'),
             icon: Calendar,
         },
         {
             to: '/templates',
-            label: 'Plantillas',
+            label: t('nav.templates'),
             icon: LayoutDashboard,
         },
         {
             to: '/recipes',
-            label: 'Recetas',
+            label: t('nav.recipes'),
             icon: ChefHat,
         },
         {
             to: '/stats',
-            label: 'Estadísticas',
+            label: t('nav.stats'),
             icon: PieChart,
         },
         {
             to: '/nutrition-breakdown',
-            label: 'Desglose',
-            icon: PieChart,
+            label: t('nav.breakdown'),
+            icon: LayoutDashboard,
         },
         {
             to: '/profile',
-            label: 'Mi Perfil',
+            label: t('nav.profile'),
             icon: User,
         },
     ]
@@ -115,6 +118,9 @@ export function AppSidebar() {
             </SidebarContent>
             <SidebarFooter>
                 <SidebarMenu>
+                    <div className="px-2 py-2">
+                        <LanguageSelector />
+                    </div>
                     <SidebarMenuItem>
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
@@ -139,7 +145,7 @@ export function AppSidebar() {
                             >
                                 <DropdownMenuItem onClick={logout}>
                                     <LogOut className="mr-2 h-4 w-4" />
-                                    <span>Cerrar Sesión</span>
+                                    <span>{t('nav.logout')}</span>
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>

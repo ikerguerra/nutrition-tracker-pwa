@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Food } from '../../types/food';
 import { Layout } from '@components/layout/Layout';
 import { FoodList } from '@features/foods/FoodList';
@@ -28,6 +29,7 @@ import { DietPlan, RecommendationItem } from '../../types/recommendation';
 import recommendationService from '@services/recommendationService';
 
 const DashboardPage = () => {
+    const { t } = useTranslation();
     const [showScanner, setShowScanner] = useState(false);
     const [showAddFood, setShowAddFood] = useState(false);
     const [showExternalSearch, setShowExternalSearch] = useState(false);
@@ -90,10 +92,10 @@ const DashboardPage = () => {
         try {
             const plan = await recommendationService.generateDailyPlan(dateString);
             setRecommendations(plan);
-            toast.success('¡Plan diario generado!');
+            toast.success(t('dashboard.planGenerated'));
         } catch (error) {
             console.error('Error generating plan', error);
-            toast.error('No se pudo generar el plan');
+            toast.error(t('dashboard.planError'));
         } finally {
             setIsGenerating(false);
         }
@@ -108,7 +110,7 @@ const DashboardPage = () => {
                 quantity: item.suggestedQuantity,
                 unit: item.unit || 'g'
             });
-            toast.success(`Añadido: ${item.foodName}`);
+            toast.success(`Añadido: ${item.foodName}`); // Keep content dynamic
 
             // Optimistically remove from list
             setRecommendations(prev => {
@@ -121,7 +123,7 @@ const DashboardPage = () => {
             });
         } catch (error) {
             console.error('Error accepting recommendation', error);
-            toast.error('Error al añadir alimento recomendado');
+            toast.error(t('dashboard.entryError'));
         }
     };
 
@@ -134,7 +136,7 @@ const DashboardPage = () => {
             }));
             return { ...prev, meals: newMeals };
         });
-        toast('Sugerencia descartada', { icon: '👋' });
+        toast(t('dashboard.recommendationDismissed'), { icon: '👋' });
     };
 
     const handleAcceptAll = async () => {
@@ -157,7 +159,7 @@ const DashboardPage = () => {
         if (!recommendations?.id) return;
         try {
             await recommendationService.acceptMeal(recommendations.id, mealType);
-            toast.success(`¡${mealType} aceptado!`);
+            toast.success(`¡${mealType} aceptado!`); // Could translate
             window.location.reload();
         } catch (error) {
             console.error(`Error accepting ${mealType}`, error);
@@ -192,10 +194,10 @@ const DashboardPage = () => {
     };
 
     const handleDelete = async (id: number) => {
-        if (window.confirm('¿Estás seguro de que quieres eliminar este alimento?')) {
+        if (window.confirm(t('dashboard.deleteFoodConfirm'))) {
             try {
                 await deleteFood(id);
-                toast.success('Alimento eliminado correctamente');
+                toast.success(t('dashboard.foodDeleted'));
             } catch (error) {
                 console.error('Error deleting food:', error);
                 toast.error('Error al eliminar el alimento');
@@ -237,9 +239,9 @@ const DashboardPage = () => {
                         size="sm"
                         onClick={() => setShowCopyModal(true)}
                         className="whitespace-nowrap"
-                        title="Copiar todas las comidas de este día a otro"
+                        title={t('dashboard.copyDayTooltip')}
                     >
-                        📋 Copiar Día
+                        📋 {t('dashboard.copyDay')}
                     </Button>
                 </div>
 
@@ -270,11 +272,11 @@ const DashboardPage = () => {
                             }}
                             onCopySection={(mealType) => {
                                 const titleMap: Record<string, string> = {
-                                    'BREAKFAST': 'Desayuno',
-                                    'MORNING_SNACK': 'Media Mañana',
-                                    'LUNCH': 'Almuerzo',
-                                    'AFTERNOON_SNACK': 'Merienda',
-                                    'DINNER': 'Cena'
+                                    'BREAKFAST': t('dashboard.meals.BREAKFAST'),
+                                    'MORNING_SNACK': t('dashboard.meals.MORNING_SNACK'),
+                                    'LUNCH': t('dashboard.meals.LUNCH'),
+                                    'AFTERNOON_SNACK': t('dashboard.meals.AFTERNOON_SNACK'),
+                                    'DINNER': t('dashboard.meals.DINNER')
                                 };
                                 setCopyingSection({
                                     date: dateString,
@@ -293,7 +295,7 @@ const DashboardPage = () => {
                             <Button
                                 variant="secondary"
                                 onClick={() => setShowExternalSearch(true)}
-                                title="Buscar en OpenFoodFacts"
+                                title={t('dashboard.searchOff')}
                             >
                                 🌐
                             </Button>
@@ -314,7 +316,7 @@ const DashboardPage = () => {
                                 className="w-full"
                                 onClick={() => setShowCharts(true)}
                             >
-                                📊 Ver Estadísticas
+                                📊 {t('dashboard.viewStats')}
                             </Button>
                         </div>
                     </div>
@@ -324,7 +326,7 @@ const DashboardPage = () => {
             <Dialog open={showCharts} onOpenChange={handleOpenChangeCharts}>
                 <DialogContent className="sm:max-w-4xl">
                     <DialogHeader>
-                        <DialogTitle>Estadísticas: {new Date(selectedDate).toLocaleDateString()}</DialogTitle>
+                        <DialogTitle>{t('dashboard.statsTitle', { date: new Date(selectedDate).toLocaleDateString() })}</DialogTitle>
                     </DialogHeader>
                     <NutritionCharts dailyLog={dailyLog} />
                 </DialogContent>
@@ -333,21 +335,21 @@ const DashboardPage = () => {
             <Dialog open={showScanner} onOpenChange={handleOpenChangeScanner}>
                 <DialogContent className="sm:max-w-md">
                     <DialogHeader>
-                        <DialogTitle>Buscar por Código de Barras</DialogTitle>
+                        <DialogTitle>{t('dashboard.barcodeSearch')}</DialogTitle>
                     </DialogHeader>
                     <BarcodeScanner
                         onFoodFound={(data) => {
                             console.log('Food found:', data);
                             if (data.foundInDatabase) {
-                                toast.success('Alimento encontrado en base de datos');
+                                toast.success(t('dashboard.foodFoundDb'));
                                 // Optionally close modal and select food
                                 // setShowScanner(false);
                                 // setSelectedFoodForEntry(data.food);
                                 // setShowAddEntryModal(true);
                             } else if (data.source === 'openfoodfacts') {
-                                toast.success('Alimento encontrado en OpenFoodFacts. Puedes importarlo.');
+                                toast.success(t('dashboard.foodFoundOff'));
                             } else {
-                                toast.error('Alimento no encontrado');
+                                toast.error(t('dashboard.foodNotFound'));
                             }
                         }}
                         onFoodImported={() => {
@@ -364,7 +366,7 @@ const DashboardPage = () => {
             <Dialog open={showAddFood} onOpenChange={handleOpenChangeFood}>
                 <DialogContent className="sm:max-w-lg">
                     <DialogHeader>
-                        <DialogTitle>{editingFood ? "Editar Alimento" : "Agregar Alimento"}</DialogTitle>
+                        <DialogTitle>{editingFood ? t('dashboard.editFood') : t('dashboard.addFood')}</DialogTitle>
                     </DialogHeader>
                     <FoodForm
                         initialData={editingFood ?? undefined}
@@ -381,13 +383,13 @@ const DashboardPage = () => {
             <Dialog open={showExternalSearch} onOpenChange={handleOpenChangeExternal}>
                 <DialogContent className="sm:max-w-lg">
                     <DialogHeader>
-                        <DialogTitle>Buscar en OpenFoodFacts</DialogTitle>
+                        <DialogTitle>{t('dashboard.searchOff')}</DialogTitle>
                     </DialogHeader>
                     <ExternalFoodSearch
                         onFoodImported={() => {
                             refresh(); // Refresh local list to show imported food
                             // Optionally close modal or keep open for more searches
-                            toast.success('Producto importado a tu lista');
+                            toast.success(t('dashboard.foodImported'));
                         }}
                     />
                 </DialogContent>
@@ -400,10 +402,10 @@ const DashboardPage = () => {
                 onSubmit={async (payload) => {
                     try {
                         await addEntry(payload);
-                        toast.success('Entrada agregada');
+                        toast.success(t('dashboard.entryAdded'));
                     } catch (err) {
                         console.error('Error adding entry', err);
-                        toast.error('Error al agregar entrada');
+                        toast.error(t('dashboard.entryError'));
                     }
                 }}
             />

@@ -40,7 +40,7 @@ export default defineConfig({
       workbox: {
         runtimeCaching: [
           {
-            urlPattern: /^https:\/\/192.168.0.20:8080\/api\/.*/i,
+            urlPattern: ({ url }) => url.pathname.startsWith('/api'),
             handler: 'NetworkFirst',
             options: {
               cacheName: 'api-cache',
@@ -56,6 +56,7 @@ export default defineConfig({
         ]
       }
     })
+
   ],
   resolve: {
     alias: {
