@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { Button } from './button';
+import { formatDate } from '@/utils/localeUtils';
 import './DateCarousel.css';
 
 interface DateCarouselProps {
@@ -9,6 +11,7 @@ interface DateCarouselProps {
 }
 
 export const DateCarousel: React.FC<DateCarouselProps> = ({ selectedDate, onDateChange }) => {
+    const { t } = useTranslation();
     const [direction, setDirection] = useState(0);
 
     const handlePrevDay = () => {
@@ -49,14 +52,14 @@ export const DateCarousel: React.FC<DateCarouselProps> = ({ selectedDate, onDate
     };
 
     const formatDateMain = (date: Date) => {
-        if (isToday(date)) return 'Hoy';
-        if (isYesterday(date)) return 'Ayer';
-        if (isTomorrow(date)) return 'Mañana';
-        return new Intl.DateTimeFormat('es-ES', { weekday: 'long' }).format(date);
+        if (isToday(date)) return t('common.today');
+        if (isYesterday(date)) return t('common.yesterday');
+        if (isTomorrow(date)) return t('common.tomorrow');
+        return formatDate(date, { weekday: 'long' });
     };
 
     const formatDateSub = (date: Date) => {
-        return new Intl.DateTimeFormat('es-ES', { day: 'numeric', month: 'long', year: 'numeric' }).format(date);
+        return formatDate(date, { day: 'numeric', month: 'long', year: 'numeric' });
     };
 
     const variants = {
@@ -84,7 +87,7 @@ export const DateCarousel: React.FC<DateCarouselProps> = ({ selectedDate, onDate
                 size="sm"
                 className="carousel-nav-btn"
                 onClick={handlePrevDay}
-                aria-label="Día anterior"
+                aria-label={t('common.previousDay')}
             >
                 ←
             </Button>
@@ -110,7 +113,7 @@ export const DateCarousel: React.FC<DateCarouselProps> = ({ selectedDate, onDate
                                 animate={{ opacity: 1, y: 0 }}
                                 className="today-badge"
                             >
-                                Seleccionado
+                                {t('common.selected')}
                             </motion.span>
                         )}
                         <div className="date-main">{formatDateMain(selectedDate)}</div>
@@ -124,7 +127,7 @@ export const DateCarousel: React.FC<DateCarouselProps> = ({ selectedDate, onDate
                 size="sm"
                 className="carousel-nav-btn"
                 onClick={handleNextDay}
-                aria-label="Día siguiente"
+                aria-label={t('common.nextDay')}
             >
                 →
             </Button>

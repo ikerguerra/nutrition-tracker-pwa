@@ -1,6 +1,8 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Card, CardContent } from '@/components/ui/card';
 import { DailyLog } from '../../types/dailyLog';
+import { formatNumber, formatCalories } from '@/utils/localeUtils';
 
 
 // If Progress doesn't exist, I'll use simple divs with Tailwind classes.
@@ -15,11 +17,12 @@ interface DailyLogSummaryProps {
 }
 
 const DailyLogSummary: React.FC<DailyLogSummaryProps> = ({ dailyLog, loading, error }) => {
+    const { t } = useTranslation();
     if (loading) {
         return (
             <Card>
                 <CardContent className="pt-6">
-                    <p className="text-muted-foreground">Cargando resumen...</p>
+                    <p className="text-muted-foreground">{t('common.loading')}</p>
                 </CardContent>
             </Card>
         );
@@ -57,7 +60,7 @@ const DailyLogSummary: React.FC<DailyLogSummaryProps> = ({ dailyLog, loading, er
         <div className="space-y-1">
             <div className="flex justify-between text-xs">
                 <span className="font-medium text-muted-foreground">{label}</span>
-                <span className="text-muted-foreground">{value} / {Math.round(max)}g</span>
+                <span className="text-muted-foreground">{formatNumber(value, 1)} / {formatNumber(max, 0)}g</span>
             </div>
             <div className="h-2 w-full overflow-hidden rounded-full bg-secondary">
                 <div className={`h-full ${colorClass} transition-all duration-300`} style={{ width: `${toPercent(value, max)}%` }} />
@@ -71,26 +74,26 @@ const DailyLogSummary: React.FC<DailyLogSummaryProps> = ({ dailyLog, loading, er
                 <div className="flex flex-col justify-center space-y-2 text-center sm:text-left">
                     <span className="text-sm font-medium text-muted-foreground">Calorías Totales</span>
                     <div className="flex items-baseline justify-center sm:justify-start gap-1">
-                        <span className="text-4xl font-bold tracking-tight">{dailyLog.totals.calories}</span>
-                        <span className="text-sm text-muted-foreground">/ {Math.round(calorieGoal)} kcal</span>
+                        <span className="text-4xl font-bold tracking-tight">{formatCalories(dailyLog.totals.calories)}</span>
+                        <span className="text-sm text-muted-foreground">/ {formatCalories(calorieGoal)} kcal</span>
                     </div>
                 </div>
 
                 <div className="space-y-3">
                     <ProgressBar
-                        label="Proteínas"
+                        label={t('dashboard.protein')}
                         value={dailyLog.totals.protein}
                         max={proteinGoal}
                         colorClass="bg-blue-500"
                     />
                     <ProgressBar
-                        label="Carbohidratos"
+                        label={t('dashboard.carbs')}
                         value={dailyLog.totals.carbs}
                         max={carbsGoal}
                         colorClass="bg-green-500"
                     />
                     <ProgressBar
-                        label="Grasas"
+                        label={t('dashboard.fats')}
                         value={dailyLog.totals.fats}
                         max={fatsGoal}
                         colorClass="bg-yellow-500"

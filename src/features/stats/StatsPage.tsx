@@ -4,6 +4,7 @@ import statsService, { WeightDataPoint, MacroTrendDataPoint, WeeklySummary, Goal
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend } from 'recharts';
 import { Button } from '@components/ui/button';
 import toast from 'react-hot-toast';
+import { formatNumber } from '@/utils/localeUtils';
 
 const StatsPage: React.FC = () => {
     const [activeTab, setActiveTab] = useState<'weight' | 'macros' | 'weekly' | 'goals'>('weight');
@@ -193,7 +194,7 @@ const StatsPage: React.FC = () => {
                                     <div className="card p-4 bg-white dark:bg-gray-800 rounded-lg shadow">
                                         <p className="text-sm text-gray-500">Cambio Calorías</p>
                                         <p className={`text-2xl font-bold ${weeklyData.changes.caloriesChange > 0 ? 'text-green-500' : 'text-red-500'}`}>
-                                            {weeklyData.changes.caloriesChange > 0 ? '+' : ''}{weeklyData.changes.caloriesChange.toFixed(1)}%
+                                            {weeklyData.changes.caloriesChange > 0 ? '+' : ''}{formatNumber(weeklyData.changes.caloriesChange, 1)}%
                                         </p>
                                     </div>
                                     <div className="card p-4 bg-white dark:bg-gray-800 rounded-lg shadow">

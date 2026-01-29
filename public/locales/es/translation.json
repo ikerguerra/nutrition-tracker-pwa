@@ -13,7 +13,13 @@
         "next": "Siguiente",
         "prev": "Anterior",
         "search": "Buscar...",
-        "noData": "No hay datos disponibles"
+        "noData": "No hay datos disponibles",
+        "today": "Hoy",
+        "yesterday": "Ayer",
+        "tomorrow": "Mañana",
+        "selected": "Seleccionado",
+        "previousDay": "Día anterior",
+        "nextDay": "Día siguiente"
     },
     "nav": {
         "dashboard": "Diario",
