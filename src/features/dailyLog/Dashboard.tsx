@@ -91,6 +91,25 @@ export const Dashboard: React.FC<DashboardProps> = ({
         return grouped;
     }, [recommendations]);
 
+    // Calculate Plan Totals (Projected)
+    const planTotals = useMemo(() => {
+        const totals = { calories: 0, protein: 0, carbs: 0, fats: 0 };
+        Object.values(groupedRecommendations).forEach(items => {
+            items.forEach(item => {
+                // Backend calculates nutrition for the specific quantity and puts it in nutritionalInfo
+                if (item.nutritionalInfo) {
+                    totals.calories += (item.nutritionalInfo.calories || 0);
+                    totals.protein += (item.nutritionalInfo.protein || 0);
+                    totals.carbs += (item.nutritionalInfo.carbs || 0);
+                    totals.fats += (item.nutritionalInfo.fats || 0);
+                }
+            });
+        });
+        return totals;
+    }, [groupedRecommendations]);
+
+    const hasPendingRecommendations = recommendations && Object.values(groupedRecommendations).some(arr => arr.length > 0);
+
     return (
         <div className="flex flex-col gap-6">
             <div className="flex items-center justify-between flex-wrap gap-2">
@@ -105,7 +124,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                             {isGeneratingPlan ? 'Generando...' : '✨ Generar Plan'}
                         </Button>
                     )}
-                    {recommendations && Object.values(groupedRecommendations).some(arr => arr.length > 0) && onAcceptAll && (
+                    {hasPendingRecommendations && onAcceptAll && (
                         <Button
                             size="sm"
                             className="bg-green-600 hover:bg-green-700 text-white"
@@ -121,10 +140,15 @@ export const Dashboard: React.FC<DashboardProps> = ({
                 </div>
             </div>
 
-            <DailyLogSummary dailyLog={dailyLog} loading={loading} error={error} />
+            <DailyLogSummary
+                dailyLog={dailyLog}
+                loading={loading}
+                error={error}
+                planTotals={hasPendingRecommendations ? planTotals : null}
+            />
 
             {recommendations && Object.values(groupedRecommendations).every(arr => arr.length === 0) && (
-                <div className="p-4 bg-green-50 text-green-700 rounded-md border border-green-200 flex items-center gap-2">
+                <div className="p-4 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 rounded-md border border-green-200 dark:border-green-800 flex items-center gap-2">
                     <span>✅</span>
                     <span>Plan generado. Has revisado todas las sugerencias pendientes.</span>
                 </div>
