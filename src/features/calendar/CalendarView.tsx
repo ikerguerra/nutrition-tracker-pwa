@@ -4,7 +4,8 @@ import { Button } from '@components/ui/button';
 import { LoadingSpinner } from '@components/ui/LoadingSpinner';
 import calendarService, { CalendarDay } from '@services/calendarService';
 import { useNavigate } from 'react-router-dom';
-import './CalendarView.css';
+import { ChevronLeft, ChevronRight, CheckCircle2, XCircle } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 export const CalendarView = () => {
     const navigate = useNavigate();
@@ -61,7 +62,7 @@ export const CalendarView = () => {
 
         // Empty cells for days before the 1st
         for (let i = 0; i < firstDay; i++) {
-            cells.push(<div key={`empty-${i}`} className="calendar-day empty" />);
+            cells.push(<div key={`empty-${i}`} className="bg-transparent pointer-events-none" />);
         }
 
         // Days of the month
@@ -72,18 +73,43 @@ export const CalendarView = () => {
 
             const isToday = new Date().toDateString() === new Date(currentDate.getFullYear(), currentDate.getMonth(), day).toDateString();
 
+            // Calorie Status Logic
+            let statusIcon = null;
+            if (dayData && dayData.totalCalories > 0) {
+                const diff = Math.abs(dayData.totalCalories - (dayData.calorieGoal || 2000)); // Default fallback if needed
+                const isMet = diff <= 50;
+
+                statusIcon = isMet ? (
+                    <CheckCircle2 className="h-4 w-4 text-green-500 fill-green-500/10" />
+                ) : (
+                    <XCircle className="h-4 w-4 text-red-500 fill-red-500/10" />
+                );
+            }
+
             cells.push(
                 <div
                     key={day}
-                    className={`calendar-day ${isToday ? 'today' : ''} ${dayData ? 'has-data' : ''}`}
+                    className={cn(
+                        "relative flex flex-col items-center justify-start p-1 md:p-2 rounded-xl transition-all duration-200 border cursor-pointer hover:shadow-md hover:-translate-y-0.5 group",
+                        isToday ? "border-primary bg-primary/5 shadow-sm" : "border-transparent bg-card hover:border-primary/20",
+                        !dayData ? "opacity-50 hover:opacity-100" : ""
+                    )}
                     onClick={() => navigate(`/dashboard?date=${dateStr}`)}
                 >
-                    <span className="day-number">{day}</span>
+                    <span className={cn(
+                        "text-sm font-semibold mb-1 w-6 h-6 flex items-center justify-center rounded-full",
+                        isToday ? "bg-primary text-primary-foreground" : "text-foreground"
+                    )}>
+                        {day}
+                    </span>
+
                     {dayData && (
-                        <>
-                            <div className={`day-indicator ${dayData.isGoalMet ? 'indicator-met' : 'indicator-missed'}`} />
-                            <span className="day-calories">{Math.round(dayData.totalCalories)}</span>
-                        </>
+                        <div className="flex flex-col items-center gap-1 mt-auto w-full">
+                            {statusIcon}
+                            <span className="text-[10px] md:text-xs font-medium text-muted-foreground group-hover:text-foreground transition-colors">
+                                {Math.round(dayData.totalCalories)}
+                            </span>
+                        </div>
                     )}
                 </div>
             );
@@ -92,30 +118,43 @@ export const CalendarView = () => {
         return cells;
     };
 
+    const weekDays = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
+
     return (
         <Layout>
-            <div className="calendar-container">
-                <div className="calendar-header">
-                    <Button variant="secondary" size="sm" onClick={handlePrevMonth}>←</Button>
-                    <div className="month-display">
+            <div className="flex flex-col h-[calc(100vh-5rem)] max-h-[calc(100vh-5rem)] p-4 md:p-6 overflow-hidden">
+                <div className="flex items-center justify-between mb-4 flex-shrink-0">
+                    <Button variant="ghost" size="icon" onClick={handlePrevMonth} className="hover:bg-secondary/50">
+                        <ChevronLeft className="h-6 w-6" />
+                    </Button>
+                    <h2 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-400 capitalize">
                         {new Intl.DateTimeFormat('es-ES', { month: 'long', year: 'numeric' }).format(currentDate)}
-                    </div>
-                    <Button variant="secondary" size="sm" onClick={handleNextMonth}>→</Button>
+                    </h2>
+                    <Button variant="ghost" size="icon" onClick={handleNextMonth} className="hover:bg-secondary/50">
+                        <ChevronRight className="h-6 w-6" />
+                    </Button>
                 </div>
 
-                {loading && <LoadingSpinner />}
-                {error && <div className="error-message">{error}</div>}
-
-                {!loading && !error && (
-                    <div className="calendar-grid">
-                        <div className="weekday-header">Lun</div>
-                        <div className="weekday-header">Mar</div>
-                        <div className="weekday-header">Mié</div>
-                        <div className="weekday-header">Jue</div>
-                        <div className="weekday-header">Vie</div>
-                        <div className="weekday-header">Sáb</div>
-                        <div className="weekday-header">Dom</div>
-                        {renderCalendar()}
+                {loading ? (
+                    <div className="flex-1 flex items-center justify-center">
+                        <LoadingSpinner />
+                    </div>
+                ) : error ? (
+                    <div className="flex-1 flex items-center justify-center text-destructive">{error}</div>
+                ) : (
+                    <div className="flex-1 grid grid-cols-7 grid-rows-[auto_1fr] gap-2 md:gap-4 min-h-0">
+                        {weekDays.map(day => (
+                            <div key={day} className="text-center font-medium text-muted-foreground text-sm py-2">
+                                {day}
+                            </div>
+                        ))}
+                        <div className="col-span-7 grid grid-cols-7 grid-rows-5 md:grid-rows-5 gap-2 md:gap-4 h-full">
+                            {/* Note: We are using a nested grid here to ensure the cells fill the height strictly. 
+                                 The number of rows might vary (4, 5, or 6) depending on the month. 
+                                 For a perfect 'full height' look, CSS Grid auto-rows is better.
+                             */}
+                            {renderCalendar()}
+                        </div>
                     </div>
                 )}
             </div>

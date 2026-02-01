@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Input } from '@components/ui/input';
 import { useDebounce } from '@hooks/useDebounce';
-import './SearchBar.css';
+import { Search, X } from 'lucide-react';
 
 interface SearchBarProps {
     onSearch: (query: string) => void;
@@ -35,46 +35,24 @@ export const SearchBar: React.FC<SearchBarProps> = ({
     };
 
     return (
-        <div className="search-bar">
-            <div className="relative w-full">
-                <div className="absolute left-2.5 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground pointer-events-none">
-                    <svg
-                        width="20"
-                        height="20"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                    >
-                        <circle cx="11" cy="11" r="8" />
-                        <path d="m21 21-4.35-4.35" />
-                    </svg>
-                </div>
-                <Input
-                    type="text"
-                    placeholder={placeholder}
-                    value={query}
-                    onChange={(e) => setQuery(e.target.value)}
-                    className="pl-9"
-                />
+        <div className="relative w-full group">
+            <div className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground transition-colors group-hover:text-primary pointer-events-none">
+                <Search className="h-5 w-5" />
             </div>
+            <Input
+                type="text"
+                placeholder={placeholder}
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                className="pl-10 pr-10 h-11 rounded-full border-muted-foreground/20 bg-background shadow-sm hover:border-primary/50 focus-visible:ring-primary focus-visible:border-primary transition-all duration-300"
+            />
             {query && (
-                <button className="search-clear" onClick={handleClear} aria-label="Clear search">
-                    <svg
-                        width="20"
-                        height="20"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                    >
-                        <line x1="18" y1="6" x2="6" y2="18" />
-                        <line x1="6" y1="6" x2="18" y2="18" />
-                    </svg>
+                <button
+                    className="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded-full text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-all duration-200"
+                    onClick={handleClear}
+                    aria-label="Clear search"
+                >
+                    <X className="h-4 w-4" />
                 </button>
             )}
         </div>

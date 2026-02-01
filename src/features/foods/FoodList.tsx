@@ -4,7 +4,7 @@ import { FoodCard } from './FoodCard';
 import { LoadingSpinner } from '@components/ui/LoadingSpinner';
 import { Button } from '@components/ui/button';
 import { useFoods } from '@hooks/useFoods';
-import './FoodList.css';
+import { ChevronLeft, ChevronRight, PackageOpen } from 'lucide-react';
 
 import { FilterPanel } from './components/FilterPanel';
 import { ActiveFilters } from './components/ActiveFilters';
@@ -85,7 +85,7 @@ export const FoodList: React.FC<FoodListProps> = ({ onEdit, onDelete, onAddToDai
     const renderContent = () => {
         if (loading && foods.length === 0) {
             return (
-                <div className="food-list-loading">
+                <div className="flex flex-col items-center justify-center py-12 text-muted-foreground gap-4">
                     <LoadingSpinner size="lg" />
                     <p>Cargando alimentos...</p>
                 </div>
@@ -94,7 +94,7 @@ export const FoodList: React.FC<FoodListProps> = ({ onEdit, onDelete, onAddToDai
 
         if (error) {
             return (
-                <div className="food-list-error">
+                <div className="text-center py-12 text-destructive bg-destructive/5 rounded-xl border border-destructive/20 mx-auto max-w-lg">
                     <p>{error}</p>
                 </div>
             );
@@ -102,27 +102,19 @@ export const FoodList: React.FC<FoodListProps> = ({ onEdit, onDelete, onAddToDai
 
         if (foods.length === 0) {
             return (
-                <div className="food-list-empty">
-                    <svg
-                        width="64"
-                        height="64"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                    >
-                        <path d="M3 3h18v18H3z" />
-                        <path d="M9 9h6v6H9z" />
-                    </svg>
-                    <h3>No hay alimentos en esta lista</h3>
-                    <p>Intenta cambiar de filtro o agrega nuevos alimentos.</p>
+                <div className="flex flex-col items-center justify-center py-16 text-center text-muted-foreground">
+                    <div className="bg-muted/50 p-4 rounded-full mb-4">
+                        <PackageOpen className="h-10 w-10 opacity-50" />
+                    </div>
+                    <h3 className="text-lg font-semibold text-foreground mb-1">No hay alimentos en esta lista</h3>
+                    <p className="max-w-xs text-sm">Intenta cambiar de filtro o agrega nuevos alimentos.</p>
                 </div>
             );
         }
 
         return (
             <>
-                <div className="food-list-grid">
+                <div className="flex flex-col gap-3 max-w-3xl mx-auto animate-in fade-in duration-500">
                     {foods.map((food) => (
                         <FoodCard
                             key={food.id}
@@ -137,23 +129,29 @@ export const FoodList: React.FC<FoodListProps> = ({ onEdit, onDelete, onAddToDai
                 </div>
 
                 {pagination.totalPages > 1 && (
-                    <div className="food-list-pagination">
+                    <div className="flex items-center justify-center gap-4 mt-8 pt-4 border-t border-border/50">
                         <Button
-                            variant="secondary"
+                            variant="outline"
                             size="sm"
                             disabled={pagination.page === 0}
                             onClick={() => changePage(pagination.page - 1)}
+                            className="gap-1 min-w-[100px]"
                         >
-                            ← Anterior
+                            <ChevronLeft className="h-4 w-4" />
+                            Anterior
                         </Button>
-                        <span className="pagination-info">Página {pagination.page + 1} de {pagination.totalPages}</span>
+                        <span className="text-sm font-medium text-muted-foreground">
+                            Página {pagination.page + 1} de {pagination.totalPages}
+                        </span>
                         <Button
-                            variant="secondary"
+                            variant="outline"
                             size="sm"
                             disabled={pagination.page >= pagination.totalPages - 1}
                             onClick={() => changePage(pagination.page + 1)}
+                            className="gap-1 min-w-[100px]"
                         >
-                            Siguiente →
+                            Siguiente
+                            <ChevronRight className="h-4 w-4" />
                         </Button>
                     </div>
                 )}
@@ -161,15 +159,30 @@ export const FoodList: React.FC<FoodListProps> = ({ onEdit, onDelete, onAddToDai
         );
     };
 
+    const tabs = [
+        { id: 'all', label: 'Todos' },
+        { id: 'favorites', label: 'Favoritos' },
+        { id: 'recent', label: 'Recientes' },
+        { id: 'frequent', label: 'Frecuentes' },
+    ] as const;
+
     return (
-        <div className="food-list-container">
-            <div className="food-list-header">
-                <h2>Alimentos</h2>
-                <div className="food-list-tabs">
-                    <button className={activeTab === 'all' ? 'active' : ''} onClick={() => setActiveTab('all')}>Todos</button>
-                    <button className={activeTab === 'favorites' ? 'active' : ''} onClick={() => setActiveTab('favorites')}>Favoritos</button>
-                    <button className={activeTab === 'recent' ? 'active' : ''} onClick={() => setActiveTab('recent')}>Recientes</button>
-                    <button className={activeTab === 'frequent' ? 'active' : ''} onClick={() => setActiveTab('frequent')}>Frecuentes</button>
+        <div className="w-full space-y-6">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <h2 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-foreground to-muted-foreground">Alimentos</h2>
+                <div className="inline-flex h-10 items-center justify-center rounded-lg bg-muted p-1 text-muted-foreground">
+                    {tabs.map((tab) => (
+                        <button
+                            key={tab.id}
+                            onClick={() => setActiveTab(tab.id)}
+                            className={`inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 ${activeTab === tab.id
+                                    ? 'bg-background text-foreground shadow-sm'
+                                    : 'hover:bg-background/50 hover:text-foreground'
+                                }`}
+                        >
+                            {tab.label}
+                        </button>
+                    ))}
                 </div>
             </div>
 

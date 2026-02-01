@@ -16,7 +16,8 @@ import { dailyLogService } from '@services/dailyLogService';
 import { Recipe, CreateRecipeRequest } from '../../types/recipe';
 import { MealType } from '../../types/dailyLog';
 import { RecipeForm } from './RecipeForm';
-import './RecipesPage.css';
+import { Card, CardContent } from '@components/ui/card';
+import { Clock, Users, Flame, Utensils, Beef } from 'lucide-react';
 
 const RecipesPage: React.FC = () => {
     const [recipes, setRecipes] = useState<Recipe[]>([]);
@@ -123,42 +124,82 @@ const RecipesPage: React.FC = () => {
 
     return (
         <Layout>
-            <div className="recipes-header">
-                <h1 className="text-2xl font-bold">Mis Recetas</h1>
-                <Button onClick={() => setShowCreateModal(true)}>
+            <div className="flex flex-col md:flex-row items-center justify-between mb-8 gap-4">
+                <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-400">Mis Recetas</h1>
+                <Button onClick={() => setShowCreateModal(true)} className="gap-2 shadow-lg hover:shadow-primary/25">
+                    <Utensils className="w-4 h-4" />
                     Nueva Receta
                 </Button>
             </div>
 
             {loading ? (
-                <div className="loading-state">Cargando recetas...</div>
+                <div className="flex items-center justify-center min-h-[200px]">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                </div>
             ) : recipes.length === 0 ? (
-                <div className="empty-state">
+                <div className="text-center py-12 text-muted-foreground bg-accent/20 rounded-xl border border-dashed border-border/50">
                     <p>No tienes recetas guardadas.</p>
                 </div>
             ) : (
-                <div className="recipes-grid">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {recipes.map(recipe => (
-                        <div key={recipe.id} className="recipe-card card" onClick={() => {
-                            setSelectedRecipe(recipe);
-                            setServingsMultiplier(1);
-                            setShowDetailModal(true);
-                        }}>
-                            {recipe.imageUrl && (
-                                <img src={recipe.imageUrl} alt={recipe.name} className="recipe-img" />
+                        <Card
+                            key={recipe.id}
+                            className="cursor-pointer hover:shadow-lg hover:border-primary/50 transition-all duration-300 overflow-hidden group"
+                            onClick={() => {
+                                setSelectedRecipe(recipe);
+                                setServingsMultiplier(1);
+                                setShowDetailModal(true);
+                            }}
+                        >
+                            {recipe.imageUrl ? (
+                                <div className="h-48 w-full overflow-hidden relative">
+                                    <img
+                                        src={recipe.imageUrl}
+                                        alt={recipe.name}
+                                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                                    />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-60"></div>
+                                </div>
+                            ) : (
+                                <div className="h-32 w-full bg-secondary/10 flex items-center justify-center relative overflow-hidden">
+                                    <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-secondary/10"></div>
+                                    <Utensils className="h-12 w-12 text-muted-foreground/20" />
+                                </div>
                             )}
-                            <div className="recipe-info">
-                                <h3>{recipe.name}</h3>
-                                <div className="recipe-meta">
-                                    <span>⏱️ {(recipe.prepTime || 0) + (recipe.cookTime || 0)} min</span>
-                                    <span>🍽️ {recipe.servings} raciones</span>
+
+                            <CardContent className="p-5">
+                                <h3 className="font-bold text-lg mb-3 line-clamp-1 group-hover:text-primary transition-colors">{recipe.name}</h3>
+
+                                <div className="flex items-center gap-3 mb-4 text-sm text-muted-foreground">
+                                    <div className="flex items-center gap-1.5 bg-secondary/20 px-2 py-1 rounded-md">
+                                        <Clock className="w-3.5 h-3.5" />
+                                        <span>{(recipe.prepTime || 0) + (recipe.cookTime || 0)} min</span>
+                                    </div>
+                                    <div className="flex items-center gap-1.5 bg-secondary/20 px-2 py-1 rounded-md">
+                                        <Users className="w-3.5 h-3.5" />
+                                        <span>{recipe.servings} rac.</span>
+                                    </div>
                                 </div>
-                                <div className="recipe-nutrition-preview">
-                                    <div className="nut-dot cals">{recipe.nutritionPerServing.calories.toFixed(0)} kcal</div>
-                                    <div className="nut-dot prot">{recipe.nutritionPerServing.protein.toFixed(0)}g P</div>
+
+                                <div className="grid grid-cols-2 gap-2">
+                                    <div className="flex flex-col items-center justify-center p-2 rounded-lg bg-orange-500/10 border border-orange-500/10">
+                                        <div className="flex items-center gap-1 text-orange-500 text-xs font-bold uppercase tracking-wider mb-0.5">
+                                            <Flame className="w-3 h-3" />
+                                            <span>Kcal</span>
+                                        </div>
+                                        <span className="font-bold text-lg">{recipe.nutritionPerServing.calories.toFixed(0)}</span>
+                                    </div>
+                                    <div className="flex flex-col items-center justify-center p-2 rounded-lg bg-blue-500/10 border border-blue-500/10">
+                                        <div className="flex items-center gap-1 text-blue-500 text-xs font-bold uppercase tracking-wider mb-0.5">
+                                            <Beef className="w-3 h-3" />
+                                            <span>Prot</span>
+                                        </div>
+                                        <span className="font-bold text-lg">{recipe.nutritionPerServing.protein.toFixed(0)}</span>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
+                            </CardContent>
+                        </Card>
                     ))}
                 </div>
             )}

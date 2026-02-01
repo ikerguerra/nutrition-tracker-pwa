@@ -3,6 +3,7 @@ import { FoodCategory, NutritionalFilters as NutritionalFiltersType } from '../.
 import { CategoryFilter } from '../CategoryFilter';
 import NutritionalFilters from './NutritionalFilters';
 import { Button } from '@components/ui/button';
+import { SlidersHorizontal } from 'lucide-react';
 
 interface FilterPanelProps {
     isOpen: boolean;
@@ -24,51 +25,45 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
     onClear
 }) => {
     return (
-        <div className="mb-6">
-            <div className="flex items-center justify-between mb-2">
+        <div className="mb-6 space-y-4">
+            <div className="flex items-center justify-between">
                 <Button
-                    variant="secondary"
+                    variant={isOpen ? "secondary" : "outline"}
                     size="sm"
                     onClick={onToggle}
-                    className="flex items-center gap-2"
+                    className="flex items-center gap-2 font-medium"
                 >
-                    <svg
-                        width="16"
-                        height="16"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                    >
-                        <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
-                    </svg>
-                    {isOpen ? 'Ocultar Filtros' : 'Mostrar Filtros'}
+                    <SlidersHorizontal className="h-4 w-4" />
+                    {isOpen ? 'Ocultar Filtros' : 'Filtros Avanzados'}
                 </Button>
 
-                {isOpen && (
-                    <Button variant="ghost" size="sm" onClick={onClear} className="text-sm text-gray-500">
-                        Restablecer
+                {(isOpen || selectedCategory || Object.values(filters).some(v => v !== undefined)) && (
+                    <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={onClear}
+                        className="text-xs text-muted-foreground hover:text-foreground h-8 px-2"
+                    >
+                        Limpiar todo
                     </Button>
                 )}
             </div>
 
             {isOpen && (
-                <div className="p-4 bg-white border border-gray-200 rounded-lg shadow-sm animate-in slide-in-from-top-2 duration-200">
-                    <div className="mb-4">
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Categoría</label>
+                <div className="p-5 bg-card border border-border/50 rounded-xl shadow-sm animate-in fade-in slide-in-from-top-2 duration-300">
+                    <div className="mb-5">
+                        <label className="block text-sm font-semibold text-foreground mb-3">Categoría</label>
                         <CategoryFilter
                             selectedCategory={selectedCategory}
                             onCategoryChange={onCategoryChange}
                         />
                     </div>
 
-                    <div className="border-t border-gray-100 pt-4">
+                    <div className="border-t border-border/50 pt-5">
                         <NutritionalFilters
                             filters={filters}
                             onChange={onFiltersChange}
-                            onClear={() => { }} // Create handles clear internally for the panel via prop onClear if needed, but here we reuse the clear all logic mainly
+                            onClear={() => { }}
                         />
                     </div>
                 </div>
