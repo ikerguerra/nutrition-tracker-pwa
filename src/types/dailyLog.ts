@@ -43,11 +43,17 @@ export interface AddEntryRequest {
     foodId: number;
     quantity: number;
     unit: string;
+    servingUnitId?: number;
 }
 
 export interface UpdateEntryRequest {
     quantity: number;
     unit: string;
+    servingUnitId?: number;
+    // Backend requires these for validation, even on update
+    date?: string;
+    mealType?: MealType;
+    foodId?: number;
 }
 
 // Breakdown Interface

@@ -35,6 +35,9 @@ export const FoodForm: React.FC<FoodFormProps> = ({ onSuccess, onCancel, initial
         }
     });
 
+    const [servingUnits, setServingUnits] = useState<import('../../types/food').ServingUnit[]>(initialData?.servingUnits || []);
+    const [newUnit, setNewUnit] = useState({ label: '', weightGrams: '', isDefault: false });
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
 
@@ -53,6 +56,31 @@ export const FoodForm: React.FC<FoodFormProps> = ({ onSuccess, onCancel, initial
                 [name]: value
             }));
         }
+    };
+
+    const handleAddUnit = () => {
+        if (!newUnit.label || !newUnit.weightGrams) return;
+        const weight = parseFloat(newUnit.weightGrams);
+        if (isNaN(weight) || weight <= 0) return;
+
+        // If this new unit is set as default, unset others
+        let updatedUnits = [...servingUnits];
+        if (newUnit.isDefault) {
+            updatedUnits = updatedUnits.map(u => ({ ...u, isDefault: false }));
+        }
+
+        updatedUnits.push({
+            label: newUnit.label,
+            weightGrams: weight,
+            isDefault: newUnit.isDefault
+        });
+
+        setServingUnits(updatedUnits);
+        setNewUnit({ label: '', weightGrams: '', isDefault: false });
+    };
+
+    const handleRemoveUnit = (index: number) => {
+        setServingUnits(prev => prev.filter((_, i) => i !== index));
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -74,7 +102,8 @@ export const FoodForm: React.FC<FoodFormProps> = ({ onSuccess, onCancel, initial
                     sugars: parseFloat(formData.nutritionalInfo.sugars) || undefined,
                     saturatedFats: parseFloat(formData.nutritionalInfo.saturatedFats) || undefined,
                     sodium: parseFloat(formData.nutritionalInfo.sodium) || undefined,
-                }
+                },
+                servingUnits: servingUnits.length > 0 ? servingUnits : undefined
             };
 
             if (initialData?.id) {
@@ -132,7 +161,7 @@ export const FoodForm: React.FC<FoodFormProps> = ({ onSuccess, onCancel, initial
                     </div>
                     <div className="serving-input-group">
                         <div className="grid gap-2 flex-1">
-                            <Label htmlFor="servingSize">Porción</Label>
+                            <Label htmlFor="servingSize">Porción base</Label>
                             <Input
                                 id="servingSize"
                                 name="servingSize"
@@ -144,7 +173,7 @@ export const FoodForm: React.FC<FoodFormProps> = ({ onSuccess, onCancel, initial
                             />
                         </div>
                         <div className="select-wrapper">
-                            <Label htmlFor="servingUnit" className="mb-2 block">Unidad</Label>
+                            <Label htmlFor="servingUnit" className="mb-2 block">Unidad base</Label>
                             <select
                                 id="servingUnit"
                                 name="servingUnit"
@@ -154,8 +183,6 @@ export const FoodForm: React.FC<FoodFormProps> = ({ onSuccess, onCancel, initial
                             >
                                 <option value="g">g</option>
                                 <option value="ml">ml</option>
-                                <option value="oz">oz</option>
-                                <option value="cup">taza</option>
                             </select>
                         </div>
                     </div>
@@ -163,7 +190,70 @@ export const FoodForm: React.FC<FoodFormProps> = ({ onSuccess, onCancel, initial
             </div>
 
             <div className="form-section">
-                <h3>Macronutrientes (por porción)</h3>
+                <h3>Unidades de Medida Personalizadas</h3>
+                <div className="p-4 border rounded-md bg-muted/20 space-y-4">
+                    <div className="grid grid-cols-12 gap-2 items-end">
+                        <div className="col-span-5">
+                            <Label htmlFor="newUnitLabel" className="text-xs">Nombre (ej. Rebanada)</Label>
+                            <Input
+                                id="newUnitLabel"
+                                value={newUnit.label}
+                                onChange={e => setNewUnit(prev => ({ ...prev, label: e.target.value }))}
+                                placeholder="Nombre unidad"
+                                className="h-8 text-sm"
+                            />
+                        </div>
+                        <div className="col-span-3">
+                            <Label htmlFor="newUnitWeight" className="text-xs">Peso (g)</Label>
+                            <Input
+                                id="newUnitWeight"
+                                type="number"
+                                value={newUnit.weightGrams}
+                                onChange={e => setNewUnit(prev => ({ ...prev, weightGrams: e.target.value }))}
+                                placeholder="g"
+                                className="h-8 text-sm"
+                            />
+                        </div>
+                        <div className="col-span-2 flex items-center h-8 pb-1">
+                            <label className="text-xs flex items-center gap-1 cursor-pointer">
+                                <input
+                                    type="checkbox"
+                                    checked={newUnit.isDefault}
+                                    onChange={e => setNewUnit(prev => ({ ...prev, isDefault: e.target.checked }))}
+                                />
+                                Default
+                            </label>
+                        </div>
+                        <div className="col-span-2">
+                            <Button type="button" size="sm" onClick={handleAddUnit} disabled={!newUnit.label || !newUnit.weightGrams} className="w-full h-8">
+                                + Añadir
+                            </Button>
+                        </div>
+                    </div>
+
+                    {servingUnits.length > 0 && (
+                        <div className="space-y-2 mt-2">
+                            <Label className="text-xs text-muted-foreground">Unidades añadidas:</Label>
+                            <div className="grid gap-2">
+                                {servingUnits.map((u, idx) => (
+                                    <div key={idx} className="flex items-center justify-between bg-background p-2 rounded border text-sm">
+                                        <span>
+                                            <span className="font-medium">{u.label}</span> = {u.weightGrams}g
+                                            {u.isDefault && <span className="ml-2 text-xs bg-primary/10 text-primary px-1 rounded">Default</span>}
+                                        </span>
+                                        <Button type="button" variant="ghost" size="sm" onClick={() => handleRemoveUnit(idx)} className="h-6 w-6 p-0 text-destructive">
+                                            ×
+                                        </Button>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+                </div>
+            </div>
+
+            <div className="form-section">
+                <h3>Macronutrientes (por porción base de 100g/ml)</h3>
                 <div className="form-grid cols-2">
                     <div className="grid gap-2">
                         <Label htmlFor="nutrition.calories">Calorías (kcal)</Label>

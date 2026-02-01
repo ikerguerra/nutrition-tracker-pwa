@@ -51,7 +51,23 @@ export const useDailyLog = (initialDate?: string): UseDailyLogReturn => {
         setLoading(true);
         setError(null);
         try {
-            const updated = await dailyLogService.updateEntry(id, entry);
+            // Find existing entry to populate required backend fields
+            let existingEntry: any = null;
+            if (dailyLog && dailyLog.meals) {
+                Object.values(dailyLog.meals).forEach(entries => {
+                    const found = entries.find(e => e.id === id);
+                    if (found) existingEntry = found;
+                });
+            }
+
+            const fullPayload = {
+                ...entry,
+                date: (dailyLog?.date || initialDate || new Date().toISOString().split('T')[0]) as string,
+                mealType: existingEntry?.mealType,
+                foodId: existingEntry?.foodId, // Required by backend DTO
+            };
+
+            const updated = await dailyLogService.updateEntry(id, fullPayload);
             setDailyLog(updated);
         } catch (err: any) {
             setError(err.message || 'Error updating entry');
@@ -59,7 +75,7 @@ export const useDailyLog = (initialDate?: string): UseDailyLogReturn => {
         } finally {
             setLoading(false);
         }
-    }, []);
+    }, [dailyLog, initialDate]);
 
     const deleteEntry = useCallback(async (id: number) => {
         setLoading(true);

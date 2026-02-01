@@ -196,6 +196,24 @@ const foodService = {
         } catch (error: any) {
             throw error.response?.data || error;
         }
+    },
+
+    /**
+     * Calculate nutrition for a specific quantity and optional serving unit
+     */
+    calculateNutrition: async (id: number, quantity: number, servingUnitId?: number): Promise<import('../types/food').NutritionalInfo> => {
+        try {
+            const params: any = { quantity };
+            if (servingUnitId) {
+                params.servingUnitId = servingUnitId;
+            }
+            const response = await apiClient.get<{ data: import('../types/food').NutritionalInfo }>(`/foods/${id}/calculate`, {
+                params
+            });
+            return response.data.data;
+        } catch (error: any) {
+            throw error.response?.data || error;
+        }
     }
 };
 

@@ -54,6 +54,13 @@ export const FOOD_CATEGORY_LABELS: Record<FoodCategory, string> = {
     [FoodCategory.OTHER]: 'Otros'
 };
 
+export interface ServingUnit {
+    id?: number;
+    label: string;
+    weightGrams: number;
+    isDefault?: boolean;
+}
+
 export interface Food {
     id?: number;
     name: string;
@@ -63,6 +70,7 @@ export interface Food {
     servingUnit?: string;
     category?: FoodCategory;
     nutritionalInfo?: NutritionalInfo;
+    servingUnits?: ServingUnit[];
     createdAt?: string;
     updatedAt?: string;
 }
@@ -73,7 +81,9 @@ export interface FoodRequest {
     barcode?: string;
     servingSize?: number;
     servingUnit?: string;
+    category?: FoodCategory;
     nutritionalInfo: Partial<NutritionalInfo>;
+    servingUnits?: ServingUnit[];
 }
 
 export interface Page<T> {
