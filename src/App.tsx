@@ -4,6 +4,7 @@ import { FoodsProvider } from '@context/FoodsContext';
 import ProtectedRoute from '@components/layout/ProtectedRoute';
 import LoginPage from '@features/auth/LoginPage';
 import RegisterPage from '@features/auth/RegisterPage';
+import AuthCallbackPage from '@features/auth/AuthCallbackPage';
 import DashboardPage from '@features/dashboard/DashboardPage';
 import ProfilePage from '@features/profile/ProfilePage';
 import TemplatesPage from '@features/mealTemplates/TemplatesPage';
@@ -22,6 +23,7 @@ function App() {
                     <Routes>
                         <Route path="/login" element={<LoginPage />} />
                         <Route path="/register" element={<RegisterPage />} />
+                        <Route path="/auth/callback" element={<AuthCallbackPage />} />
                         <Route
                             path="/"
                             element={
