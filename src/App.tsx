@@ -12,6 +12,7 @@ import RecipesPage from '@features/recipes/RecipesPage';
 import NutritionBreakdownPage from '@features/stats/NutritionBreakdownPage';
 import StatsPage from '@features/stats/StatsPage';
 import { CalendarView } from '@features/calendar/CalendarView';
+import { AchievementsPage } from '@features/achievements/AchievementsPage';
 import { Toaster } from 'react-hot-toast';
 import '@styles/global.css';
 
@@ -81,6 +82,14 @@ function App() {
                                 element={
                                     <ProtectedRoute>
                                         <StatsPage />
+                                    </ProtectedRoute>
+                                }
+                            />
+                            <Route
+                                path="/achievements"
+                                element={
+                                    <ProtectedRoute>
+                                        <AchievementsPage />
                                     </ProtectedRoute>
                                 }
                             />

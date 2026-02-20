@@ -30,6 +30,7 @@
         "stats": "Estadísticas",
         "breakdown": "Desglose",
         "profile": "Perfil",
+        "achievements": "Logros",
         "logout": "Cerrar Sesión"
     },
     "dashboard": {
@@ -186,5 +187,16 @@
         "continueWithGoogle": "Continuar con Google",
         "alreadyHaveAccount": "¿Ya tienes cuenta? Inicia sesión",
         "dontHaveAccount": "¿No tienes cuenta? Regístrate"
+    },
+    "achievements": {
+        "title": "Logros",
+        "subtitle": "Tu progreso y hitos desbloqueados",
+        "unlocked": "Desbloqueados",
+        "total": "Total",
+        "completion": "Completado",
+        "sectionUnlocked": "Desbloqueados",
+        "sectionLocked": "Por desbloquear",
+        "unlockedOn": "Desbloqueado el {{date}}",
+        "empty": "Empieza a registrar tu dieta para desbloquear logros"
     }
 }

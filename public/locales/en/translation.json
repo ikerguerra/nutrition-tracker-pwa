@@ -30,6 +30,7 @@
         "stats": "Stats",
         "breakdown": "Breakdown",
         "profile": "Profile",
+        "achievements": "Achievements",
         "logout": "Logout"
     },
     "dashboard": {
@@ -186,5 +187,16 @@
         "continueWithGoogle": "Continue with Google",
         "alreadyHaveAccount": "Already have an account? Login",
         "dontHaveAccount": "Don't have an account? Register"
+    },
+    "achievements": {
+        "title": "Achievements",
+        "subtitle": "Your progress and unlocked milestones",
+        "unlocked": "Unlocked",
+        "total": "Total",
+        "completion": "Completion",
+        "sectionUnlocked": "Unlocked",
+        "sectionLocked": "Locked",
+        "unlockedOn": "Unlocked on {{date}}",
+        "empty": "Start logging your diet to unlock achievements"
     }
 }

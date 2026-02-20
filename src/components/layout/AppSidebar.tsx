@@ -9,6 +9,7 @@ import {
     LayoutDashboard,
     LogOut,
     PieChart,
+    Trophy,
     User,
 } from 'lucide-react'
 import { useAuth } from '@hooks/useAuth'
@@ -71,6 +72,11 @@ export function AppSidebar() {
             to: '/nutrition-breakdown',
             label: t('nav.breakdown'),
             icon: LayoutDashboard,
+        },
+        {
+            to: '/achievements',
+            label: t('nav.achievements'),
+            icon: Trophy,
         },
         {
             to: '/profile',
