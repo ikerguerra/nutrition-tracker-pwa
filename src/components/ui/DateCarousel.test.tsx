@@ -58,8 +58,8 @@ describe('DateCarousel', () => {
         const customDate = new Date('2026-01-15');
         render(<DateCarousel selectedDate={customDate} onDateChange={mockOnDateChange} />);
 
-        // Should display weekday name
-        const weekdayElement = screen.getByText(/monday|tuesday|wednesday|thursday|friday|saturday|sunday/i);
+        // Should display weekday name — may be English or Spanish depending on i18n locale in tests
+        const weekdayElement = screen.getByText(/monday|tuesday|wednesday|thursday|friday|saturday|sunday|lunes|martes|miércoles|miercoles|jueves|viernes|sábado|sabado|domingo/i);
         expect(weekdayElement).toBeInTheDocument();
     });
 });
