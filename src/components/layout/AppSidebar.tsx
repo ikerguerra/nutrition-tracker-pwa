@@ -34,6 +34,7 @@ import {
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { useTranslation } from 'react-i18next'
 import { LanguageSelector } from '@components/common/LanguageSelector'
+import { ModeToggle } from '@components/common/ModeToggle'
 
 export function AppSidebar() {
     const { t } = useTranslation();
@@ -118,8 +119,9 @@ export function AppSidebar() {
             </SidebarContent>
             <SidebarFooter>
                 <SidebarMenu>
-                    <div className="px-2 py-2">
+                    <div className="px-2 py-2 flex gap-2">
                         <LanguageSelector />
+                        <ModeToggle />
                     </div>
                     <SidebarMenuItem>
                         <DropdownMenu>

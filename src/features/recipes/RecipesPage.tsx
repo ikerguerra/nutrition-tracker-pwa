@@ -158,6 +158,7 @@ const RecipesPage: React.FC = () => {
                                         src={recipe.imageUrl}
                                         alt={recipe.name}
                                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                                        loading="lazy"
                                     />
                                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-60"></div>
                                 </div>

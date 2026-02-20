@@ -15,7 +15,7 @@ export const ExternalFoodCard: React.FC<ExternalFoodCardProps> = ({ food, onImpo
         <Card className="external-food-card">
             <div className="external-food-image-container">
                 {food.imageUrl ? (
-                    <img src={food.imageUrl} alt={food.name} className="external-food-image" />
+                    <img src={food.imageUrl} alt={food.name} className="external-food-image" loading="lazy" />
                 ) : (
                     <div className="external-food-placeholder">No Image</div>
                 )}
