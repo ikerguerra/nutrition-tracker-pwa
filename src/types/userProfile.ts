@@ -18,6 +18,8 @@ export interface UserProfile {
     customProteinPercentage: number | null;
     customCarbsPercentage: number | null;
     customFatsPercentage: number | null;
+    xp?: number;
+    level?: number;
 }
 
 export interface UserProfileUpdateRequest {

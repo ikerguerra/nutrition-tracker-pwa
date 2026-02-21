@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Layout } from '@components/layout/Layout';
 import statsService, { WeightDataPoint, MacroTrendDataPoint, WeeklySummary, GoalAchievement } from '@services/statsService';
+import { reportService } from '@services/reportService';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend } from 'recharts';
 import { Button } from '@components/ui/button';
 import toast from 'react-hot-toast';
@@ -10,6 +11,7 @@ const StatsPage: React.FC = () => {
     const [activeTab, setActiveTab] = useState<'weight' | 'macros' | 'weekly' | 'goals'>('weight');
     const [dateRange, setDateRange] = useState<'7' | '30' | '90'>('30');
     const [loading, setLoading] = useState(false);
+    const [downloading, setDownloading] = useState(false);
 
     // Data states
     const [weightData, setWeightData] = useState<WeightDataPoint[]>([]);
@@ -54,31 +56,70 @@ const StatsPage: React.FC = () => {
         }
     };
 
+    const handleDownloadCsv = async () => {
+        try {
+            setDownloading(true);
+            const { startDate, endDate } = getDateRange();
+            await reportService.downloadCsv(startDate, endDate);
+            toast.success('Reporte CSV descargado con éxito');
+        } catch (error) {
+            console.error('Failed to download CSV:', error);
+            toast.error('Error al generar el reporte CSV');
+        } finally {
+            setDownloading(false);
+        }
+    };
+
+    const handleDownloadPdf = async () => {
+        try {
+            setDownloading(true);
+            const { startDate, endDate } = getDateRange();
+            await reportService.downloadPdf(startDate, endDate);
+            toast.success('Reporte PDF descargado con éxito');
+        } catch (error) {
+            console.error('Failed to download PDF:', error);
+            toast.error('Error al generar el reporte PDF');
+        } finally {
+            setDownloading(false);
+        }
+    };
+
     return (
         <Layout>
             <div className="container mx-auto px-4 py-8">
                 <h1 className="text-3xl font-bold mb-6">📊 Estadísticas</h1>
 
-                {/* Date Range Selector */}
-                <div className="flex gap-2 mb-6">
-                    <Button
-                        variant={dateRange === '7' ? 'primary' : 'secondary'}
-                        onClick={() => setDateRange('7')}
-                    >
-                        7 días
-                    </Button>
-                    <Button
-                        variant={dateRange === '30' ? 'primary' : 'secondary'}
-                        onClick={() => setDateRange('30')}
-                    >
-                        30 días
-                    </Button>
-                    <Button
-                        variant={dateRange === '90' ? 'primary' : 'secondary'}
-                        onClick={() => setDateRange('90')}
-                    >
-                        90 días
-                    </Button>
+                {/* Date Range Selector and Export */}
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+                    <div className="flex gap-2">
+                        <Button
+                            variant={dateRange === '7' ? 'primary' : 'secondary'}
+                            onClick={() => setDateRange('7')}
+                        >
+                            7 días
+                        </Button>
+                        <Button
+                            variant={dateRange === '30' ? 'primary' : 'secondary'}
+                            onClick={() => setDateRange('30')}
+                        >
+                            30 días
+                        </Button>
+                        <Button
+                            variant={dateRange === '90' ? 'primary' : 'secondary'}
+                            onClick={() => setDateRange('90')}
+                        >
+                            90 días
+                        </Button>
+                    </div>
+
+                    <div className="flex gap-2">
+                        <Button variant="outline" onClick={handleDownloadCsv} disabled={downloading}>
+                            {downloading ? 'Generando...' : 'Descargar CSV'}
+                        </Button>
+                        <Button variant="outline" onClick={handleDownloadPdf} disabled={downloading}>
+                            {downloading ? 'Generando...' : 'Descargar PDF'}
+                        </Button>
+                    </div>
                 </div>
 
                 {/* Tabs */}

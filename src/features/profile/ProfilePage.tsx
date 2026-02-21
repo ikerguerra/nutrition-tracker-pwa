@@ -23,7 +23,8 @@ import {
     Wheat,
     Droplet,
     Save,
-    Loader2
+    Loader2,
+    Trophy
 } from 'lucide-react';
 
 
@@ -133,6 +134,15 @@ const ProfilePage: React.FC = () => {
                                 <div className="space-y-1">
                                     <h3 className="font-semibold text-lg">{profile?.id ? `User #${profile.id}` : 'User'}</h3>
                                     {profile?.age && <div className="text-sm text-muted-foreground">{profile.age} {t('profile.years')}</div>}
+                                    <div className="flex items-center gap-2 mt-1 pt-1">
+                                        <div className="bg-primary/10 text-primary px-2 py-0.5 rounded text-xs font-bold border border-primary/20">
+                                            Level {profile?.level || 1}
+                                        </div>
+                                        <span className="text-xs font-medium text-muted-foreground flex items-center gap-1">
+                                            <Trophy className="h-3 w-3" />
+                                            {profile?.xp || 0} XP
+                                        </span>
+                                    </div>
                                 </div>
                             </CardHeader>
                             <CardContent className="grid grid-cols-2 gap-4 pt-4">

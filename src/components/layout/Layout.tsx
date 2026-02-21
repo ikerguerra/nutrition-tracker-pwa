@@ -3,7 +3,7 @@ import { SidebarProvider, SidebarInset, SidebarTrigger } from '@/components/ui/s
 import { Separator } from '@/components/ui/separator';
 import { AppSidebar } from './AppSidebar';
 import { Header } from './Header';
-
+import { OfflineBanner } from '@components/common/OfflineBanner';
 
 interface LayoutProps {
     children: React.ReactNode;
@@ -16,6 +16,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, onAddFood, onScanBarco
         <SidebarProvider>
             <AppSidebar />
             <SidebarInset>
+                <OfflineBanner />
                 <header className="flex h-16 shrink-0 items-center gap-2 border-b bg-background px-4 sticky top-0 z-10">
                     <SidebarTrigger className="-ml-1" />
                     <Separator orientation="vertical" className="mr-2 h-4" />
