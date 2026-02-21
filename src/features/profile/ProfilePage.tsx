@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Layout } from '@components/layout/Layout';
 import userProfileService from '@services/userProfileService';
+import { pushNotificationService } from '@services/pushNotificationService';
 import type { UserProfile, UserProfileUpdateRequest } from '../../types/userProfile';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -24,7 +25,8 @@ import {
     Droplet,
     Save,
     Loader2,
-    Trophy
+    Trophy,
+    Bell
 } from 'lucide-react';
 
 
@@ -34,9 +36,15 @@ const ProfilePage: React.FC = () => {
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
     const [formData, setFormData] = useState<UserProfileUpdateRequest>({});
+    const [notificationsEnabled, setNotificationsEnabled] = useState(false);
 
     useEffect(() => {
         loadProfile();
+        const checkPush = async () => {
+            const hasPermission = await pushNotificationService.checkPermission();
+            setNotificationsEnabled(hasPermission);
+        };
+        checkPush();
     }, []);
 
     const loadProfile = async () => {
@@ -223,6 +231,29 @@ const ProfilePage: React.FC = () => {
                                 <div className="flex items-center justify-between">
                                     <Label>{t('profile.language')}</Label>
                                     <LanguageSelector />
+                                </div>
+                                <div className="flex flex-col gap-1 py-3 border-t">
+                                    <div className="flex items-center justify-between">
+                                        <Label className="flex items-center gap-2">
+                                            <Bell className="h-4 w-4 text-primary" />
+                                            Daily Reminders
+                                        </Label>
+                                        <Switch
+                                            checked={notificationsEnabled}
+                                            onCheckedChange={async (checked) => {
+                                                if (checked) {
+                                                    const success = await pushNotificationService.subscribe();
+                                                    setNotificationsEnabled(success);
+                                                    if (success) toast.success("Subscribed to notifications!");
+                                                    else toast.error("Could not subscribe to notifications.");
+                                                } else {
+                                                    toast.error("Please disable notifications from your browser settings.");
+                                                    setNotificationsEnabled(true);
+                                                }
+                                            }}
+                                        />
+                                    </div>
+                                    <p className="text-xs text-muted-foreground ml-6">Receive a daily reminder at 20:00 to log your meals</p>
                                 </div>
                             </CardContent>
                         </Card>
