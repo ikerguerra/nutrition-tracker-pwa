@@ -131,6 +131,11 @@ const TemplatesPage: React.FC = () => {
                                                     template.mealType === 'LUNCH' ? 'Almuerzo' :
                                                         template.mealType === 'DINNER' ? 'Cena' : 'Snack'}
                                         </div>
+                                        {template.isSystem && (
+                                            <div className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-primary/10 text-primary">
+                                                Sistema
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                                 {template.description && (
@@ -167,14 +172,16 @@ const TemplatesPage: React.FC = () => {
                                     <PlusCircle className="h-4 w-4" />
                                     Aplicar
                                 </Button>
-                                <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    className="text-destructive hover:text-destructive hover:bg-destructive/10"
-                                    onClick={() => handleDelete(template.id)}
-                                >
-                                    <Trash2 className="h-4 w-4" />
-                                </Button>
+                                {!template.isSystem && (
+                                    <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                                        onClick={() => handleDelete(template.id)}
+                                    >
+                                        <Trash2 className="h-4 w-4" />
+                                    </Button>
+                                )}
                             </CardFooter>
                         </Card>
                     ))}

@@ -6,6 +6,7 @@ export interface MealTemplate {
     description?: string;
     mealType?: MealType;
     isPublic: boolean;
+    isSystem?: boolean;
     items: MealTemplateItem[];
 }
 
