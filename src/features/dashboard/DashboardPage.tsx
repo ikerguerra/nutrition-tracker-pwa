@@ -27,6 +27,7 @@ import { CopyDayModal } from './CopyDayModal';
 import { CopyMealSectionModal } from './CopyEntryModal';
 import { DietPlan, RecommendationItem } from '../../types/recommendation';
 import recommendationService from '@services/recommendationService';
+import { Search } from 'lucide-react';
 
 const DashboardPage = () => {
     const { t } = useTranslation();
@@ -42,6 +43,7 @@ const DashboardPage = () => {
     const [recommendations, setRecommendations] = useState<DietPlan | null>(null);
     const [recLoading, setRecLoading] = useState(false);
     const [isGenerating, setIsGenerating] = useState(false);
+    const [showFoodSearchModal, setShowFoodSearchModal] = useState(false);
 
     // Date state
     const [searchParams, setSearchParams] = useSearchParams();
@@ -170,8 +172,6 @@ const DashboardPage = () => {
     const { dailyLog, addEntry, updateEntry, deleteEntry, updateWeight, loading: dailyLogLoading, error: dailyLogError } = useDailyLog(dateString);
     const { searchFoods, refresh, deleteFood, foods } = useFoods();
 
-    const minWidthForWidgets = '300px';
-
     const handleSearch = (query: string) => {
         if (query) {
             searchFoods(query);
@@ -245,13 +245,8 @@ const DashboardPage = () => {
                     </Button>
                 </div>
 
-                <div style={{
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
-                    gap: 'var(--spacing-xl)',
-                    alignItems: 'start'
-                }}>
-                    <div style={{ minWidth: 0 }}>
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                    <div className="lg:col-span-8 flex flex-col gap-6 min-w-0">
                         <Dashboard
                             date={dateString}
                             dailyLog={dailyLog}
@@ -266,10 +261,7 @@ const DashboardPage = () => {
                             onAcceptMeal={handleAcceptMeal}
                             onGeneratePlan={handleGeneratePlan}
                             isGeneratingPlan={isGenerating}
-                            onOpenFoods={() => {
-                                // Scroll to food list on mobile or focus search
-                                document.querySelector('.food-list-section')?.scrollIntoView({ behavior: 'smooth' });
-                            }}
+                            // Removing onOpenFoods from here as it's not needed directly inside the daily log anymore
                             onCopySection={(mealType) => {
                                 const titleMap: Record<string, string> = {
                                     'BREAKFAST': t('dashboard.meals.BREAKFAST'),
@@ -287,41 +279,65 @@ const DashboardPage = () => {
                         />
                     </div>
 
-                    <div className="food-list-section" style={{ minWidth: 0 }}>
-                        <div style={{ display: 'flex', gap: 'var(--spacing-sm)', marginBottom: 'var(--spacing-md)' }}>
-                            <div style={{ flex: 1 }}>
+                    <div className="lg:col-span-4 flex flex-col gap-6 sticky top-6">
+                        <div className="bg-card text-card-foreground p-6 rounded-xl border border-border shadow-sm">
+                            <h3 className="text-lg font-semibold mb-4 text-center">{t('dashboard.addFoodTitle', '¿Qué has comido hoy?')}</h3>
+                            <Button
+                                className="w-full h-12 text-base rounded-full shadow-md"
+                                onClick={() => setShowFoodSearchModal(true)}
+                            >
+                                <Search className="w-5 h-5 mr-3" />
+                                {t('dashboard.searchFoodBtn', 'Buscar alimento...')}
+                            </Button>
+                        </div>
+
+                        <WeightWidget dailyLog={dailyLog} onUpdateWeight={updateWeight} />
+
+                        <Button
+                            variant="secondary"
+                            className="w-full"
+                            onClick={() => setShowCharts(true)}
+                        >
+                            📊 {t('dashboard.viewStats')}
+                        </Button>
+                    </div>
+                </div>
+            </Layout >
+
+            <Dialog open={showFoodSearchModal} onOpenChange={setShowFoodSearchModal}>
+                <DialogContent className="sm:max-w-2xl h-[85vh] flex flex-col p-6">
+                    <DialogHeader className="mb-2">
+                        <DialogTitle className="text-2xl">{t('dashboard.addFood')}</DialogTitle>
+                    </DialogHeader>
+
+                    <div className="flex-1 flex flex-col gap-4 overflow-hidden min-h-0">
+                        <div className="flex gap-2">
+                            <div className="flex-1">
                                 <SearchBar onSearch={handleSearch} />
                             </div>
                             <Button
                                 variant="secondary"
-                                onClick={() => setShowExternalSearch(true)}
+                                onClick={() => {
+                                    setShowFoodSearchModal(false);
+                                    setShowExternalSearch(true);
+                                }}
                                 title={t('dashboard.searchOff')}
                             >
                                 🌐
                             </Button>
                         </div>
 
-                        <FoodList onEdit={handleEdit} onDelete={handleDelete} onAddToDailyLog={(food) => {
-                            setSelectedFoodForEntry(food);
-                            setShowAddEntryModal(true);
-                        }} />
-                    </div>
-
-                    <div style={{ minWidth: minWidthForWidgets }}>
-                        <WeightWidget dailyLog={dailyLog} onUpdateWeight={updateWeight} />
-
-                        <div className="mt-4">
-                            <Button
-                                variant="secondary"
-                                className="w-full"
-                                onClick={() => setShowCharts(true)}
-                            >
-                                📊 {t('dashboard.viewStats')}
-                            </Button>
+                        <div className="flex-1 overflow-auto rounded-md border border-border min-h-0">
+                            <FoodList onEdit={handleEdit} onDelete={handleDelete} onAddToDailyLog={(food) => {
+                                setSelectedFoodForEntry(food);
+                                setShowFoodSearchModal(false);
+                                // Small delay to prevent dialog animation clash
+                                setTimeout(() => setShowAddEntryModal(true), 150);
+                            }} />
                         </div>
                     </div>
-                </div>
-            </Layout >
+                </DialogContent>
+            </Dialog>
 
             <Dialog open={showCharts} onOpenChange={handleOpenChangeCharts}>
                 <DialogContent className="sm:max-w-4xl">

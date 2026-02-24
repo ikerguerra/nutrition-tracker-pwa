@@ -186,7 +186,15 @@
         "lastName": "Apellido",
         "continueWithGoogle": "Continuar con Google",
         "alreadyHaveAccount": "¿Ya tienes cuenta? Inicia sesión",
-        "dontHaveAccount": "¿No tienes cuenta? Regístrate"
+        "dontHaveAccount": "¿No tienes cuenta?",
+        "signUpToday": "Regístrate hoy",
+        "welcomeBack": "Bienvenido de nuevo",
+        "enterCredentials": "Ingresa tus credenciales para acceder a tu cuenta",
+        "forgotPassword": "¿Olvidaste tu contraseña?",
+        "orContinueWith": "O continúa con",
+        "invalidCredentials": "Email o contraseña inválidos",
+        "loginHeroTitle": "Domina tu viaje nutricional.",
+        "loginHeroDesc": "Lleva un registro de tus comidas, macros y alcanza tus metas con nuestra experiencia de seguimiento."
     },
     "achievements": {
         "title": "Logros",

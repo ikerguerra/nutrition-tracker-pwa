@@ -125,7 +125,7 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({ onCancel, onSave }) 
                 <div>
                     <label className="block text-sm font-medium mb-1.5 text-gray-700 dark:text-gray-300">Tipo de Comida Preferido</label>
                     <select
-                        className="w-full px-3 py-2 border rounded-lg bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-primary/50 focus:border-primary transition-colors duration-200 outline-none"
+                        className="w-full px-3 py-2 border rounded-lg bg-background border-input focus:ring-2 focus:ring-primary/50 focus:border-primary transition-colors duration-200 outline-none"
                         value={mealType}
                         onChange={(e) => setMealType(e.target.value as MealType)}
                     >
@@ -144,7 +144,7 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({ onCancel, onSave }) 
                     <SearchBar onSearch={handleSearch} placeholder="Buscar alimentos para añadir..." />
 
                     {showSearchResults && foods.length > 0 && (
-                        <div className="mt-2 max-h-60 overflow-y-auto border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg bg-white dark:bg-gray-800 z-10 relative">
+                        <div className="mt-2 max-h-60 overflow-y-auto border border-border bg-card text-card-foreground z-10 relative">
                             {foods.map(food => (
                                 <div
                                     key={food.id}
@@ -172,13 +172,13 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({ onCancel, onSave }) 
                     </div>
 
                     {items.length === 0 ? (
-                        <div className="text-center py-8 border-2 border-dashed border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-800/50">
+                        <div className="text-center py-8 border-2 border-dashed border-border bg-muted/50">
                             <p className="text-sm text-gray-500">Busca y añade alimentos arriba para crear tu plantilla.</p>
                         </div>
                     ) : (
                         <div className="space-y-3 max-h-[400px] overflow-y-auto pr-1">
                             {items.map((item, index) => (
-                                <div key={index} className="flex items-center gap-3 p-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm transition-all hover:shadow-md">
+                                <div key={index} className="flex items-center gap-3 p-3 bg-card text-card-foreground border-border shadow-sm transition-all hover:shadow-md">
                                     <div className="flex-1 min-w-0">
                                         <div className="font-medium text-gray-900 dark:text-white truncate" title={item.food.name}>
                                             {item.food.name}
@@ -192,7 +192,7 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({ onCancel, onSave }) 
                                         <div className="relative">
                                             <input
                                                 type="number"
-                                                className="w-20 px-2 py-1.5 text-right border border-gray-300 dark:border-gray-600 rounded bg-gray-50 dark:bg-gray-900 focus:ring-2 focus:ring-primary/50 outline-none transition-all"
+                                                className="w-20 px-2 py-1.5 text-right border border-input bg-muted/50 focus:ring-2 focus:ring-primary/50 outline-none transition-all"
                                                 value={item.quantity}
                                                 onChange={(e) => handleUpdateItem(index, 'quantity', Number(e.target.value))}
                                                 min="0"
@@ -203,7 +203,7 @@ export const TemplateForm: React.FC<TemplateFormProps> = ({ onCancel, onSave }) 
                                         <div className="relative">
                                             <input
                                                 type="text"
-                                                className="w-16 px-2 py-1.5 border border-gray-300 dark:border-gray-600 rounded bg-gray-50 dark:bg-gray-900 focus:ring-2 focus:ring-primary/50 outline-none transition-all"
+                                                className="w-16 px-2 py-1.5 border border-input bg-muted/50 focus:ring-2 focus:ring-primary/50 outline-none transition-all"
                                                 value={item.unit}
                                                 onChange={(e) => handleUpdateItem(index, 'unit', e.target.value)}
                                                 placeholder="Ud."

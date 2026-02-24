@@ -161,7 +161,7 @@ export const RecipeForm: React.FC<RecipeFormProps> = ({ onCancel, onSave }) => {
             <div>
                 <label className="block text-sm font-medium mb-1">Instrucciones</label>
                 <textarea
-                    className="w-full p-2 border rounded-md dark:bg-gray-800 dark:border-gray-700 min-h-[100px]"
+                    className="w-full p-2 border rounded-md bg-background border-input min-h-[100px]"
                     value={instructions}
                     onChange={(e) => setInstructions(e.target.value)}
                     placeholder="Pasos para preparar la receta..."
@@ -173,7 +173,7 @@ export const RecipeForm: React.FC<RecipeFormProps> = ({ onCancel, onSave }) => {
                 <SearchBar onSearch={handleSearch} placeholder="Buscar ingredientes..." />
 
                 {showSearchResults && foods.length > 0 && (
-                    <div className="mt-2 max-h-40 overflow-y-auto border rounded-md shadow-sm bg-white dark:bg-gray-800">
+                    <div className="mt-2 max-h-40 overflow-y-auto border rounded-md shadow-sm bg-card text-card-foreground">
                         {foods.map(food => (
                             <div
                                 key={food.id}
@@ -195,7 +195,7 @@ export const RecipeForm: React.FC<RecipeFormProps> = ({ onCancel, onSave }) => {
                 ) : (
                     <div className="space-y-2 max-h-60 overflow-y-auto pr-1">
                         {items.map((item, index) => (
-                            <div key={index} className="flex items-center gap-2 p-2 bg-gray-50 dark:bg-gray-900 rounded-md border text-sm">
+                            <div key={index} className="flex items-center gap-2 p-2 bg-muted/50 rounded-md border text-sm">
                                 <div className="flex-1 font-medium truncate">
                                     {item.food.name}
                                 </div>

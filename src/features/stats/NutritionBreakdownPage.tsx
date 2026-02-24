@@ -93,7 +93,7 @@ const NutritionBreakdownPage: React.FC = () => {
                     <>
                         {activeTab === 'macros' && (
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                                <div className="card p-6 bg-white dark:bg-gray-800 rounded-lg shadow">
+                                <div className="card p-6 bg-card text-card-foreground rounded-lg shadow">
                                     <h2 className="text-xl font-bold mb-4">{t('breakdown.caloriesByMeal')}</h2>
                                     <div className="h-64">
                                         <ResponsiveContainer width="100%" height="100%">
@@ -113,7 +113,7 @@ const NutritionBreakdownPage: React.FC = () => {
 
                                 <div className="space-y-4">
                                     {breakdown.map(meal => (
-                                        <div key={meal.mealType} className="card p-4 bg-white dark:bg-gray-800 rounded-lg shadow border-l-4" style={{ borderColor: COLORS[meal.mealType] || '#ccc' }}>
+                                        <div key={meal.mealType} className="card p-4 bg-card text-card-foreground rounded-lg shadow border-l-4" style={{ borderColor: COLORS[meal.mealType] || '#ccc' }}>
                                             <div className="flex justify-between items-center mb-2">
                                                 <h3 className="font-bold">{t(`dashboard.meals.${meal.mealType}`, meal.mealType)}</h3>
                                                 <span className="text-sm font-semibold">{meal.calories} kcal ({meal.caloriesPercentage?.toFixed(1)}%)</span>
@@ -139,9 +139,9 @@ const NutritionBreakdownPage: React.FC = () => {
                         )}
 
                         {activeTab === 'food' && dailyLog && (
-                            <div className="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+                            <div className="bg-card text-card-foreground rounded-lg shadow overflow-hidden">
                                 <table className="w-full text-left">
-                                    <thead className="bg-gray-50 dark:bg-gray-900 border-b dark:border-gray-700">
+                                    <thead className="bg-card text-card-foreground border-border">
                                         <tr>
                                             <th className="p-4 font-semibold text-sm">{t('breakdown.table.food')}</th>
                                             <th className="p-4 font-semibold text-sm">{t('breakdown.table.meal')}</th>
@@ -179,7 +179,7 @@ const NutritionBreakdownPage: React.FC = () => {
 
                         {activeTab === 'chart' && (
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-                                <div className="card p-6 bg-white dark:bg-gray-800 rounded-lg shadow flex flex-col items-center">
+                                <div className="card p-6 bg-card text-card-foreground rounded-lg shadow flex flex-col items-center">
                                     <h2 className="text-xl font-bold mb-4">{t('breakdown.charts.macroDistribution')}</h2>
                                     <div className="h-80 w-full max-w-md">
                                         <ResponsiveContainer width="100%" height="100%">
@@ -229,7 +229,7 @@ const NutritionBreakdownPage: React.FC = () => {
 
                         {activeTab === 'micros' && (
                             <div className="space-y-6">
-                                <div className="card p-6 bg-white dark:bg-gray-800 rounded-lg shadow">
+                                <div className="card p-6 bg-card text-card-foreground rounded-lg shadow">
                                     <h2 className="text-xl font-bold mb-4">{t('breakdown.micros.title')}</h2>
                                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                         {[
@@ -275,7 +275,7 @@ const NutritionBreakdownPage: React.FC = () => {
                                             }
 
                                             return (
-                                                <div key={nutrient.key} className="p-4 border rounded-lg bg-gray-50 dark:bg-gray-900/50">
+                                                <div key={nutrient.key} className="p-4 border rounded-lg bg-card text-card-foreground/50">
                                                     <div className="flex justify-between items-baseline mb-2">
                                                         <span className="font-medium text-gray-700 dark:text-gray-300">{nutrient.label}</span>
                                                         <div className="text-right">

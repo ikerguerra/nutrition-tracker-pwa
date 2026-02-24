@@ -156,7 +156,7 @@ const StatsPage: React.FC = () => {
                 ) : (
                     <>
                         {activeTab === 'weight' && (
-                            <div className="card p-6 bg-white dark:bg-gray-800 rounded-lg shadow">
+                            <div className="card p-6 bg-card text-card-foreground rounded-lg shadow">
                                 <h2 className="text-xl font-bold mb-4">Progreso de Peso</h2>
                                 {weightData.length === 0 ? (
                                     <p className="text-gray-500 text-center py-10">
@@ -181,7 +181,7 @@ const StatsPage: React.FC = () => {
                         )}
 
                         {activeTab === 'macros' && (
-                            <div className="card p-6 bg-white dark:bg-gray-800 rounded-lg shadow">
+                            <div className="card p-6 bg-card text-card-foreground rounded-lg shadow">
                                 <h2 className="text-xl font-bold mb-4">Tendencias de Macronutrientes</h2>
                                 {macroData.length === 0 ? (
                                     <p className="text-gray-500 text-center py-10">
@@ -209,7 +209,7 @@ const StatsPage: React.FC = () => {
 
                         {activeTab === 'weekly' && weeklyData && (
                             <div className="space-y-6">
-                                <div className="card p-6 bg-white dark:bg-gray-800 rounded-lg shadow">
+                                <div className="card p-6 bg-card text-card-foreground rounded-lg shadow">
                                     <h2 className="text-xl font-bold mb-4">Comparación Semanal</h2>
                                     <div className="h-96">
                                         <ResponsiveContainer width="100%" height="100%">
@@ -232,25 +232,25 @@ const StatsPage: React.FC = () => {
                                 </div>
 
                                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                                    <div className="card p-4 bg-white dark:bg-gray-800 rounded-lg shadow">
+                                    <div className="card p-4 bg-card text-card-foreground rounded-lg shadow">
                                         <p className="text-sm text-gray-500">Cambio Calorías</p>
                                         <p className={`text-2xl font-bold ${weeklyData.changes.caloriesChange > 0 ? 'text-green-500' : 'text-red-500'}`}>
                                             {weeklyData.changes.caloriesChange > 0 ? '+' : ''}{formatNumber(weeklyData.changes.caloriesChange, 1)}%
                                         </p>
                                     </div>
-                                    <div className="card p-4 bg-white dark:bg-gray-800 rounded-lg shadow">
+                                    <div className="card p-4 bg-card text-card-foreground rounded-lg shadow">
                                         <p className="text-sm text-gray-500">Cambio Proteína</p>
                                         <p className={`text-2xl font-bold ${weeklyData.changes.proteinChange > 0 ? 'text-green-500' : 'text-red-500'}`}>
                                             {weeklyData.changes.proteinChange > 0 ? '+' : ''}{weeklyData.changes.proteinChange.toFixed(1)}%
                                         </p>
                                     </div>
-                                    <div className="card p-4 bg-white dark:bg-gray-800 rounded-lg shadow">
+                                    <div className="card p-4 bg-card text-card-foreground rounded-lg shadow">
                                         <p className="text-sm text-gray-500">Cambio Carbohidratos</p>
                                         <p className={`text-2xl font-bold ${weeklyData.changes.carbsChange > 0 ? 'text-green-500' : 'text-red-500'}`}>
                                             {weeklyData.changes.carbsChange > 0 ? '+' : ''}{weeklyData.changes.carbsChange.toFixed(1)}%
                                         </p>
                                     </div>
-                                    <div className="card p-4 bg-white dark:bg-gray-800 rounded-lg shadow">
+                                    <div className="card p-4 bg-card text-card-foreground rounded-lg shadow">
                                         <p className="text-sm text-gray-500">Cambio Grasas</p>
                                         <p className={`text-2xl font-bold ${weeklyData.changes.fatsChange > 0 ? 'text-green-500' : 'text-red-500'}`}>
                                             {weeklyData.changes.fatsChange > 0 ? '+' : ''}{weeklyData.changes.fatsChange.toFixed(1)}%
@@ -262,7 +262,7 @@ const StatsPage: React.FC = () => {
 
                         {activeTab === 'goals' && goalData && (
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div className="card p-6 bg-white dark:bg-gray-800 rounded-lg shadow">
+                                <div className="card p-6 bg-card text-card-foreground rounded-lg shadow">
                                     <h2 className="text-xl font-bold mb-4">Logro de Objetivos</h2>
                                     <div className="flex items-center justify-center mb-6">
                                         <div className="relative w-48 h-48">
@@ -297,15 +297,15 @@ const StatsPage: React.FC = () => {
                                     </div>
                                 </div>
 
-                                <div className="card p-6 bg-white dark:bg-gray-800 rounded-lg shadow">
+                                <div className="card p-6 bg-card text-card-foreground rounded-lg shadow">
                                     <h2 className="text-xl font-bold mb-4">Rachas</h2>
                                     <div className="space-y-6">
-                                        <div className="text-center p-6 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                                        <div className="text-center p-6 bg-muted/50 rounded-lg">
                                             <p className="text-sm text-gray-500 mb-2">Racha Actual</p>
                                             <p className="text-5xl font-bold text-blue-600">{goalData.currentStreak}</p>
                                             <p className="text-sm text-gray-500 mt-2">días consecutivos</p>
                                         </div>
-                                        <div className="text-center p-6 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                                        <div className="text-center p-6 bg-muted/50 rounded-lg">
                                             <p className="text-sm text-gray-500 mb-2">Mejor Racha</p>
                                             <p className="text-5xl font-bold text-green-600">{goalData.bestStreak}</p>
                                             <p className="text-sm text-gray-500 mt-2">días consecutivos</p>

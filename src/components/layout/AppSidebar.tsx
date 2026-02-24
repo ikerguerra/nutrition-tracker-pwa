@@ -141,7 +141,7 @@ export function AppSidebar() {
                                         <AvatarFallback className="rounded-lg">{user?.firstName?.charAt(0) || 'U'}</AvatarFallback>
                                     </Avatar>
                                     <div className="grid flex-1 text-left text-sm leading-tight">
-                                        <span className="truncate font-semibold">{user?.firstName || 'Usuario'}</span>
+                                        <span className="truncate font-semibold">{user?.firstName || 'Usuario'} {user?.lastName || ''}</span>
                                         <span className="truncate text-xs">{user?.email || 'email@example.com'}</span>
                                     </div>
                                     <ChevronUp className="ml-auto size-4" />

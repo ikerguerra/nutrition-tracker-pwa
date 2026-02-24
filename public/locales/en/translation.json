@@ -186,7 +186,15 @@
         "lastName": "Last Name",
         "continueWithGoogle": "Continue with Google",
         "alreadyHaveAccount": "Already have an account? Login",
-        "dontHaveAccount": "Don't have an account? Register"
+        "dontHaveAccount": "Don't have an account?",
+        "signUpToday": "Sign up today",
+        "welcomeBack": "Welcome back",
+        "enterCredentials": "Enter your credentials to access your account",
+        "forgotPassword": "Forgot password?",
+        "orContinueWith": "Or continue with",
+        "invalidCredentials": "Invalid email or password",
+        "loginHeroTitle": "Master your nutrition journey.",
+        "loginHeroDesc": "Log your meals, track your macros, and achieve your health goals with our beautifully designed tracking experience."
     },
     "achievements": {
         "title": "Achievements",

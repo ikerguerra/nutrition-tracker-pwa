@@ -112,8 +112,14 @@ export const Dashboard: React.FC<DashboardProps> = ({
 
     return (
         <div className="flex flex-col gap-6">
+            <DailyLogSummary
+                dailyLog={dailyLog}
+                loading={loading}
+                error={error}
+                planTotals={hasPendingRecommendations ? planTotals : null}
+            />
+
             <div className="flex items-center justify-between flex-wrap gap-2">
-                <h2 className="text-2xl font-bold tracking-tight">Dashboard — {date || (dailyLog ? dailyLog.date : new Date().toISOString().split('T')[0])}</h2>
                 <div className="flex items-center gap-2">
                     {onGeneratePlan && !recommendations && (
                         <Button
@@ -139,13 +145,6 @@ export const Dashboard: React.FC<DashboardProps> = ({
                     )}
                 </div>
             </div>
-
-            <DailyLogSummary
-                dailyLog={dailyLog}
-                loading={loading}
-                error={error}
-                planTotals={hasPendingRecommendations ? planTotals : null}
-            />
 
             {recommendations && Object.values(groupedRecommendations).every(arr => arr.length === 0) && (
                 <div className="p-4 bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 rounded-md border border-green-200 dark:border-green-800 flex items-center gap-2">
