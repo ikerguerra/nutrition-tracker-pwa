@@ -42,6 +42,17 @@ const logout = () => {
     localStorage.removeItem('refreshToken');
 };
 
+const deleteAccount = async (password: string): Promise<void> => {
+    const token = getCurrentToken();
+    await axios.delete(`http://localhost:8080/api/v1/users/me`, {
+        data: { password },
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    });
+    logout();
+};
+
 const getCurrentToken = () => {
     return localStorage.getItem('accessToken');
 };
@@ -50,6 +61,7 @@ const authService = {
     login,
     register,
     logout,
+    deleteAccount,
     getCurrentToken,
 };
 

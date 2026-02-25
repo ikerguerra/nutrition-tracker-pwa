@@ -12,6 +12,17 @@ import { Label } from '@components/ui/label';
 import { Button } from '@components/ui/button';
 import { Switch } from '@components/ui/switch';
 import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from '@components/ui/dialog';
+import authService from '@services/authService';
+import { useAuth } from '../../hooks/useAuth';
+import {
     User,
     Ruler,
     Weight,
@@ -26,7 +37,8 @@ import {
     Save,
     Loader2,
     Trophy,
-    Bell
+    Bell,
+    AlertTriangle
 } from 'lucide-react';
 
 
@@ -37,6 +49,10 @@ const ProfilePage: React.FC = () => {
     const [saving, setSaving] = useState(false);
     const [formData, setFormData] = useState<UserProfileUpdateRequest>({});
     const [notificationsEnabled, setNotificationsEnabled] = useState(false);
+    const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+    const [deletePassword, setDeletePassword] = useState('');
+    const [isDeleting, setIsDeleting] = useState(false);
+    const { logout } = useAuth();
 
     useEffect(() => {
         loadProfile();
@@ -85,6 +101,25 @@ const ProfilePage: React.FC = () => {
             toast.error(t('profile.errorUpdate'));
         } finally {
             setSaving(false);
+        }
+    };
+
+    const handleDeleteAccount = async () => {
+        try {
+            setIsDeleting(true);
+            await authService.deleteAccount(deletePassword || 'DELETE');
+            toast.success(t('profile.accountDeleted') || 'Account successfully deleted.');
+            setIsDeleteDialogOpen(false);
+            logout();
+        } catch (error: any) {
+            console.error('Error deleting account:', error);
+            if (error.response?.data?.message) {
+                toast.error(error.response.data.message);
+            } else {
+                toast.error(t('profile.deleteError') || 'An error occurred while deleting your account.');
+            }
+        } finally {
+            setIsDeleting(false);
         }
     };
 
@@ -487,6 +522,63 @@ const ProfilePage: React.FC = () => {
                                 </CardContent>
                             </Card>
                         </form>
+
+                        {/* Danger Zone */}
+                        <Card className="border-destructive/50 mt-8 mb-8">
+                            <CardHeader>
+                                <CardTitle className="text-destructive flex items-center gap-2">
+                                    <AlertTriangle className="h-5 w-5" />
+                                    {t('profile.dangerZone')}
+                                </CardTitle>
+                                <CardDescription>
+                                    {t('profile.dangerZoneDesc')}
+                                </CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 py-4">
+                                    <div className="space-y-1">
+                                        <h4 className="font-medium">{t('profile.deleteAccount')}</h4>
+                                        <p className="text-sm text-muted-foreground">
+                                            {t('profile.deleteAccountDesc')}
+                                        </p>
+                                    </div>
+                                    <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+                                        <DialogTrigger asChild>
+                                            <Button variant="destructive">{t('profile.deleteAccount')}</Button>
+                                        </DialogTrigger>
+                                        <DialogContent className="sm:max-w-[425px]">
+                                            <DialogHeader>
+                                                <DialogTitle className="text-destructive flex items-center gap-2">
+                                                    <AlertTriangle className="h-5 w-5" />
+                                                    {t('profile.deleteAccountModalTitle')}
+                                                </DialogTitle>
+                                                <DialogDescription className="pt-2" dangerouslySetInnerHTML={{ __html: t('profile.deleteAccountConfirm') }}>
+                                                </DialogDescription>
+                                            </DialogHeader>
+                                            <div className="grid gap-4 py-4">
+                                                <div className="space-y-2">
+                                                    <Label htmlFor="delete-password">{t('profile.deleteAccountConfirmation')}</Label>
+                                                    <Input
+                                                        id="delete-password"
+                                                        type="password"
+                                                        value={deletePassword}
+                                                        onChange={(e) => setDeletePassword(e.target.value)}
+                                                        placeholder={t('profile.deleteAccountPasswordPlaceholder') as string}
+                                                    />
+                                                </div>
+                                            </div>
+                                            <DialogFooter>
+                                                <Button variant="outline" onClick={() => setIsDeleteDialogOpen(false)} disabled={isDeleting}>{t('profile.deleteAccountCancel')}</Button>
+                                                <Button variant="destructive" onClick={handleDeleteAccount} disabled={!deletePassword || isDeleting}>
+                                                    {isDeleting ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
+                                                    {t('profile.deleteAccountPermanently')}
+                                                </Button>
+                                            </DialogFooter>
+                                        </DialogContent>
+                                    </Dialog>
+                                </div>
+                            </CardContent>
+                        </Card>
                     </div>
                 </div>
             </div>

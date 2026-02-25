@@ -6,7 +6,6 @@ import MealSection from './MealSection';
 import DailyLogSummary from './DailyLogSummary';
 
 interface DashboardProps {
-    date?: string;
     dailyLog: DailyLog | null;
     recommendations?: DietPlan | null;
     loading?: boolean;
@@ -24,7 +23,6 @@ interface DashboardProps {
 }
 
 export const Dashboard: React.FC<DashboardProps> = ({
-    date,
     dailyLog,
     recommendations,
     loading,

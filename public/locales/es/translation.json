@@ -175,7 +175,19 @@
             "PALEO": "Paleo"
         },
         "preferences": "Preferencias",
-        "language": "Idioma"
+        "language": "Idioma",
+        "dangerZone": "Zona de Peligro",
+        "dangerZoneDesc": "Acciones irreversibles y destructivas",
+        "deleteAccount": "Eliminar Cuenta",
+        "deleteAccountDesc": "Elimina permanentemente tu cuenta y todos los datos asociados. Esta acción no se puede deshacer.",
+        "deleteAccountConfirm": "Esta acción es <strong>irreversible</strong>. Eliminará permanentemente tu cuenta, tu perfil, comidas, plantillas y todos los demás datos asociados a tu usuario.<br /><br />Por favor, introduce tu contraseña para confirmar. Si te registraste vía Google, escribe \"DELETE\".",
+        "deleteAccountModalTitle": "Eliminar Cuenta",
+        "deleteAccountCancel": "Cancelar",
+        "deleteAccountPermanently": "Eliminar Permanentemente",
+        "deleteAccountPasswordPlaceholder": "Contraseña o 'DELETE'",
+        "deleteAccountConfirmation": "Confirmación",
+        "accountDeleted": "Cuenta eliminada correctamente.",
+        "deleteError": "Ocurrió un error al eliminar tu cuenta."
     },
     "auth": {
         "login": "Iniciar Sesión",
