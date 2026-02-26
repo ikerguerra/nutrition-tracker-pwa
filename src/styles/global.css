@@ -9,6 +9,22 @@
         @apply border-border outline-ring/50;
         scrollbar-width: thin;
         scrollbar-color: var(--border) transparent;
+        -webkit-user-select: none;
+        user-select: none;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    input,
+    textarea,
+    [contenteditable] {
+        -webkit-user-select: auto;
+        user-select: auto;
+    }
+
+    html,
+    body {
+        overscroll-behavior-y: none;
+        -webkit-overflow-scrolling: touch;
     }
 
     html {
@@ -44,6 +60,19 @@
 @utility container {
     margin-inline: auto;
     padding-inline: 2rem;
+}
+
+@utility safe-area-pt {
+    padding-top: max(env(safe-area-inset-top), 16px);
+}
+
+@utility safe-area-pb {
+    padding-bottom: max(env(safe-area-inset-bottom), 16px);
+}
+
+@utility safe-area-px {
+    padding-left: max(env(safe-area-inset-left), 16px);
+    padding-right: max(env(safe-area-inset-right), 16px);
 }
 
 @utility no-scrollbar {

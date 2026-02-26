@@ -17,7 +17,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, onAddFood, onScanBarco
             <AppSidebar />
             <SidebarInset>
                 <OfflineBanner />
-                <header className="flex h-16 shrink-0 items-center gap-2 border-b bg-background px-4 sticky top-0 z-10">
+                <header className="flex h-[calc(4rem+env(safe-area-inset-top))] pt-[env(safe-area-inset-top)] shrink-0 items-center gap-2 border-b bg-background px-4 sticky top-0 z-10">
                     <SidebarTrigger className="-ml-1" />
                     <Separator orientation="vertical" className="mr-2 h-4" />
                     <div className="flex flex-1 items-center justify-between">
