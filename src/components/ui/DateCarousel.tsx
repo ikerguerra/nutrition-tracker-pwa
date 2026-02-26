@@ -8,9 +8,10 @@ import './DateCarousel.css';
 interface DateCarouselProps {
     selectedDate: Date;
     onDateChange: (date: Date) => void;
+    onCopy?: () => void;
 }
 
-export const DateCarousel: React.FC<DateCarouselProps> = ({ selectedDate, onDateChange }) => {
+export const DateCarousel: React.FC<DateCarouselProps> = ({ selectedDate, onDateChange, onCopy }) => {
     const { t } = useTranslation();
     const [direction, setDirection] = useState(0);
 
@@ -85,7 +86,7 @@ export const DateCarousel: React.FC<DateCarouselProps> = ({ selectedDate, onDate
             <Button
                 variant="secondary"
                 size="sm"
-                className="carousel-nav-btn"
+                className="carousel-nav-btn prev-btn"
                 onClick={handlePrevDay}
                 aria-label={t('common.previousDay')}
             >
@@ -125,12 +126,24 @@ export const DateCarousel: React.FC<DateCarouselProps> = ({ selectedDate, onDate
             <Button
                 variant="secondary"
                 size="sm"
-                className="carousel-nav-btn"
+                className="carousel-nav-btn next-btn"
                 onClick={handleNextDay}
                 aria-label={t('common.nextDay')}
             >
                 →
             </Button>
+
+            {onCopy && (
+                <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={onCopy}
+                    className="carousel-copy-btn"
+                    title={t('dashboard.copyDayTooltip')}
+                >
+                    📋 {t('dashboard.copyDay')}
+                </Button>
+            )}
         </div>
     );
 };

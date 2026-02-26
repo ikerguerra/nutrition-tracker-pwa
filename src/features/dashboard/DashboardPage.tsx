@@ -227,28 +227,17 @@ const DashboardPage = () => {
                 onAddFood={() => setShowAddFood(true)}
                 onScanBarcode={() => setShowScanner(true)}
             >
-                <div style={{ marginBottom: 'var(--spacing-lg)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
-                    <div style={{ flex: 1 }}>
-                        <DateCarousel
-                            selectedDate={selectedDate}
-                            onDateChange={setSelectedDate}
-                        />
-                    </div>
-                    <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => setShowCopyModal(true)}
-                        className="whitespace-nowrap"
-                        title={t('dashboard.copyDayTooltip')}
-                    >
-                        📋 {t('dashboard.copyDay')}
-                    </Button>
+                <div style={{ marginBottom: 'var(--spacing-lg)' }}>
+                    <DateCarousel
+                        selectedDate={selectedDate}
+                        onDateChange={setSelectedDate}
+                        onCopy={() => setShowCopyModal(true)}
+                    />
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
                     <div className="lg:col-span-8 flex flex-col gap-6 min-w-0">
                         <Dashboard
-                            date={dateString}
                             dailyLog={dailyLog}
                             recommendations={recommendations}
                             loading={dailyLogLoading || recLoading}

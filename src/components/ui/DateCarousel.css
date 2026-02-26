@@ -9,10 +9,13 @@
     margin-bottom: var(--spacing-md);
     position: relative;
     overflow: hidden;
+    flex-wrap: wrap;
+    gap: 0.5rem;
 }
 
 .carousel-nav-btn {
     z-index: 10;
+    flex-shrink: 0;
 }
 
 .carousel-display {
@@ -25,6 +28,7 @@
     height: 80px;
     /* Fixed height to prevent layout jumps during transition */
     overflow: hidden;
+    min-width: 150px;
 }
 
 .carousel-content {
@@ -58,4 +62,27 @@
 .date-sub {
     font-size: 0.9rem;
     color: var(--text-secondary);
+}
+
+.carousel-copy-btn {
+    width: 100%;
+    margin-top: 0.5rem;
+    border-top: 1px solid var(--border);
+    padding-top: 0.75rem !important;
+    height: auto !important;
+}
+
+@media (min-width: 640px) {
+    .date-carousel {
+        flex-wrap: nowrap;
+        gap: 0;
+    }
+
+    .carousel-copy-btn {
+        width: auto;
+        margin-top: 0;
+        border-top: none;
+        padding-top: 0 !important;
+        margin-left: 1rem;
+    }
 }

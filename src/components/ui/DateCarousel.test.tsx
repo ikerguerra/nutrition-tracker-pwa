@@ -62,4 +62,15 @@ describe('DateCarousel', () => {
         const weekdayElement = screen.getByText(/monday|tuesday|wednesday|thursday|friday|saturday|sunday|lunes|martes|miércoles|miercoles|jueves|viernes|sábado|sabado|domingo/i);
         expect(weekdayElement).toBeInTheDocument();
     });
+
+    it('should call onCopy when clicking copy button', () => {
+        const mockOnCopy = vi.fn();
+        const today = new Date();
+        render(<DateCarousel selectedDate={today} onDateChange={mockOnDateChange} onCopy={mockOnCopy} />);
+
+        const copyButton = screen.getByText(/📋/);
+        fireEvent.click(copyButton);
+
+        expect(mockOnCopy).toHaveBeenCalledTimes(1);
+    });
 });
