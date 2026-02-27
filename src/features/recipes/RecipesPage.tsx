@@ -79,19 +79,19 @@ const RecipesPage: React.FC = () => {
         try {
             const dateStr = logDate || new Date().toISOString().split('T')[0];
 
-            // Iterate over ingredients and add them one by one
-            const promises = selectedRecipe.ingredients.map(ing => {
+            // Add ingredients sequentially to avoid race condition on DailyLog creation.
+            // Concurrent requests can violate the UNIQUE(user_id, date) DB constraint
+            // if the daily log for that date doesn't exist yet.
+            for (const ing of selectedRecipe.ingredients) {
                 const quantity = (ing.quantity * servingsMultiplier) / selectedRecipe.servings;
-                return dailyLogService.addEntry({
+                await dailyLogService.addEntry({
                     date: dateStr as string,
                     mealType: logMealType,
                     foodId: ing.foodId,
                     quantity: Number(quantity.toFixed(1)),
                     unit: (ing.unit || 'g') as string
                 });
-            });
-
-            await Promise.all(promises);
+            }
             toast.success('Receta añadida al diario');
             setShowAddLogModal(false);
             setShowDetailModal(false);
