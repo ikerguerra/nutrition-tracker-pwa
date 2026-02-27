@@ -20,6 +20,7 @@ interface DashboardProps {
     onRejectRecommendation?: (item: RecommendationItem) => void;
     onGeneratePlan?: () => void;
     isGeneratingPlan?: boolean;
+    onAddEntry?: (mealType: string) => void;
 }
 
 export const Dashboard: React.FC<DashboardProps> = ({
@@ -36,7 +37,8 @@ export const Dashboard: React.FC<DashboardProps> = ({
     onGeneratePlan,
     isGeneratingPlan,
     onAcceptAll,
-    onAcceptMeal
+    onAcceptMeal,
+    onAddEntry
 }) => {
 
     const groupedMeals = useMemo(() => {
@@ -154,6 +156,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                         onAcceptRecommendation={(item) => onAcceptRecommendation && onAcceptRecommendation(item, 'BREAKFAST')}
                         onRejectRecommendation={(item) => onRejectRecommendation && onRejectRecommendation(item)}
                         onAcceptAll={() => onAcceptMeal && onAcceptMeal('BREAKFAST')}
+                        onAdd={() => onAddEntry && onAddEntry('BREAKFAST')}
                     />
                     <MealSection
                         title="Almuerzo"
@@ -166,6 +169,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                         onAcceptRecommendation={(item) => onAcceptRecommendation && onAcceptRecommendation(item, 'LUNCH')}
                         onRejectRecommendation={(item) => onRejectRecommendation && onRejectRecommendation(item)}
                         onAcceptAll={() => onAcceptMeal && onAcceptMeal('LUNCH')}
+                        onAdd={() => onAddEntry && onAddEntry('LUNCH')}
                     />
 
                     <MealSection
@@ -179,6 +183,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                         onAcceptRecommendation={(item) => onAcceptRecommendation && onAcceptRecommendation(item, 'SNACK')}
                         onRejectRecommendation={(item) => onRejectRecommendation && onRejectRecommendation(item)}
                         onAcceptAll={() => onAcceptMeal && onAcceptMeal('SNACK')}
+                        onAdd={() => onAddEntry && onAddEntry('SNACK')}
                     />
 
                     <MealSection
@@ -192,6 +197,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                         onAcceptRecommendation={(item) => onAcceptRecommendation && onAcceptRecommendation(item, 'DINNER')}
                         onRejectRecommendation={(item) => onRejectRecommendation && onRejectRecommendation(item)}
                         onAcceptAll={() => onAcceptMeal && onAcceptMeal('DINNER')}
+                        onAdd={() => onAddEntry && onAddEntry('DINNER')}
                     />
                 </div>
             </div>

@@ -44,6 +44,7 @@ const DashboardPage = () => {
     const [recLoading, setRecLoading] = useState(false);
     const [isGenerating, setIsGenerating] = useState(false);
     const [showFoodSearchModal, setShowFoodSearchModal] = useState(false);
+    const [selectedMealType, setSelectedMealType] = useState<string | null>(null);
 
     // Date state
     const [searchParams, setSearchParams] = useSearchParams();
@@ -250,6 +251,10 @@ const DashboardPage = () => {
                             onAcceptMeal={handleAcceptMeal}
                             onGeneratePlan={handleGeneratePlan}
                             isGeneratingPlan={isGenerating}
+                            onAddEntry={(mealType) => {
+                                setSelectedMealType(mealType);
+                                setShowFoodSearchModal(true);
+                            }}
                             // Removing onOpenFoods from here as it's not needed directly inside the daily log anymore
                             onCopySection={(mealType) => {
                                 const titleMap: Record<string, string> = {
@@ -318,9 +323,8 @@ const DashboardPage = () => {
                         <div className="flex-1 overflow-auto rounded-md border border-border min-h-0">
                             <FoodList onEdit={handleEdit} onDelete={handleDelete} onAddToDailyLog={(food) => {
                                 setSelectedFoodForEntry(food);
-                                setShowFoodSearchModal(false);
-                                // Small delay to prevent dialog animation clash
-                                setTimeout(() => setShowAddEntryModal(true), 150);
+                                // Don't close search modal here to allow cumulative adding
+                                setShowAddEntryModal(true);
                             }} />
                         </div>
                     </div>
@@ -402,11 +406,14 @@ const DashboardPage = () => {
             <AddEntryModal
                 isOpen={showAddEntryModal}
                 food={selectedFoodForEntry}
+                date={dateString}
+                initialMealType={selectedMealType as any}
                 onClose={() => { setShowAddEntryModal(false); setSelectedFoodForEntry(null); }}
                 onSubmit={async (payload) => {
                     try {
                         await addEntry(payload);
                         toast.success(t('dashboard.entryAdded'));
+                        // No need to close search modal, it stays open for next food
                     } catch (err) {
                         console.error('Error adding entry', err);
                         toast.error(t('dashboard.entryError'));

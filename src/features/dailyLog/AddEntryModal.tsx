@@ -19,15 +19,23 @@ interface AddEntryModalProps {
     onClose: () => void;
     onSubmit: (payload: { date: string; mealType: MealType; foodId: number; quantity: number; unit: string; servingUnitId?: number }) => Promise<void>;
     date?: string;
+    initialMealType?: MealType;
 }
 
-const AddEntryModal: React.FC<AddEntryModalProps> = ({ isOpen, food, onClose, onSubmit, date }) => {
+const AddEntryModal: React.FC<AddEntryModalProps> = ({ isOpen, food, onClose, onSubmit, date, initialMealType }) => {
     const [selectedFood, setSelectedFood] = useState<Food | null>(food);
-    const [mealType, setMealType] = useState<MealType>('BREAKFAST');
+    const [mealType, setMealType] = useState<MealType>(initialMealType || 'BREAKFAST');
     const [quantity, setQuantity] = useState<number>(100);
     const [unit, setUnit] = useState<string>('g');
     const [selectedServingUnitId, setSelectedServingUnitId] = useState<number | null>(null); // null means default (g/ml)
     const [loading, setLoading] = useState(false);
+
+    // Update meal type when prop changes
+    useEffect(() => {
+        if (initialMealType) {
+            setMealType(initialMealType);
+        }
+    }, [initialMealType]);
 
     // Update selected food when prop changes
     useEffect(() => {

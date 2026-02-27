@@ -4,7 +4,7 @@ import { RecommendationItem } from '../../types/recommendation';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 
-import { Copy, Check } from 'lucide-react';
+import { Copy, Check, Plus } from 'lucide-react';
 import MealEntryCard from './MealEntryCard';
 import RecommendedEntryCard from './components/RecommendedEntryCard';
 
@@ -19,6 +19,7 @@ interface MealSectionProps {
     onAcceptRecommendation?: (item: RecommendationItem) => void;
     onRejectRecommendation?: (item: RecommendationItem) => void;
     onAcceptAll?: () => void;
+    onAdd?: () => void;
 }
 
 const MealSection: React.FC<MealSectionProps> = ({
@@ -30,7 +31,8 @@ const MealSection: React.FC<MealSectionProps> = ({
     onCopy,
     onAcceptRecommendation,
     onRejectRecommendation,
-    onAcceptAll
+    onAcceptAll,
+    onAdd
 }) => {
     const hasItems = (entries && entries.length > 0) || (recommendations && recommendations.length > 0);
 
@@ -56,6 +58,17 @@ const MealSection: React.FC<MealSectionProps> = ({
                         >
                             <Check className="mr-1 size-3" />
                             Aceptar todo
+                        </Button>
+                    )}
+                    {onAdd && (
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-7 w-7 text-primary hover:text-primary hover:bg-primary/10"
+                            onClick={onAdd}
+                            title={`Añadir a ${title}`}
+                        >
+                            <Plus className="size-4" />
                         </Button>
                     )}
                     {onCopy && entries?.length > 0 && (
