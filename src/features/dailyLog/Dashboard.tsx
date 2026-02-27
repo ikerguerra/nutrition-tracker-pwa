@@ -44,9 +44,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
             BREAKFAST: [],
             LUNCH: [],
             DINNER: [],
-            SNACK: [],
-            MORNING_SNACK: [],
-            AFTERNOON_SNACK: []
+            SNACK: []
         };
 
         if (!dailyLog || !dailyLog.meals) {
@@ -61,29 +59,21 @@ export const Dashboard: React.FC<DashboardProps> = ({
                 BREAKFAST: [],
                 LUNCH: [],
                 DINNER: [],
-                SNACK: [],
-                MORNING_SNACK: [], // Ensure all keys are present
-                AFTERNOON_SNACK: []
+                SNACK: []
             };
         }
         const grouped: Record<string, RecommendationItem[]> = {
             BREAKFAST: [],
             LUNCH: [],
             DINNER: [],
-            SNACK: [],
-            MORNING_SNACK: [],
-            AFTERNOON_SNACK: []
+            SNACK: []
         };
 
         recommendations.meals.forEach(meal => {
             const pendingItems = (meal.items || []).filter(i => !i.status || i.status === 'PENDING');
 
-            if (meal.mealType === 'SNACK') {
-                grouped['AFTERNOON_SNACK'] = [...(grouped['AFTERNOON_SNACK'] || []), ...pendingItems];
-            } else {
-                if (grouped[meal.mealType]) {
-                    grouped[meal.mealType] = [...(grouped[meal.mealType] || []), ...pendingItems];
-                }
+            if (grouped[meal.mealType]) {
+                grouped[meal.mealType] = [...(grouped[meal.mealType] || []), ...pendingItems];
             }
         });
         return grouped;
@@ -165,20 +155,6 @@ export const Dashboard: React.FC<DashboardProps> = ({
                         onRejectRecommendation={(item) => onRejectRecommendation && onRejectRecommendation(item)}
                         onAcceptAll={() => onAcceptMeal && onAcceptMeal('BREAKFAST')}
                     />
-
-                    <MealSection
-                        title="Media Mañana"
-                        mealType="MORNING_SNACK"
-                        entries={groupedMeals.MORNING_SNACK || []}
-                        recommendations={groupedRecommendations.MORNING_SNACK}
-                        onUpdate={updateEntry}
-                        onDelete={deleteEntry}
-                        onCopy={() => onCopySection && onCopySection('MORNING_SNACK')}
-                        onAcceptRecommendation={(item) => onAcceptRecommendation && onAcceptRecommendation(item, 'MORNING_SNACK')}
-                        onRejectRecommendation={(item) => onRejectRecommendation && onRejectRecommendation(item)}
-                        onAcceptAll={() => onAcceptMeal && onAcceptMeal('MORNING_SNACK')}
-                    />
-
                     <MealSection
                         title="Almuerzo"
                         mealType="LUNCH"
@@ -193,14 +169,14 @@ export const Dashboard: React.FC<DashboardProps> = ({
                     />
 
                     <MealSection
-                        title="Merienda"
-                        mealType="AFTERNOON_SNACK"
-                        entries={groupedMeals.AFTERNOON_SNACK || []}
-                        recommendations={groupedRecommendations.AFTERNOON_SNACK}
+                        title="Snack"
+                        mealType="SNACK"
+                        entries={groupedMeals.SNACK || []}
+                        recommendations={groupedRecommendations.SNACK}
                         onUpdate={updateEntry}
                         onDelete={deleteEntry}
-                        onCopy={() => onCopySection && onCopySection('AFTERNOON_SNACK')}
-                        onAcceptRecommendation={(item) => onAcceptRecommendation && onAcceptRecommendation(item, 'AFTERNOON_SNACK')}
+                        onCopy={() => onCopySection && onCopySection('SNACK')}
+                        onAcceptRecommendation={(item) => onAcceptRecommendation && onAcceptRecommendation(item, 'SNACK')}
                         onRejectRecommendation={(item) => onRejectRecommendation && onRejectRecommendation(item)}
                         onAcceptAll={() => onAcceptMeal && onAcceptMeal('SNACK')}
                     />

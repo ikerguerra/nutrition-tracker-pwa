@@ -81,9 +81,8 @@ export const CopyMealSectionModal: React.FC<CopyMealSectionModalProps> = ({
 
     const mealTypeOptions = [
         { value: 'BREAKFAST', label: 'Desayuno' },
-        { value: 'MORNING_SNACK', label: 'Media Mañana' },
         { value: 'LUNCH', label: 'Almuerzo' },
-        { value: 'AFTERNOON_SNACK', label: 'Merienda' },
+        { value: 'SNACK', label: 'Snack' },
         { value: 'DINNER', label: 'Cena' },
     ];
 

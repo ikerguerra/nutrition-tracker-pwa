@@ -254,9 +254,8 @@ const DashboardPage = () => {
                             onCopySection={(mealType) => {
                                 const titleMap: Record<string, string> = {
                                     'BREAKFAST': t('dashboard.meals.BREAKFAST'),
-                                    'MORNING_SNACK': t('dashboard.meals.MORNING_SNACK'),
                                     'LUNCH': t('dashboard.meals.LUNCH'),
-                                    'AFTERNOON_SNACK': t('dashboard.meals.AFTERNOON_SNACK'),
+                                    'SNACK': t('dashboard.meals.SNACK'),
                                     'DINNER': t('dashboard.meals.DINNER')
                                 };
                                 setCopyingSection({

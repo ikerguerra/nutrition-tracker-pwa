@@ -86,22 +86,28 @@ export const FoodForm: React.FC<FoodFormProps> = ({ onSuccess, onCancel, initial
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
+        const parseNutrient = (val: string) => {
+            if (val === '' || val === null || val === undefined) return undefined;
+            const parsed = parseFloat(val);
+            return isNaN(parsed) ? undefined : parsed;
+        };
+
         try {
             const foodData: FoodRequest = {
                 name: formData.name,
                 brand: formData.brand || undefined,
                 barcode: formData.barcode || undefined,
-                servingSize: parseFloat(formData.servingSize) || undefined,
+                servingSize: parseNutrient(formData.servingSize),
                 servingUnit: formData.servingUnit,
                 nutritionalInfo: {
-                    calories: parseFloat(formData.nutritionalInfo.calories) || undefined,
-                    protein: parseFloat(formData.nutritionalInfo.protein) || undefined,
-                    carbohydrates: parseFloat(formData.nutritionalInfo.carbohydrates) || undefined,
-                    fats: parseFloat(formData.nutritionalInfo.fats) || undefined,
-                    fiber: parseFloat(formData.nutritionalInfo.fiber) || undefined,
-                    sugars: parseFloat(formData.nutritionalInfo.sugars) || undefined,
-                    saturatedFats: parseFloat(formData.nutritionalInfo.saturatedFats) || undefined,
-                    sodium: parseFloat(formData.nutritionalInfo.sodium) || undefined,
+                    calories: parseNutrient(formData.nutritionalInfo.calories) as number,
+                    protein: parseNutrient(formData.nutritionalInfo.protein) as number,
+                    carbohydrates: parseNutrient(formData.nutritionalInfo.carbohydrates) as number,
+                    fats: parseNutrient(formData.nutritionalInfo.fats) as number,
+                    fiber: parseNutrient(formData.nutritionalInfo.fiber),
+                    sugars: parseNutrient(formData.nutritionalInfo.sugars),
+                    saturatedFats: parseNutrient(formData.nutritionalInfo.saturatedFats),
+                    sodium: parseNutrient(formData.nutritionalInfo.sodium),
                 },
                 servingUnits: servingUnits.length > 0 ? servingUnits : undefined
             };
